@@ -7,7 +7,7 @@ import { safes, selectSafeSchema } from "./safes.ts";
 import { users } from "./users.ts";
 
 export const stores = pgTable("stores", {
-  id: uuid("id").primaryKey().notNull(),
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
   userId: uuid("user_id")
     .notNull()
     .references(() => users.id),

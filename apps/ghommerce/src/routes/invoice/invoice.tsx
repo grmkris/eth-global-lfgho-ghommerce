@@ -19,7 +19,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
-import {Skeleton} from "@/components/ui/skeleton.tsx";
+import { Skeleton } from "@/components/ui/skeleton.tsx";
 
 export const InvoiceParams = z.object({
   id: z.string(),

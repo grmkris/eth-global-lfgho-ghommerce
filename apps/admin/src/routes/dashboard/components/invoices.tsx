@@ -52,7 +52,7 @@ export const CreateInvoiceComponent = (props: {
 }) => {
   const toast = useToast();
   const queryClient = useQueryClient();
-  const createInvoice = trpcClient.invoices.create.useMutation({
+  const createInvoice = trpcClient.stores.createInvoice.useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries();
       setIsModalOpen(false);

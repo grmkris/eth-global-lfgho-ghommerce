@@ -47,7 +47,7 @@
     "@tanstack/react-query-devtools": "^4.36.1",
     "@tanstack/react-router": "^1.4.6",
     "@tanstack/react-table": "^8.11.6",
-    "@tanstack/router-devtools": "beta",
+    "@tanstack/router-devtools": "^1.4.6",
     "@trpc/client": "^10.45.0",
     "@trpc/react-query": "^10.45.0",
     "@web3inbox/core": "^0.0.25",

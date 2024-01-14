@@ -4,7 +4,11 @@ import { db } from "../db/db";
 import { and, eq } from "drizzle-orm";
 import { eoas, safeEoas, safes } from "ghommerce-schema/src/db/safes";
 import { stores } from "ghommerce-schema/src/db/stores";
-import { invoices, selectInvoiceSchema } from "ghommerce-schema/src/db/invoices";
+import {
+  insertInvoiceSchema,
+  invoices,
+  selectInvoiceSchema,
+} from "ghommerce-schema/src/db/invoices";
 
 export const storeRouter = router({
   registerNewSafe: authProcedure
@@ -196,5 +200,41 @@ export const storeRouter = router({
       });
 
       return selectInvoiceSchema.parse(result);
+    }),
+
+  getInvoices: authProcedure
+    .input(
+      z.object({
+        storeId: z.string().uuid().optional(),
+      }),
+    )
+    .output(z.array(selectInvoiceSchema))
+    .query(async ({ input, ctx }) => {
+      if (!input?.storeId) throw new Error("Invalid storeId");
+      const result = await db.query.invoices.findMany({
+        where: eq(invoices.storeId, input.storeId),
+        with: {
+          store: {
+            with: {
+              safe: true,
+            },
+          },
+        },
+      });
+
+      return selectInvoiceSchema.array().parse(result);
+    }),
+
+  createInvoice: authProcedure
+    .input(insertInvoiceSchema)
+    .output(selectInvoiceSchema)
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.session?.user?.id) throw new Error("Unauthorized");
+      const newInvoice = await db
+        .insert(invoices)
+        .values(input)
+        .returning()
+        .execute();
+      return selectInvoiceSchema.parse(newInvoice[0]);
     }),
 });

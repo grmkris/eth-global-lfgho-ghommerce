@@ -13,11 +13,11 @@ import { z } from "zod";
 import { payments } from "./payments";
 import { selectStoreSchema, stores } from "./stores.ts";
 import { BaseTokenSchema } from "../tokens.schema.ts";
-import { QuoteCurrencies } from "../swap.schema.ts";
+import { QuoteCurrencies, QuoteCurrency } from "../swap.schema.ts";
 import { Address } from "../address.schema.ts";
 
 export const invoices = pgTable("invoices", {
-  id: uuid("id").primaryKey().notNull(),
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
   storeId: uuid("store_id")
     .notNull()
     .references(() => stores.id),
@@ -26,7 +26,7 @@ export const invoices = pgTable("invoices", {
   payerWallet: text("payer_wallet"),
   description: text("description").notNull(),
   amountDue: bigint("amount_due", { mode: "number" }).notNull(),
-  currency: text("currency", { enum: ["USD", "EUR", "JPY", "CAD"] }).notNull(),
+  currency: text("currency", { enum: QuoteCurrencies }).notNull(),
   acceptedTokens: jsonb("accepted_tokens").notNull(),
   dueDate: timestamp("due_date", { mode: "date" }),
   status: text("status", { enum: ["pending", "paid", "handled"] }).notNull(),
@@ -49,7 +49,7 @@ export const selectInvoiceSchema = createSelectSchema(invoices, {
 });
 
 export const insertInvoiceSchema = createInsertSchema(invoices, {
-  currency: z.enum(QuoteCurrencies),
+  currency: QuoteCurrency,
   payerEmail: z.string().optional(),
   payerWallet: z.string().optional(),
   acceptedTokens: z.array(BaseTokenSchema),

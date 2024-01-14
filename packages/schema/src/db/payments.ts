@@ -14,7 +14,7 @@ import { invoices } from "./invoices";
 import { TokenSchema } from "../tokens.schema.ts";
 
 export const payments = pgTable("payments", {
-  id: uuid("id").primaryKey().notNull(),
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
   invoiceId: uuid("invoice_id")
     .references(() => invoices.id)
     .notNull(),

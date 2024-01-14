@@ -43,16 +43,12 @@ import { selectInvoiceSchema } from "ghommerce-schema/src/db/invoices.ts";
 
 export const Stores = () => {
   const stores = trpcClient.stores.getStores.useQuery();
-  const [selectedStoreId, setSelectedStoreId] = useState<string | null>(null);
-  const invoices = trpcClient.invoices.list.useQuery(
+  const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(
+    undefined,
+  );
+  const invoices = trpcClient.stores.getInvoices.useQuery(
     {
-      filters: [
-        {
-          column: "store_id",
-          operator: "eq",
-          value: selectedStoreId ?? "",
-        },
-      ],
+      storeId: selectedStoreId,
     },
     { enabled: !!selectedStoreId },
   );

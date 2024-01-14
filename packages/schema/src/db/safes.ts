@@ -16,7 +16,7 @@ import { users } from "./users.ts";
  * Customer entity can have multiple wallets, this table is used to store the relation between Customer and wallet
  */
 export const eoas = pgTable("eoas", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
   wallet: text("wallet").notNull(),
   nonce: text("nonce").notNull(),
   verified: boolean("verified").notNull(),

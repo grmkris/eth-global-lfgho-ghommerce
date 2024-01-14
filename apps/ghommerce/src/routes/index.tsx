@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount } from "wagmi";
 import { SLIDE_IN_SLIDE_OUT_LEFT } from "@/animations.ts";
-import { apiTrpc, getTrpcClientIframe } from "@/trpc-client.ts";
+import { getTrpcClientIframe } from "@/trpc-client.ts";
 import { useAppDrawer } from "@/drawers/AppDrawer.tsx";
 
 export const indexRoute = new Route({
@@ -36,10 +36,7 @@ function Index() {
   // 4. Use modal hook
   const modal = useWeb3Modal();
   const wagmiAccount = useAccount();
-
-  const invoices = apiTrpc.invoices.list.useQuery();
   const drawer = useAppDrawer();
-  console.log(invoices);
   return (
     <div className={SLIDE_IN_SLIDE_OUT_LEFT}>
       Wagmi Account: {wagmiAccount?.address}
@@ -50,7 +47,6 @@ function Index() {
       >
         Click me
       </Button>
-
       <Separator />
       <Button onClick={() => modal.open()}>Connect Wallet</Button>
       <Button onClick={() => modal.open({ view: "Networks" })}>
