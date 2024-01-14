@@ -25,25 +25,8 @@ export const DashboardPage = () => {
   const selectedView = dashboardRoute.useSearch().view;
   const router = useRouter();
   return (
-    <>
-      <div className="md:hidden">
-        <img
-          src="/examples/dashboard-light.png"
-          width={1280}
-          height={866}
-          alt="Dashboard"
-          className="block dark:hidden"
-        />
-        <img
-          src="/examples/dashboard-dark.png"
-          width={1280}
-          height={866}
-          alt="Dashboard"
-          className="hidden dark:block"
-        />
-      </div>
-      <div className="hidden flex-col md:flex">
-        <div className="flex-1 space-y-4 p-8 pt-6">
+      <div className="flex flex-col mx-2">
+        <div className="flex-1 space-y-4">
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
             <div className="flex items-center space-x-2">
@@ -189,7 +172,6 @@ export const DashboardPage = () => {
           </Tabs>
         </div>
       </div>
-    </>
   );
 };
 
