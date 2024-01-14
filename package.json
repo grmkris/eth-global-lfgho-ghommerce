@@ -8,5 +8,10 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@biomejs/biome": "1.5.1",
+    "supabase": "^1.131.3",
+    "concurrently": "^8.2.2"
+  }
 }
