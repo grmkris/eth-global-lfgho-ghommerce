@@ -1,0 +1,12 @@
+{
+  "ignore": {
+    "@tanstack/react-query": {
+      "versions": "5.13.4",
+      "reason": ""
+    },
+    "@tanstack/react-query-devtools": {
+      "versions": "5.13.5",
+      "reason": ""
+    }
+  }
+}
