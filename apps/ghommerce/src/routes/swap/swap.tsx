@@ -67,7 +67,7 @@ const SwapPage = () => {
       />
       <Input
         placeholder="Amount"
-        onChange={(e) => setToAmount(BigInt(e.target.value))}
+        onChange={(e) => setToAmount(e.target.value.toString())}
       />
       {swapData.success && (
         <div>

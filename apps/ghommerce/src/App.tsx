@@ -20,8 +20,6 @@ const queryClient = new QueryClient({
   },
 });
 
-import "./App.css";
-
 import { WagmiConfig } from "wagmi";
 import { iframeRouter } from "./routes/Router.tsx";
 import { useState } from "react";

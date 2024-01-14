@@ -21,8 +21,8 @@ export type SwapStore = {
   }): void;
   setFromToken: (token: TokenSchema) => void;
   setToToken: (token: TokenSchema) => void;
-  setToAmount: (amount: bigint) => void;
-  setFromAmount: (amount: bigint) => void;
+  setToAmount: (amount: string) => void;
+  setFromAmount: (amount: string) => void;
   setToChain: (chain: ChainSchema) => void;
   setFromChain: (chain: ChainSchema) => void;
   setToAddress: (address: Address) => void;

@@ -4,7 +4,6 @@ import {
   supabase,
 } from "@/features/TrpcProvider.tsx";
 import { WalletContextProvider } from "@/features/aa/WalletContextProvider.tsx";
-import { generateAppConfig } from "@/features/auto-admin/generateAppConfig.ts";
 import { authOnboardingRoute, authRoute } from "@/routes/authRoute.tsx";
 import { dashboardRoute } from "@/routes/dashboardRoute.tsx";
 import { indexRoute } from "@/routes/indexRoute.tsx";
@@ -64,7 +63,6 @@ export const App = () => {
 const routeTree = rootRoute.addChildren([
   authRoute.addChildren([
     dashboardRoute,
-    ...generateAppConfig({ rootRoute: authRoute }),
   ]),
   authOnboardingRoute.addChildren([indexRoute]),
   loginRoute,
