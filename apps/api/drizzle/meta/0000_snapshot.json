@@ -1,0 +1,480 @@
+{
+  "id": "f936c323-370e-4061-a800-18826f8d8df4",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "5",
+  "dialect": "pg",
+  "tables": {
+    "eoas": {
+      "name": "eoas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "wallet": {
+          "name": "wallet",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nonce": {
+          "name": "nonce",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "verified": {
+          "name": "verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "eoas_user_id_users_id_fk": {
+          "name": "eoas_user_id_users_id_fk",
+          "tableFrom": "eoas",
+          "tableTo": "users",
+          "schemaTo": "public",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "invoices": {
+      "name": "invoices",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "store_id": {
+          "name": "store_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "payer_email": {
+          "name": "payer_email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "payer_name": {
+          "name": "payer_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "payer_wallet": {
+          "name": "payer_wallet",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount_due": {
+          "name": "amount_due",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currency": {
+          "name": "currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "accepted_tokens": {
+          "name": "accepted_tokens",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "due_date": {
+          "name": "due_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "invoices_store_id_stores_id_fk": {
+          "name": "invoices_store_id_stores_id_fk",
+          "tableFrom": "invoices",
+          "tableTo": "stores",
+          "schemaTo": "public",
+          "columnsFrom": ["store_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "payments": {
+      "name": "payments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "invoice_id": {
+          "name": "invoice_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount_paid": {
+          "name": "amount_paid",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "payment_date": {
+          "name": "payment_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "payment_method": {
+          "name": "payment_method",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "transaction_id": {
+          "name": "transaction_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "payments_invoice_id_invoices_id_fk": {
+          "name": "payments_invoice_id_invoices_id_fk",
+          "tableFrom": "payments",
+          "tableTo": "invoices",
+          "schemaTo": "public",
+          "columnsFrom": ["invoice_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "safe_eoas": {
+      "name": "safe_eoas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "safe_id": {
+          "name": "safe_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "eoa_id": {
+          "name": "eoa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "safe_eoas_safe_id_safes_id_fk": {
+          "name": "safe_eoas_safe_id_safes_id_fk",
+          "tableFrom": "safe_eoas",
+          "tableTo": "safes",
+          "schemaTo": "public",
+          "columnsFrom": ["safe_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "safe_eoas_eoa_id_eoas_id_fk": {
+          "name": "safe_eoas_eoa_id_eoas_id_fk",
+          "tableFrom": "safe_eoas",
+          "tableTo": "eoas",
+          "schemaTo": "public",
+          "columnsFrom": ["eoa_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "safes": {
+      "name": "safes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nonce": {
+          "name": "nonce",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "address": {
+          "name": "address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "predicted": {
+          "name": "predicted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "threshold": {
+          "name": "threshold",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "safes_user_id_users_id_fk": {
+          "name": "safes_user_id_users_id_fk",
+          "tableFrom": "safes",
+          "tableTo": "users",
+          "schemaTo": "public",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "stores": {
+      "name": "stores",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "safe_id": {
+          "name": "safe_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "stores_user_id_users_id_fk": {
+          "name": "stores_user_id_users_id_fk",
+          "tableFrom": "stores",
+          "tableTo": "users",
+          "schemaTo": "public",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "stores_safe_id_safes_id_fk": {
+          "name": "stores_safe_id_safes_id_fk",
+          "tableFrom": "stores",
+          "tableTo": "safes",
+          "schemaTo": "public",
+          "columnsFrom": ["safe_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

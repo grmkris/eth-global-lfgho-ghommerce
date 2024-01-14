@@ -9,7 +9,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { Address, AddressSchema } from "../address.schema.ts";
+import { Address } from "../address.schema.ts";
 import { users } from "./users.ts";
 
 /**
