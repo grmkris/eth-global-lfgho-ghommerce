@@ -39,7 +39,7 @@ import {
   CreateInvoiceComponent,
   StoreInvoices,
 } from "@/routes/dashboard/components/invoices.tsx";
-import { selectInvoiceSchema } from "schema/src/db/invoices.ts";
+import { selectInvoiceSchema } from "ghommerce-schema/src/db/invoices.ts";
 
 export const Stores = () => {
   const stores = trpcClient.stores.getStores.useQuery();

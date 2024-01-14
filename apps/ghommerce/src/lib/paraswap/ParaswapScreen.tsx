@@ -4,7 +4,7 @@ import {
   useExecuteParaSwap,
   useParaSwapRoute,
 } from "@/lib/paraswap/useParaswap.tsx";
-import { SwapSchema } from "schema/src/swap.schema.ts";
+import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
 
 export const ParaSwapScreen = (props: {
   swap: SwapSchema;

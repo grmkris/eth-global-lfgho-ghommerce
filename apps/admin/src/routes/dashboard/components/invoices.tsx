@@ -3,7 +3,7 @@ import { generateColumnsFromZodSchema } from "@/components/table/generateColumns
 import {
   insertInvoiceSchema,
   selectInvoiceSchema,
-} from "schema/src/db/invoices.ts";
+} from "ghommerce-schema/src/db/invoices.ts";
 import { useToast } from "@/components/ui/use-toast.ts";
 import { trpcClient } from "@/features/trpc-client.ts";
 import AutoForm, { AutoFormSubmit } from "@/components/auto-form";

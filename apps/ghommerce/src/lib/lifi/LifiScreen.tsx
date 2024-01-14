@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card.tsx";
 import { formatUnits } from "viem";
 import { Button } from "@/components/ui/button.tsx";
 import { useExecuteLifi, useLifiRoutes } from "@/lib/lifi/useLifi.tsx";
-import { SwapSchema } from "schema/src/swap.schema.ts";
+import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
 
 export const LifiScreen = (props: {
   swap: SwapSchema;

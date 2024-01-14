@@ -1,4 +1,4 @@
-import { Address } from "schema/src/address.schema.ts";
+import { Address } from "ghommerce-schema/src/address.schema.ts";
 import { useToast } from "@/components/ui/use-toast.ts";
 import { Badge } from "@/components/ui/badge.tsx";
 

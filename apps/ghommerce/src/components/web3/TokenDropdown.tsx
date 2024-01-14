@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { ChainSchema } from "schema/src/chains.schema.ts";
-import { TokenSchema } from "schema/src/tokens.schema.ts";
+import { ChainSchema } from "ghommerce-schema/src/chains.schema.ts";
+import { TokenSchema } from "ghommerce-schema/src/tokens.schema.ts";
 import { VirtualizedCombobox } from "@/components/VirtualCombobox.tsx";
 import { CheckIcon, Link } from "lucide-react";
 import { Badge } from "@/components/ui/badge.tsx";

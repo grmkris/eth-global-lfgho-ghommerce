@@ -1,7 +1,7 @@
 import { createTRPCReact } from "@trpc/react-query";
 import { ApiRouter } from "backend/src/router.ts";
 import { createTRPCProxyClient } from "@trpc/client";
-import { sdkTrpcRouter } from "iframe-sdk/src/router.ts";
+import { sdkTrpcRouter } from "ghommerce-sdk/src/router.ts";
 import { windowLink } from "trpc-browser/link";
 import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 

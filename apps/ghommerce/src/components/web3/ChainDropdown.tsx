@@ -2,7 +2,7 @@
 import { CheckIcon } from "@radix-ui/react-icons";
 
 import { Badge } from "@/components/ui/badge.tsx";
-import { ChainSchema } from "schema/src/chains.schema.ts";
+import { ChainSchema } from "ghommerce-schema/src/chains.schema.ts";
 import { Link } from "lucide-react";
 import { VirtualizedCombobox } from "@/components/VirtualCombobox.tsx";
 /**

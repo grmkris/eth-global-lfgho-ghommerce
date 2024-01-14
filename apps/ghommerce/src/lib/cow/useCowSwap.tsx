@@ -3,8 +3,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAccount } from "wagmi";
 import { OrderSigningUtils, SupportedChainId } from "@cowprotocol/cow-sdk";
 import { useEthersSigner } from "@/lib/useEthersSigner.tsx";
-import { SwapSchema } from "schema/src/swap.schema.ts";
-import { ChainNameToId } from "schema/src/chains.schema.ts";
+import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
+import { ChainNameToId } from "ghommerce-schema/src/chains.schema.ts";
 
 const COWSWAP_ENABLED_CHAINS = [
   ChainNameToId["eth-mainnet"],

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent, CardFooter } from "@/components/ui/card.tsx";
 import { use1InchOrderQuote, useSwapOneInch } from "./use1Inch";
-import { SwapSchema } from "schema/src/swap.schema.ts";
+import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
 
 export const OneInchScreen = (props: {
   swap: SwapSchema;

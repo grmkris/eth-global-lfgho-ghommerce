@@ -3,7 +3,7 @@ import { apiTrpc } from "@/trpc-client.ts";
 import { useLifiRoutes } from "@/lib/lifi/useLifi.tsx";
 import { useParaSwapRoute } from "@/lib/paraswap/useParaswap.tsx";
 import { z } from "zod";
-import { SwapSchema } from "schema/src/swap.schema.ts";
+import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
 import {
   Card,
   CardContent,
@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import { TokenSchema } from "schema/src/tokens.schema.ts";
+import { TokenSchema } from "ghommerce-schema/src/tokens.schema.ts";
 import { formatUnits } from "viem";
 
 const SWAP_PROVIDERS = ["1inch", "0x", "lifi", "paraswap"] as const;

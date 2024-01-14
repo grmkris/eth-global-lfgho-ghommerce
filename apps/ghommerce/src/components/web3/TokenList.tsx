@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Minus, Plus } from "lucide-react";
 import { SwapProviderList, useSwapProviders } from "@/lib/useSwapProviders.tsx";
-import { TokenAmountSchema, TokenSchema } from "schema/src/tokens.schema.ts";
+import { TokenAmountSchema, TokenSchema } from "ghommerce-schema/src/tokens.schema.ts";
 import { ZERO_ADDRESS } from "@1inch/fusion-sdk";
-import { SwapSchema } from "schema/src/swap.schema.ts";
-import { Address } from "schema/src/address.schema.ts";
+import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
+import { Address } from "ghommerce-schema/src/address.schema.ts";
 import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
 
 export const TokenList = (props: {

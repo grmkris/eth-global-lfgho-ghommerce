@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, Outlet, RootRoute, Route, Router } from "@tanstack/react-router";
-import { IframeSDK } from "iframe-sdk";
+import { IframeSDK } from "ghommerce-sdk/src";
 import * as React from "react";
 import { Suspense } from "react";
 import { useBearStore } from "./store.ts";

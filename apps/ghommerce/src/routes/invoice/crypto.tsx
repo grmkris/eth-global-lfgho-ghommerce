@@ -9,7 +9,7 @@ import {
   CardDescription,
   CardHeader,
 } from "@/components/ui/card.tsx";
-import { TokenAmountSchema, TokenSchema } from "schema/src/tokens.schema.ts";
+import { TokenAmountSchema, TokenSchema } from "ghommerce-schema/src/tokens.schema.ts";
 import { TokenList } from "@/components/web3/TokenList.tsx";
 
 export type Token =

@@ -3,8 +3,8 @@ import { useEthersSigner } from "@/lib/useEthersSigner.tsx";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import type { OptimalRate } from "@paraswap/sdk/src/types.ts";
 import { BigNumber } from "ethers";
-import { SwapSchema } from "schema/src/swap.schema.ts";
-import { ZERO_ADDRESS } from "schema/src/tokens.schema";
+import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
+import { ZERO_ADDRESS } from "ghommerce-schema/src/tokens.schema";
 
 export const useParaSwapRoute = (props: {
   swap: SwapSchema;

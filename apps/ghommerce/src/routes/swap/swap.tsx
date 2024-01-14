@@ -13,13 +13,13 @@ import { OneInchScreen } from "@/lib/1inch/OneInchScreen.tsx";
 import { LifiScreen } from "@/lib/lifi/LifiScreen.tsx";
 import { ZeroExScreen } from "@/lib/0x/ZeroExScreen.tsx";
 import { ParaSwapScreen } from "@/lib/paraswap/ParaswapScreen.tsx";
-import { ChainSchema } from "schema/src/chains.schema.ts";
-import { SwapSchema } from "schema/src/swap.schema.ts";
+import { ChainSchema } from "ghommerce-schema/src/chains.schema.ts";
+import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
 import {
   TokenAmountSchema,
   TokenSchema,
   ZERO_ADDRESS,
-} from "schema/src/tokens.schema.ts";
+} from "ghommerce-schema/src/tokens.schema.ts";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const SwapPage = () => {

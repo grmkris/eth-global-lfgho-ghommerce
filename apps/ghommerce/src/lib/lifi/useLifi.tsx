@@ -2,7 +2,7 @@ import { LiFi, Route } from "@lifi/sdk";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEthersSigner } from "@/lib/useEthersSigner.tsx";
 import { useAccount } from "wagmi";
-import { SwapSchema } from "schema/src/swap.schema.ts";
+import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
 
 const lifi = new LiFi({
   integrator: "Your dApp/company name",

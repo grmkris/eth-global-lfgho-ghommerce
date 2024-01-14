@@ -1,6 +1,6 @@
 import { apiTrpc } from "@/trpc-client.ts";
 import { Card, CardContent } from "@/components/ui/card.tsx";
-import { SwapSchema } from "schema/src/swap.schema.ts";
+import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
 
 export const ZeroExScreen = (props: {
   order: SwapSchema;

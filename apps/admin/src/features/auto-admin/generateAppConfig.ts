@@ -5,7 +5,7 @@ import {
 } from "@/features/auto-admin/createEntityRoute.tsx";
 import { RootRoute, Route } from "@tanstack/react-router";
 import { PlaneIcon, UserIcon } from "lucide-react";
-import { insertInvoiceSchema } from "schema/src/db/invoices.ts";
+import { insertInvoiceSchema } from "ghommerce-schema/src/db/invoices.ts";
 import {
   insertEoaSchema,
   insertPaymentSchema,
@@ -14,7 +14,7 @@ import {
   selectInvoiceSchema,
   selectPaymentSchema,
   selectSafeSchema,
-} from "schema/src/db/schema.ts";
+} from "ghommerce-schema/src/db/schema.ts";
 
 const ROUTES = {
   invoices: createEntityRoute({

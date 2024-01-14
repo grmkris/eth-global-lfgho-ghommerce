@@ -4,7 +4,7 @@ import {
   useCowSwapCreateOrder,
   useCowSwapQuote,
 } from "@/lib/cow/useCowSwap.tsx";
-import { SwapSchema } from "schema/src/swap.schema.ts";
+import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
 
 /**
  * Uncaught (in promise) TypeError: (0 , import_node_util.promisify) is not a function

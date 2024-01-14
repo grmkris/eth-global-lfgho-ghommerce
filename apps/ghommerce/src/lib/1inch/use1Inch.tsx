@@ -14,7 +14,7 @@ import {
   is1InchNetworkSupported,
   ViemWalletClientProvider,
 } from "@/lib/1inch/1inch-utils.ts";
-import { SwapSchema } from "schema/src/swap.schema.ts";
+import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
 
 export const use1InchOrderQuote = (props: {
   swap: SwapSchema;

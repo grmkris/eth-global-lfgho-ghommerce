@@ -15,7 +15,7 @@ import { trpcClient } from "@/features/trpc-client.ts";
 import { authOnboardingRoute } from "@/routes/authRoute.tsx";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, Route } from "@tanstack/react-router";
-import { insertStoreSchema } from "schema/src/db/schema.ts";
+import { insertStoreSchema } from "ghommerce-schema/src/db/schema.ts";
 import { SiweMessage } from "siwe";
 import { SLIDE_IN_SLIDE_OUT_LEFT } from "@/features/animations.ts";
 

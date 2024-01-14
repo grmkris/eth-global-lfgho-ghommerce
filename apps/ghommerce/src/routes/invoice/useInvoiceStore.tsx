@@ -3,7 +3,7 @@ import { RouterOutput } from "@/trpc-client.ts";
 import { Address } from "wagmi";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { TokenAmountSchema } from "schema/src/tokens.schema.ts";
+import { TokenAmountSchema } from "ghommerce-schema/src/tokens.schema.ts";
 
 export type UserInvoiceInput = {
   paymentMethod: "card" | "crypto";

@@ -1,9 +1,9 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { Address } from "wagmi";
-import { SwapSchema } from "schema/src/swap.schema.ts";
-import { TokenSchema } from "schema/src/tokens.schema.ts";
-import { ChainSchema } from "schema/src/chains.schema.ts";
+import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
+import { TokenSchema } from "ghommerce-schema/src/tokens.schema.ts";
+import { ChainSchema } from "ghommerce-schema/src/chains.schema.ts";
 import { z } from "zod";
 
 export const SwapStoreSchema = SwapSchema.extend({
