@@ -52,7 +52,8 @@ export const insertInvoiceSchema = createInsertSchema(invoices, {
   currency: QuoteCurrency,
   payerEmail: z.string().optional(),
   payerWallet: z.string().optional(),
-  acceptedTokens: z.array(BaseTokenSchema),
+  // acceptedTokens: z.array(BaseTokenSchema),
+  acceptedTokens: BaseTokenSchema,
   payerName: z.string().optional(),
   amountDue: z.coerce.number(),
   dueDate: z.coerce.date(),
@@ -67,4 +68,5 @@ export const invoicesRelations = relations(invoices, ({ many, one }) => ({
   }),
 }));
 
+export type insertInvoiceSchema = z.infer<typeof insertInvoiceSchema>;
 export type selectInvoiceSchema = z.infer<typeof selectInvoiceSchema>;

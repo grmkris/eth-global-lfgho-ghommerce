@@ -195,7 +195,7 @@ const DeploySafeComponent = () => {
                 </div>
               </CardContent>
               <CardFooter>
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-2">
                   <p>
                     {" "}
                     Sign message with your wallet to verify ownership, and
