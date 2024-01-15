@@ -89,13 +89,13 @@
     "@types/react-dom": "^18.2.18",
     "@types/react-syntax-highlighter": "^15.5.11",
     "@vitejs/plugin-react": "^4.2.1",
-    "autoprefixer": "^10.4.16",
     "api": "workspace:*",
+    "autoprefixer": "^10.4.16",
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3",
     "vite": "^5.0.11",
-    "vite-plugin-node-polyfills": "^0.19.0"
+    "vite-plugin-node-polyfills": "0.16.0"
   },
   "overrides": {
     "rollup": "npm:@rollup/wasm-node"
