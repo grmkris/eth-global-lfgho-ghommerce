@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS "eoas" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "invoices" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"store_id" uuid NOT NULL,
 	"payer_email" text,
 	"payer_name" text,
@@ -25,9 +25,10 @@ CREATE TABLE IF NOT EXISTS "invoices" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "payments" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"invoice_id" uuid NOT NULL,
 	"amount_paid" bigint NOT NULL,
+	"token" jsonb NOT NULL,
 	"payment_date" timestamp,
 	"payment_method" text NOT NULL,
 	"transaction_id" text,
@@ -53,7 +54,7 @@ CREATE TABLE IF NOT EXISTS "safes" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "stores" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
 	"name" text NOT NULL,
 	"safe_id" uuid NOT NULL,
@@ -69,53 +70,52 @@ CREATE TABLE IF NOT EXISTS "users" (
 );
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "eoas" ADD CONSTRAINT "eoas_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "eoas" ADD CONSTRAINT "eoas_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "invoices" ADD CONSTRAINT "invoices_store_id_stores_id_fk" FOREIGN KEY ("store_id") REFERENCES "public"."stores"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "invoices" ADD CONSTRAINT "invoices_store_id_stores_id_fk" FOREIGN KEY ("store_id") REFERENCES "stores"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "payments" ADD CONSTRAINT "payments_invoice_id_invoices_id_fk" FOREIGN KEY ("invoice_id") REFERENCES "public"."invoices"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "payments" ADD CONSTRAINT "payments_invoice_id_invoices_id_fk" FOREIGN KEY ("invoice_id") REFERENCES "invoices"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "safe_eoas" ADD CONSTRAINT "safe_eoas_safe_id_safes_id_fk" FOREIGN KEY ("safe_id") REFERENCES "public"."safes"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "safe_eoas" ADD CONSTRAINT "safe_eoas_safe_id_safes_id_fk" FOREIGN KEY ("safe_id") REFERENCES "safes"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "safe_eoas" ADD CONSTRAINT "safe_eoas_eoa_id_eoas_id_fk" FOREIGN KEY ("eoa_id") REFERENCES "public"."eoas"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "safe_eoas" ADD CONSTRAINT "safe_eoas_eoa_id_eoas_id_fk" FOREIGN KEY ("eoa_id") REFERENCES "eoas"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "safes" ADD CONSTRAINT "safes_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "safes" ADD CONSTRAINT "safes_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "stores" ADD CONSTRAINT "stores_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "stores" ADD CONSTRAINT "stores_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "stores" ADD CONSTRAINT "stores_safe_id_safes_id_fk" FOREIGN KEY ("safe_id") REFERENCES "public"."safes"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "stores" ADD CONSTRAINT "stores_safe_id_safes_id_fk" FOREIGN KEY ("safe_id") REFERENCES "safes"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
-
 
 -- Create the function to handle new user creation
 CREATE FUNCTION public.handle_new_user()

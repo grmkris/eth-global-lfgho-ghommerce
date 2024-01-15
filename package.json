@@ -6,6 +6,7 @@
   "scripts": {
     "db:dev": "supabase start",
     "db:status": "supabase status",
+    "db:reset": "supabase db reset",
     "dev:admin": "pnpm run --filter admin dev",
     "dev:api": "pnpm run --filter api dev",
     "dev:example": "pnpm run --filter example dev",
@@ -18,7 +19,7 @@
     "start:api": "pnpm run --filter api start",
     "start:example": "pnpm run --filter example start",
     "start:iframe": "pnpm run --filter ghommerce start",
-    "dev": "pnpm -r run dev",
+    "dev": "concurrently \"pnpm run dev:admin\" \"pnpm run dev:api\" \"pnpm run dev:example\" \"pnpm run dev:ghommerce\"",
     "format": "biome format . --write",
     "lint": "biome check .",
     "lint:fix": "pnpm run lint --apply"

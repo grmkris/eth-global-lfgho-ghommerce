@@ -1,5 +1,5 @@
 {
-  "id": "f936c323-370e-4061-a800-18826f8d8df4",
+  "id": "8551f2e5-5f0b-4c43-8f97-a0974214ed38",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -60,9 +60,12 @@
           "name": "eoas_user_id_users_id_fk",
           "tableFrom": "eoas",
           "tableTo": "users",
-          "schemaTo": "public",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -78,7 +81,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "store_id": {
           "name": "store_id",
@@ -161,9 +165,12 @@
           "name": "invoices_store_id_stores_id_fk",
           "tableFrom": "invoices",
           "tableTo": "stores",
-          "schemaTo": "public",
-          "columnsFrom": ["store_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "store_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -179,7 +186,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "invoice_id": {
           "name": "invoice_id",
@@ -190,6 +198,12 @@
         "amount_paid": {
           "name": "amount_paid",
           "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token": {
+          "name": "token",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": true
         },
@@ -225,9 +239,12 @@
           "name": "payments_invoice_id_invoices_id_fk",
           "tableFrom": "payments",
           "tableTo": "invoices",
-          "schemaTo": "public",
-          "columnsFrom": ["invoice_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "invoice_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -279,9 +296,12 @@
           "name": "safe_eoas_safe_id_safes_id_fk",
           "tableFrom": "safe_eoas",
           "tableTo": "safes",
-          "schemaTo": "public",
-          "columnsFrom": ["safe_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "safe_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -289,9 +309,12 @@
           "name": "safe_eoas_eoa_id_eoas_id_fk",
           "tableFrom": "safe_eoas",
           "tableTo": "eoas",
-          "schemaTo": "public",
-          "columnsFrom": ["eoa_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "eoa_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -353,9 +376,12 @@
           "name": "safes_user_id_users_id_fk",
           "tableFrom": "safes",
           "tableTo": "users",
-          "schemaTo": "public",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -371,7 +397,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "user_id": {
           "name": "user_id",
@@ -418,9 +445,12 @@
           "name": "stores_user_id_users_id_fk",
           "tableFrom": "stores",
           "tableTo": "users",
-          "schemaTo": "public",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -428,9 +458,12 @@
           "name": "stores_safe_id_safes_id_fk",
           "tableFrom": "stores",
           "tableTo": "safes",
-          "schemaTo": "public",
-          "columnsFrom": ["safe_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "safe_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
