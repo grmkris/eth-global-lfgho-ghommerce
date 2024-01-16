@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
+import { TokenInfo } from "@/components/web3/TokenElement.tsx";
 
 export const InvoiceParams = z.object({
   id: z.string(),
@@ -211,6 +212,14 @@ export const InvoiceInformation = (props: {
           <div>
             <p className="font-medium text-gray-600">Status:</p>
             <Badge>{invoice?.status}</Badge>
+          </div>
+          <div>
+            <p className="font-medium text-gray-600">Accepted tokens:</p>
+            <p>
+              {invoice?.acceptedTokens.map((x) => (
+                <TokenInfo tokenData={x} />
+              ))}
+            </p>
           </div>
         </div>
       </CardContent>

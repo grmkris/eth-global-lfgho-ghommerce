@@ -9,6 +9,7 @@ export const BaseTokenSchema = z.object({
   chainId: ChainId,
   address: Address,
 });
+export type BaseTokenSchema = z.infer<typeof BaseTokenSchema>;
 export const StaticTokenSchema = BaseTokenSchema.extend({
   symbol: z.string(),
   decimals: z.number(),

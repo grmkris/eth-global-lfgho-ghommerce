@@ -23,7 +23,7 @@ import { RecentSales } from "./components/recent-sales";
 
 export const DashboardPage = () => {
   const selectedView = dashboardRoute.useSearch().view;
-  const userId = dashboardRoute.useRouteContext().session
+  const userId = dashboardRoute.useRouteContext().session;
   const router = useRouter();
   return (
     <div className="flex flex-col mx-2">
