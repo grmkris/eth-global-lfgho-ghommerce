@@ -50,8 +50,8 @@ export const selectInvoiceSchema = createSelectSchema(invoices, {
 
 export const insertInvoiceSchema = createInsertSchema(invoices, {
   currency: QuoteCurrency,
-  payerEmail: z.string().optional(),
-  payerWallet: z.string().optional(),
+  payerEmail: z.string().email().optional(),
+  payerWallet: Address.optional(),
   acceptedTokens: z.array(BaseTokenSchema),
   payerName: z.string().optional(),
   amountDue: z.coerce.number(),
