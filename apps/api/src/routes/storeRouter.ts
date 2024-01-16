@@ -101,18 +101,20 @@ export const storeRouter = router({
 
   getStores: authProcedure
     .input(
-      z
-        .object({
-          safeId: z.string().uuid().optional(),
-        })
-        .optional(),
+      z.object({
+        userId: z.string().uuid(),
+        safeId: z.string().uuid().optional(),
+      }),
     )
     .query(async ({ input, ctx }) => {
       if (!ctx.session?.user?.id) throw new Error("Unauthorized");
       if (!input?.safeId) {
         // return all stores for user
         const result = await db.query.stores.findMany({
-          where: eq(stores.userId, ctx.session.user.id),
+          where: and(
+            eq(stores.userId, ctx.session.user.id),
+            eq(stores.userId, input.userId),
+          ),
         });
         return result;
       }

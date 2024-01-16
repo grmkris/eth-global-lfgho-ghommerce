@@ -61,9 +61,7 @@ export const App = () => {
 
 // Create the route tree using your root and dynamically generated entity routes
 const routeTree = rootRoute.addChildren([
-  authRoute.addChildren([
-    dashboardRoute,
-  ]),
+  authRoute.addChildren([dashboardRoute]),
   authOnboardingRoute.addChildren([indexRoute]),
   loginRoute,
 ]);

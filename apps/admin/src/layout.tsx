@@ -24,8 +24,8 @@ export const Layout = () => {
     <div>
       <div className="flex flex-row m-2">
         <UserNav />
-        </div>
-          <Outlet />
+      </div>
+      <Outlet />
     </div>
   );
 };

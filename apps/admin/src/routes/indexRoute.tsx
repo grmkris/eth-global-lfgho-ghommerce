@@ -19,10 +19,12 @@ import { insertStoreSchema } from "ghommerce-schema/src/db/schema.ts";
 import { SiweMessage } from "siwe";
 import { SLIDE_IN_SLIDE_OUT_LEFT } from "@/features/animations.ts";
 
+
 export const indexRoute = new Route({
   getParentRoute: () => authOnboardingRoute,
   path: "/",
   component: () => {
+    const user = indexRoute.useRouteContext().session
     const { web3Auth, web3Modal } = useWallet();
     const walletConnected = !!web3Auth?.address || !!web3Modal?.address;
     const isWalletVerified = trpcClient.verifyWallet.isVerified.useQuery(
@@ -44,6 +46,7 @@ export const indexRoute = new Route({
     const stores = trpcClient.stores.getStores.useQuery(
       {
         safeId: safes.data?.[0]?.id,
+        userId: user.user.id
       },
       {
         enabled: !!safes.data?.[0]?.id,
