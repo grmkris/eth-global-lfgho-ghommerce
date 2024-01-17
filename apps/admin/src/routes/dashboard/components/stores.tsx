@@ -50,7 +50,7 @@ export const Stores = (props: {
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(
     undefined,
   );
-  const invoices = trpcClient.stores.getInvoices.useQuery(
+  const invoices = trpcClient.invoices.getInvoices.useQuery(
     {
       storeId: selectedStoreId,
     },

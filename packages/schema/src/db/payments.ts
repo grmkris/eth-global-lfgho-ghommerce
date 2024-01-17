@@ -11,32 +11,31 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
 import { invoices } from "./invoices";
-import { TokenSchema } from "../tokens.schema.ts";
+import { TokenAmountSchema } from "../tokens.schema.ts";
 
 export const payments = pgTable("payments", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
   invoiceId: uuid("invoice_id")
     .references(() => invoices.id)
     .notNull(),
-  amountPaid: bigint("amount_paid", { mode: "number" }).notNull(), // in currency units based on invoice currency
+  amountPaid: bigint("amount_paid", { mode: "number" }).notNull(), // in currency units based on invoice defined currency (USD, EUR, etc.)
   token: jsonb("token").notNull(), // e.g., { token: 'ETH', amount: '0.1' }
   paymentDate: timestamp("payment_date", { mode: "date" }),
   paymentMethod: text("payment_method").notNull(), // e.g., 'wallet', 'credit_card'
-  transactionId: text("transaction_id"), // For blockchain or other payment gateway transaction references
+  transactionHash: text("transaction_id"), // For blockchain or other payment gateway transaction references
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
 });
 
 export const insertPaymentSchema = createInsertSchema(payments, {
   id: (schema) => schema.id.uuid(),
-  token: TokenSchema,
-  createdAt: z.coerce.date().default(new Date()),
+  token: TokenAmountSchema,
 }).omit({
   updatedAt: true,
   createdAt: true,
 });
 
 export const selectPaymentSchema = createSelectSchema(payments, {
-  token: TokenSchema,
+  token: TokenAmountSchema,
   createdAt: z.coerce.date().default(new Date()),
 });
 

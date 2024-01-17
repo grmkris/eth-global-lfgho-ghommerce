@@ -21,9 +21,18 @@ export type Token =
   };
 
 export const CryptoScreen = (props: {
-  invoice: RouterOutput["stores"]["getInvoice"];
+  invoice: RouterOutput["invoices"]["getInvoice"];
 }) => {
-  const account = useAccount();
+  const updatePayerInformation = apiTrpc.invoices.updatePayerData.useMutation();
+  const account = useAccount({
+    onConnect: () => {
+      if (account.address && (account.address !== props.invoice.payerWallet))
+        updatePayerInformation.mutate({
+          invoiceId: props.invoice.id,
+          payerData: { payerWallet: account.address },
+        });
+    },
+  });
   const tokens = apiTrpc.tokens.getTokensForAddress.useQuery(
     {
       quoteCurrency: "USD",

@@ -18,7 +18,7 @@ export const Gatefi = () => {
 export const useGateFi = (props: {
   invoiceId?: string;
 }) => {
-  const invoice = apiTrpc.stores.getInvoice.useQuery(
+  const invoice = apiTrpc.invoices.getInvoice.useQuery(
     { invoiceId: props.invoiceId },
     { enabled: !!props.invoiceId },
   );

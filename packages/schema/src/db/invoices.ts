@@ -68,3 +68,10 @@ export const invoicesRelations = relations(invoices, ({ many, one }) => ({
 }));
 
 export type selectInvoiceSchema = z.infer<typeof selectInvoiceSchema>;
+
+export const PayerInformationSchema = selectInvoiceSchema.pick({
+  payerEmail: true,
+  payerName: true,
+  payerWallet: true,
+});
+export type PayerInformationSchema = z.infer<typeof PayerInformationSchema>;

@@ -8,9 +8,16 @@ export const isValidAddress = (address: string) => {
 export const Address = z
   .string()
   .refine((value) => isValidAddress(value))
-  .transform((value) => value.toLowerCase() as `0x${string}`)
-  .describe(
-    "String value that identifies the address of a specific user. Normally tied to an EOA that includes the Smart Wallet.",
-  );
+  .transform((value) => value.toLowerCase() as `0x${string}`);
 
 export type Address = z.infer<typeof Address>;
+
+export const TransactionHash = z
+  .string()
+  .refine((value) => {
+    const regex = /^0x[a-fA-F0-9]{64}$/;
+    return regex.test(value);
+  })
+  .transform((value) => value.toLowerCase() as `0x${string}`);
+
+export type TransactionHash = z.infer<typeof TransactionHash>;
