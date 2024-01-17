@@ -67,6 +67,7 @@ export const invoicesRelations = relations(invoices, ({ many, one }) => ({
   }),
 }));
 
+export type insertInvoiceSchema = z.infer<typeof insertInvoiceSchema>;
 export type selectInvoiceSchema = z.infer<typeof selectInvoiceSchema>;
 
 export const PayerInformationSchema = selectInvoiceSchema.pick({

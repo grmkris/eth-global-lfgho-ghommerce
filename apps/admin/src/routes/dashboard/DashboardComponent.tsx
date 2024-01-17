@@ -16,47 +16,57 @@ import {
 import { DateRangePicker } from "@/components/ui/date-range-picker.tsx";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Overview } from "@/routes/dashboard/components/overview.tsx";
-import { Stores } from "@/routes/dashboard/components/stores.tsx";
+import {
+  StoresWrapper,
+} from "@/routes/dashboard/components/stores.tsx";
 import { ViewOption, dashboardRoute } from "@/routes/dashboardRoute.tsx";
 import { useRouter } from "@tanstack/react-router";
 import { RecentSales } from "./components/recent-sales";
+import { UserNav } from "@/layout";
 
 export const DashboardPage = () => {
   const selectedView = dashboardRoute.useSearch().view;
   const userId = dashboardRoute.useRouteContext().session;
   const router = useRouter();
   return (
-    <div className="flex flex-col mx-2">
-      <div className="flex-1 space-y-4">
-        <div className="flex items-center justify-between space-y-2">
-          <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-          <div className="flex items-center space-x-2">
-            <DateRangePicker />
-            <Button>Download</Button>
-            <Button>New Payment</Button>
+    <Tabs
+      defaultValue={selectedView ?? "Overview"}
+      className="space-y-4"
+      onValueChange={(value) => {
+        router.navigate({
+          search: {
+            view: value,
+          },
+        });
+      }}
+    >
+      <div className="flex flex-col mx-2">
+        <div className="flex-1 space-y-4">
+          <div className="flex items-center justify-between space-y-2">
+            <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+
+            <TabsList>
+              <TabsTrigger value={ViewOption.enum.Overview}>
+                Overview
+              </TabsTrigger>
+              <TabsTrigger value={ViewOption.enum.Stores}>Stores</TabsTrigger>
+              <TabsTrigger value={ViewOption.enum.Integrations}>
+                Integrations
+              </TabsTrigger>
+              <TabsTrigger value={ViewOption.enum.Notifications}>
+                Notifications
+              </TabsTrigger>
+            </TabsList>
+            <div className="flex items-center space-x-2">
+              <DateRangePicker />
+              {/* <Button>Download</Button>
+              <Button>New Payment</Button> */}
+              <div className="pl-4">
+                <UserNav />
+              </div>
+            </div>
           </div>
-        </div>
-        <Tabs
-          defaultValue={selectedView ?? "Overview"}
-          className="space-y-4"
-          onValueChange={(value) => {
-            router.navigate({
-              search: {
-                view: value,
-              },
-            });
-          }}
-        >
-          <TabsList>
-            <TabsTrigger value={ViewOption.enum.Overview}>Overview</TabsTrigger>
-            <TabsTrigger value={ViewOption.enum.Stores}>Stores</TabsTrigger>
-            <TabsTrigger value={ViewOption.enum.Integrations}>
-              Integrations
-            </TabsTrigger>
-            <TabsTrigger value={ViewOption.enum.Notifications}>
-              Notifications
-            </TabsTrigger>
-          </TabsList>
+
           <TabsContent value={ViewOption.enum.Overview} className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               <Card>
@@ -160,11 +170,11 @@ export const DashboardPage = () => {
           </TabsContent>
 
           <TabsContent value={ViewOption.enum.Stores} className="space-y-4">
-            <Stores userId={userId.user.id} />
+            <StoresWrapper userId={userId.user.id} />
           </TabsContent>
-        </Tabs>
+        </div>
       </div>
-    </div>
+    </Tabs>
   );
 };
 

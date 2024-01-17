@@ -20,6 +20,13 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -35,26 +42,42 @@ import { trpcClient } from "@/features/trpc-client.ts";
 import { CreateStoreComponent } from "@/routes/indexRoute.tsx";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
-import {
-  CreateInvoiceComponent,
-  StoreInvoices,
-} from "@/routes/dashboard/components/invoices.tsx";
+import { StoreInvoices } from "@/routes/dashboard/components/invoices.tsx";
 import { selectInvoiceSchema } from "ghommerce-schema/src/db/invoices.ts";
+import { MoreHorizontal, PlusCircleIcon } from "lucide-react";
 
-export const Stores = (props: {
+export type Store = {
+  description: string;
+  id: string;
+  name: string;
+  createdAt: string | null;
+  updatedAt: string | null;
   userId: string;
-}) => {
+  safeId: string;
+};
+
+export const StoresWrapper = (props: { userId: string }) => {
   const stores = trpcClient.stores.getStores.useQuery({
     userId: props.userId,
   });
+
+  if (stores.isFetching || stores.isLoading) return <p>Loading...</p>;
+
+  if (stores.data && stores.data?.length > 0)
+    return <Stores stores={stores.data} />;
+};
+
+const Stores = (props: { stores: Store[] }) => {
+  const { stores } = props;
+
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(
-    undefined,
+    stores[0].id
   );
   const invoices = trpcClient.invoices.getInvoices.useQuery(
     {
       storeId: selectedStoreId,
     },
-    { enabled: !!selectedStoreId },
+    { enabled: !!selectedStoreId }
   );
 
   const handleSelectStore = (id: string) => {
@@ -63,32 +86,48 @@ export const Stores = (props: {
 
   return (
     <>
-      <CreateStoreModal />
       <Carousel
         opts={{
           align: "start",
         }}
         className="w-11/12 mx-auto"
       >
-        <CarouselContent>
-          {stores.data?.map((store) => (
-            <CarouselItem key={store.id} className="md:basis-1/2 lg:basis-1/3">
+        <CarouselPrevious />
+        <CarouselContent className="px-4">
+          <div className="flex h-auto justify-center items-center ">
+            <CreateStoreModal />
+          </div>
+          {stores?.map((store) => (
+            <CarouselItem key={store.id} className="md:basis-1/2 lg:basis-1/5">
               <div className="p-1">
                 <Card
                   onClick={() => handleSelectStore(store.id)}
-                  className={`card hover:shadow-lg ${
-                    selectedStoreId === store.id ? "bg-blue-100" : ""
-                  }`}
+                  className={`card hover:shadow-md ${
+                    selectedStoreId === store.id ? "bg-gray-100" : ""
+                  } p-2 rounded-3xl`}
                 >
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
                       {store.name}
                     </CardTitle>
+                    <DropdownMenu dir="ltr">
+                      <DropdownMenuTrigger asChild>
+                        <MoreHorizontal
+                          color="gray"
+                          className="hover:cursor-pointer"
+                        />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuRadioGroup>
+                          <DropdownMenuItem>Delete</DropdownMenuItem>
+                        </DropdownMenuRadioGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </CardHeader>
-                  <CardContent className="pl-2">
-                    <div className="text-sm text-gray-500">
-                      <div>{store.name}</div>
-                      <div>{store.description}</div>
+                  <CardContent>
+                    <div className="flex flex-col gap-1 text-gray-500">
+                      <p className="text-2xl font-semibold">$ 1450.00</p>
+                      <p className="text-sm">{store.description}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -96,14 +135,14 @@ export const Stores = (props: {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious />
         <CarouselNext />
       </Carousel>
-      {selectedStoreId && <CreateInvoiceComponent storeId={selectedStoreId} />}
-      {invoices.data && (
+      {!selectedStoreId && <p>no data</p>}
+      {invoices.data && selectedStoreId && (
         <div>
           <StoreInvoices
             data={selectInvoiceSchema.array().parse(invoices.data)}
+            selectedStoreId={selectedStoreId}
           />
         </div>
       )}
@@ -117,7 +156,12 @@ const CreateStoreModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <Button onClick={() => setIsModalOpen(true)}>Create Store</Button>
+      <PlusCircleIcon
+        size={64}
+        color="gray"
+        className="hover:cursor-pointer"
+        onClick={() => setIsModalOpen(true)}
+      />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Creating new store</DialogTitle>
@@ -189,7 +233,7 @@ const SafesDropdown = (props: {
                 <CheckIcon
                   className={cn(
                     "ml-auto h-4 w-4",
-                    value === safe.value ? "opacity-100" : "opacity-0",
+                    value === safe.value ? "opacity-100" : "opacity-0"
                   )}
                 />
               </CommandItem>
