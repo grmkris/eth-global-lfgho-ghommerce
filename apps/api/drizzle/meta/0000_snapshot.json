@@ -60,12 +60,8 @@
           "name": "eoas_user_id_users_id_fk",
           "tableFrom": "eoas",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -165,12 +161,8 @@
           "name": "invoices_store_id_stores_id_fk",
           "tableFrom": "invoices",
           "tableTo": "stores",
-          "columnsFrom": [
-            "store_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["store_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -239,12 +231,8 @@
           "name": "payments_invoice_id_invoices_id_fk",
           "tableFrom": "payments",
           "tableTo": "invoices",
-          "columnsFrom": [
-            "invoice_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["invoice_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -296,12 +284,8 @@
           "name": "safe_eoas_safe_id_safes_id_fk",
           "tableFrom": "safe_eoas",
           "tableTo": "safes",
-          "columnsFrom": [
-            "safe_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["safe_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -309,12 +293,8 @@
           "name": "safe_eoas_eoa_id_eoas_id_fk",
           "tableFrom": "safe_eoas",
           "tableTo": "eoas",
-          "columnsFrom": [
-            "eoa_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["eoa_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -376,12 +356,8 @@
           "name": "safes_user_id_users_id_fk",
           "tableFrom": "safes",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -445,12 +421,8 @@
           "name": "stores_user_id_users_id_fk",
           "tableFrom": "stores",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -458,12 +430,8 @@
           "name": "stores_safe_id_safes_id_fk",
           "tableFrom": "stores",
           "tableTo": "safes",
-          "columnsFrom": [
-            "safe_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["safe_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

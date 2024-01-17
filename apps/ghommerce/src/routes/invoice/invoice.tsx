@@ -1,8 +1,7 @@
-import { Route } from "@tanstack/react-router";
-import { rootRoute } from "../Router.tsx";
-import { Button } from "@/components/ui/button.tsx";
 import { SLIDE_IN_SLIDE_OUT_LEFT } from "@/animations.ts";
-import { z } from "zod";
+import AutoForm from "@/components/auto-form";
+import { Badge } from "@/components/ui/badge.tsx";
+import { Button } from "@/components/ui/button.tsx";
 import {
   Card,
   CardContent,
@@ -10,34 +9,43 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import { useInvoiceStore } from "@/routes/invoice/useInvoiceStore.tsx";
-import { Gatefi, useGateFi } from "@/routes/invoice/gatefi.tsx";
-import { CryptoScreen } from "@/routes/invoice/crypto.tsx";
-import { useToast } from "@/components/ui/use-toast.ts";
-import { apiTrpc, RouterOutput } from "@/trpc-client.ts";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import { Badge } from "@/components/ui/badge.tsx";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
+import { useToast } from "@/components/ui/use-toast.ts";
+import { TokenInfo } from "@/components/web3/TokenElement.tsx";
+import { CryptoScreen } from "@/routes/invoice/crypto.tsx";
+import { Gatefi, useGateFi } from "@/routes/invoice/gatefi.tsx";
+import { RouterOutput, apiTrpc } from "@/trpc-client.ts";
+import { Route, useNavigate } from "@tanstack/react-router";
+import { PayerInformationSchema } from "ghommerce-schema/src/db/invoices.ts";
+import { z } from "zod";
+import { rootRoute } from "../Router.tsx";
+import { Address } from "ghommerce-schema/src/address.schema.ts";
+import { ChainId } from "ghommerce-schema/src/chains.schema.ts";
 
 export const InvoiceParams = z.object({
   id: z.string(),
+  selectedPaymentMethod: z
+    .union([z.literal("card"), z.literal("crypto")])
+    .optional(),
+  token: Address.optional(),
+  chainId: ChainId.optional(),
+  amount: z.string().optional(),
 });
 
 export const invoiceRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "/invoice",
   validateSearch: (search) => InvoiceParams.parse(search),
-  component: Index,
+  component: Invoice,
 });
 
-function Index() {
+function Invoice() {
   const invoiceId = invoiceRoute.useSearch().id;
-  const invoice = apiTrpc.stores.getInvoice.useQuery(
-    { invoiceId: invoiceId },
-    { enabled: !!invoiceId },
-  );
+  const invoice = apiTrpc.invoices.getInvoice.useQuery({
+    invoiceId: invoiceId,
+  });
 
   if (invoice.isLoading || !invoice.data)
     return (
@@ -54,23 +62,18 @@ function Index() {
 }
 
 function PaymentScreen(props: {
-  invoice: RouterOutput["stores"]["getInvoice"];
+  invoice: RouterOutput["invoices"]["getInvoice"];
 }) {
-  const selection = useInvoiceStore((state) => ({
-    userInvoiceInput: state.userInvoiceInput,
-  }));
+  const selectedPaymentMethod = invoiceRoute.useSearch().selectedPaymentMethod;
   const gateFi = useGateFi({ invoiceId: props.invoice?.id });
   const toaster = useToast();
   const handleClick = () => {
-    console.log("handleClick", selection.userInvoiceInput);
-    if (selection.userInvoiceInput?.paymentMethod === "card") {
+    if (selectedPaymentMethod === "card") {
       gateFi.handleOnClick();
       return;
     }
     toaster.toast({ title: "Please select a payment method" });
   };
-
-  const selected = selection.userInvoiceInput?.paymentMethod;
 
   return (
     <div className="flex flex-col h-screen space-y-2">
@@ -86,7 +89,9 @@ function PaymentScreen(props: {
       <div className="overflow-auto flex-grow flex flex-col space-y-2 p-2">
         <InvoiceInformation invoice={props.invoice} />
         <PaymentSelector />
-        {selected === "crypto" && <CryptoScreen invoice={props.invoice} />}
+        {selectedPaymentMethod === "crypto" && (
+          <CryptoScreen invoice={props.invoice} />
+        )}
       </div>
       {/* Payment Button */}
       {/* Sticky Footer */}
@@ -100,23 +105,18 @@ function PaymentScreen(props: {
 }
 
 export const PaymentSelector = () => {
-  const selection = useInvoiceStore((state) => ({
-    userInvoiceInput: state.userInvoiceInput,
-    setPaymentMethod: state.setPaymentMethod,
-    setPaymentEmail: state.setPaymentEmail,
-  }));
-
-  const selected = selection.userInvoiceInput?.paymentMethod;
+  const params = invoiceRoute.useSearch();
+  const navigate = useNavigate({ from: invoiceRoute.fullPath });
+  const invoice = apiTrpc.invoices.getInvoice.useQuery({
+    invoiceId: params.id,
+  });
 
   const onSelectedChange = (value: string) => {
     console.log("onSelectedChange", value);
-    selection.setPaymentMethod(value as "card" | "crypto");
+    navigate({ search: { id: params.id, selectedPaymentMethod: value } });
   };
 
-  const onEmailChange = (value: string) => {
-    console.log("onEmailChange", value);
-    selection.setPaymentEmail(value);
-  };
+  if (!invoice.data) return <>No invoice found</>;
 
   return (
     <Card>
@@ -128,7 +128,7 @@ export const PaymentSelector = () => {
       </CardHeader>
       <CardContent className="grid gap-6">
         <RadioGroup
-          defaultValue={selected}
+          defaultValue={params.selectedPaymentMethod ?? "card"}
           className="grid grid-cols-2 gap-4"
           onValueChange={(value) => onSelectedChange(value)}
         >
@@ -150,21 +150,18 @@ export const PaymentSelector = () => {
             </Label>
           </div>
         </RadioGroup>
-        <div className="grid gap-2">
-          <Label htmlFor="name">Email</Label>
-          <Input
-            id="name"
-            placeholder="Your email"
-            onChange={(event) => onEmailChange(event.target.value)}
-          />
-        </div>
+
+        <InvoicePayerInformation
+          invoiceId={invoice.data?.id}
+          payerData={invoice.data}
+        />
       </CardContent>
     </Card>
   );
 };
 
 export const InvoiceInformation = (props: {
-  invoice: RouterOutput["stores"]["getInvoice"];
+  invoice: RouterOutput["invoices"]["getInvoice"];
 }) => {
   const invoice = props.invoice;
   return (
@@ -212,8 +209,36 @@ export const InvoiceInformation = (props: {
             <p className="font-medium text-gray-600">Status:</p>
             <Badge>{invoice?.status}</Badge>
           </div>
+          <div>
+            <p className="font-medium text-gray-600">Accepted tokens:</p>
+            <p>
+              {invoice?.acceptedTokens.map((x) => (
+                <TokenInfo tokenData={x} />
+              ))}
+            </p>
+          </div>
         </div>
       </CardContent>
     </Card>
+  );
+};
+
+export const InvoicePayerInformation = (props: {
+  invoiceId: string;
+  payerData: PayerInformationSchema;
+}) => {
+  const update = apiTrpc.invoices.updatePayerData.useMutation();
+  return (
+    <AutoForm
+      formSchema={PayerInformationSchema}
+      onSubmit={(data) => console.log(data)}
+      values={props.payerData}
+      onParsedValuesChange={(data) =>
+        update.mutate({
+          invoiceId: props.invoiceId,
+          payerData: data,
+        })
+      }
+    />
   );
 };

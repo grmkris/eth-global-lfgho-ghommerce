@@ -41,12 +41,16 @@ import {
 } from "@/routes/dashboard/components/invoices.tsx";
 import { selectInvoiceSchema } from "ghommerce-schema/src/db/invoices.ts";
 
-export const Stores = () => {
-  const stores = trpcClient.stores.getStores.useQuery();
+export const Stores = (props: {
+  userId: string;
+}) => {
+  const stores = trpcClient.stores.getStores.useQuery({
+    userId: props.userId,
+  });
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(
     undefined,
   );
-  const invoices = trpcClient.stores.getInvoices.useQuery(
+  const invoices = trpcClient.invoices.getInvoices.useQuery(
     {
       storeId: selectedStoreId,
     },

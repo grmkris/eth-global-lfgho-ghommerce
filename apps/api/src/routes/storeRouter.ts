@@ -101,18 +101,20 @@ export const storeRouter = router({
 
   getStores: authProcedure
     .input(
-      z
-        .object({
-          safeId: z.string().uuid().optional(),
-        })
-        .optional(),
+      z.object({
+        userId: z.string().uuid(),
+        safeId: z.string().uuid().optional(),
+      }),
     )
     .query(async ({ input, ctx }) => {
       if (!ctx.session?.user?.id) throw new Error("Unauthorized");
       if (!input?.safeId) {
         // return all stores for user
         const result = await db.query.stores.findMany({
-          where: eq(stores.userId, ctx.session.user.id),
+          where: and(
+            eq(stores.userId, ctx.session.user.id),
+            eq(stores.userId, input.userId),
+          ),
         });
         return result;
       }
@@ -179,62 +181,4 @@ export const storeRouter = router({
   /**
    * Gets invoice by id along with store and safe
    */
-  getInvoice: publicProcedure
-    .input(
-      z.object({
-        invoiceId: z.string().uuid().optional(),
-      }),
-    )
-    .output(selectInvoiceSchema)
-    .query(async ({ input, ctx }) => {
-      if (!input?.invoiceId) throw new Error("Invalid storeId");
-      const result = await db.query.invoices.findFirst({
-        where: eq(invoices.id, input.invoiceId),
-        with: {
-          store: {
-            with: {
-              safe: true,
-            },
-          },
-        },
-      });
-
-      return selectInvoiceSchema.parse(result);
-    }),
-
-  getInvoices: authProcedure
-    .input(
-      z.object({
-        storeId: z.string().uuid().optional(),
-      }),
-    )
-    .output(z.array(selectInvoiceSchema))
-    .query(async ({ input, ctx }) => {
-      if (!input?.storeId) throw new Error("Invalid storeId");
-      const result = await db.query.invoices.findMany({
-        where: eq(invoices.storeId, input.storeId),
-        with: {
-          store: {
-            with: {
-              safe: true,
-            },
-          },
-        },
-      });
-
-      return selectInvoiceSchema.array().parse(result);
-    }),
-
-  createInvoice: authProcedure
-    .input(insertInvoiceSchema)
-    .output(selectInvoiceSchema)
-    .mutation(async ({ input, ctx }) => {
-      if (!ctx.session?.user?.id) throw new Error("Unauthorized");
-      const newInvoice = await db
-        .insert(invoices)
-        .values(input)
-        .returning()
-        .execute();
-      return selectInvoiceSchema.parse(newInvoice[0]);
-    }),
 });

@@ -23,6 +23,7 @@ export const indexRoute = new Route({
   getParentRoute: () => authOnboardingRoute,
   path: "/",
   component: () => {
+    const user = indexRoute.useRouteContext().session;
     const { web3Auth, web3Modal } = useWallet();
     const walletConnected = !!web3Auth?.address || !!web3Modal?.address;
     const isWalletVerified = trpcClient.verifyWallet.isVerified.useQuery(
@@ -44,11 +45,13 @@ export const indexRoute = new Route({
     const stores = trpcClient.stores.getStores.useQuery(
       {
         safeId: safes.data?.[0]?.id,
+        userId: user.user.id,
       },
       {
         enabled: !!safes.data?.[0]?.id,
       },
     );
+
     return (
       <div className="">
         {!walletConnected && <ConnectWalletComponent />}
@@ -94,9 +97,9 @@ const ConnectWalletComponent = () => {
   const { web3Auth, web3Modal } = useWallet();
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <div className="space-x-4 flex flex-row">
+      <div className="flex flex-col md:flex-row space-x-0 md:space-x-4 space-y-4 md:space-y-0 w-full md:w-auto ml-2 mr-2">
         {/* First Card with Left Animation */}
-        <Card className="flex-1 animate-in fade-in zoom-in slide-in-left slide-out-to-left max-w-md">
+        <Card className="flex-1 animate-in fade-in zoom-in slide-in-left slide-out-to-left max-w-xl">
           <CardHeader>
             <CardTitle>Existing wallet</CardTitle>
             <CardDescription>Connect your existing wallet</CardDescription>
@@ -112,7 +115,7 @@ const ConnectWalletComponent = () => {
           </CardFooter>
         </Card>
 
-        <Card className="flex-1 animate-in fade-in zoom-in slide-in-left slide-out-to-left max-w-md">
+        <Card className="flex-1 animate-in fade-in zoom-in slide-in-left slide-out-to-left max-w-xl">
           <CardHeader>
             <CardTitle>Email</CardTitle>
             <CardDescription>Connect to Web3Auth-SafeAuth</CardDescription>
@@ -123,7 +126,7 @@ const ConnectWalletComponent = () => {
               <Link
                 href="https://web3auth.io/safeauth.html"
                 target="_blank"
-                className="text-blue-500 hover:text-blue-700"
+                className="text-blue-500 hover:underline"
               >
                 SafeAuth
               </Link>{" "}
