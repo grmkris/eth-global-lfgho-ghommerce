@@ -1,8 +1,6 @@
 import { apiTrpc, RouterOutput } from "@/trpc-client.ts";
 import { useAccount } from "wagmi";
-import { useMemo, useState } from "react";
 import { SLIDE_IN_SLIDE_OUT_LEFT } from "@/animations.ts";
-import * as R from "remeda";
 import {
   Card,
   CardContent,
@@ -14,6 +12,8 @@ import {
   TokenSchema,
 } from "ghommerce-schema/src/tokens.schema.ts";
 import { TokenList } from "@/components/web3/TokenList.tsx";
+import { useNavigate } from "@tanstack/react-router";
+import { invoiceRoute } from "@/routes/invoice/invoice.tsx";
 
 export type Token =
   RouterOutput["tokens"]["getTokensForAddress"]["items"][0] & {
@@ -23,10 +23,12 @@ export type Token =
 export const CryptoScreen = (props: {
   invoice: RouterOutput["invoices"]["getInvoice"];
 }) => {
+  const params = invoiceRoute.useSearch();
+  const navigate = useNavigate({ from: invoiceRoute.fullPath });
   const updatePayerInformation = apiTrpc.invoices.updatePayerData.useMutation();
   const account = useAccount({
     onConnect: () => {
-      if (account.address && (account.address !== props.invoice.payerWallet))
+      if (account.address && account.address !== props.invoice.payerWallet)
         updatePayerInformation.mutate({
           invoiceId: props.invoice.id,
           payerData: { payerWallet: account.address },
@@ -42,31 +44,22 @@ export const CryptoScreen = (props: {
       enabled: !!account.address,
     },
   );
-  const [selectedTokens, setSelectedTokens] = useState<
-    Record<string, TokenAmountSchema>
-  >({});
 
-  const totalValue = useMemo(() => {
-    const tokensArray = Object.values(selectedTokens);
-    return R.sumBy(
-      tokensArray,
-      (token) => (Number(token.amount) ?? 0) * (Number(token.priceUSD) ?? 0),
-    ).toFixed(2);
-  }, [selectedTokens]);
-
-  const handleTokenChange = (token: TokenSchema, amount: number) => {
+  const handleTokenChange = async (token: TokenSchema, amount: string) => {
+    console.log("handleTokenChange", token);
     if (!token) return;
     const tokenData = tokens.data?.items.find(
       (x) => x.address === token.address,
     );
     if (!tokenData) return;
-    setSelectedTokens((prev) => ({
-      ...prev,
-      [token.address]: {
-        ...TokenAmountSchema.parse(tokenData),
-        amount: amount.toString(),
+    navigate({
+      search: {
+        ...params,
+        token: token.address,
+        chainId: token.chainId,
+        amount: amount,
       },
-    }));
+    });
   };
 
   if (!account.address)
@@ -86,11 +79,13 @@ export const CryptoScreen = (props: {
           <h3 className="text-lg">
             Invoice Total: ${props.invoice?.amountDue}
           </h3>
-          <h3 className="text-lg">Total selected: ${totalValue}</h3>
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className={"flex flex-col space-y-1"}>
+          {
+            // <TokenSwapInformationCard/>
+          }
           {tokens.data && (
             <TokenList
               handleTokenChange={handleTokenChange}

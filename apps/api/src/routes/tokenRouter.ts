@@ -17,19 +17,25 @@ import {
   TokenSchema,
 } from "ghommerce-schema/src/tokens.schema";
 import { filterArray } from "ghommerce-schema/src/schema.utils";
+import { cachified } from "@epic-web/cachified";
+import { lruCache } from "../lib/cache";
 
-export const tokenRouter = router({
-  getTokensForAddress: publicProcedure
-    .input(
-      z.object({
-        address: Address.optional(),
-        quoteCurrency: QuoteCurrency,
-        chains: Chain.array().optional(),
-      }),
-    )
-    .output(GetTokensOutput)
-    .query(async ({ input, ctx }) => {
-      if (!input?.address) throw new Error("Invalid address");
+export const GetTokensForAddressParams = z.object({
+  address: Address,
+  quoteCurrency: QuoteCurrency,
+  chains: Chain.array().optional(),
+});
+export type GetTokensForAddressParams = z.infer<
+  typeof GetTokensForAddressParams
+>;
+
+async function getTokensForAddress(input: GetTokensForAddressParams) {
+  return cachified({
+    key: `getTokensForAddress-${input.address}-${
+      input.quoteCurrency
+    }-${input.chains?.map((chain) => chain).join("-")}`,
+    cache: lruCache,
+    async getFreshValue() {
       const client = new CovalentClient("cqt_rQg66wvckMDgfbm3C3X8XFJGPRTP"); // Replace with your Covalent API key.
 
       const combined = [];
@@ -78,6 +84,19 @@ export const tokenRouter = router({
           return item.priceUSD && item.amount !== "0";
         }),
       });
+    },
+    /* 5 minutes until cache gets invalid
+     * Optional, defaults to Infinity */
+    ttl: 300_000,
+  });
+}
+
+export const tokenRouter = router({
+  getTokensForAddress: publicProcedure
+    .input(GetTokensForAddressParams.partial())
+    .output(GetTokensOutput)
+    .query(async ({ input, ctx }) => {
+      return await getTokensForAddress(GetTokensForAddressParams.parse(input));
     }),
 
   getTokenInfo: publicProcedure

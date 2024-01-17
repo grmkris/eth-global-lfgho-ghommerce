@@ -21,16 +21,17 @@ import { Route, useNavigate } from "@tanstack/react-router";
 import { PayerInformationSchema } from "ghommerce-schema/src/db/invoices.ts";
 import { z } from "zod";
 import { rootRoute } from "../Router.tsx";
+import { Address } from "ghommerce-schema/src/address.schema.ts";
+import { ChainId } from "ghommerce-schema/src/chains.schema.ts";
 
 export const InvoiceParams = z.object({
   id: z.string(),
   selectedPaymentMethod: z
     .union([z.literal("card"), z.literal("crypto")])
     .optional(),
-  crypto: z.object({
-    token: z.string(),
-    amount: z.number(),
-  }).optional(),
+  token: Address.optional(),
+  chainId: ChainId.optional(),
+  amount: z.string().optional(),
 });
 
 export const invoiceRoute = new Route({
