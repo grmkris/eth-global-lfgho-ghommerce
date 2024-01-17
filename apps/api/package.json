@@ -42,7 +42,7 @@
   "devDependencies": {
     "@types/pg": "^8.10.9",
     "bun-types": "latest",
-    "drizzle-kit": "^0.20.12"
+    "drizzle-kit": "^0.20.13"
   },
   "module": "src/index.js"
 }

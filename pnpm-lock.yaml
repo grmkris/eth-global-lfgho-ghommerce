@@ -114,13 +114,13 @@ importers:
         specifier: ^4.36.1
         version: 4.36.1(@tanstack/react-query@4.36.1)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-router':
-        specifier: ^1.4.6
+        specifier: ^1.4.8
         version: 1.4.8(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-table':
         specifier: ^8.11.6
         version: 8.11.6(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/router-devtools':
-        specifier: ^1.4.6
+        specifier: ^1.4.7
         version: 1.4.7(react-dom@18.2.0)(react@18.2.0)
       '@trpc/client':
         specifier: ^10.45.0
@@ -223,10 +223,10 @@ importers:
         version: 3.22.4
     devDependencies:
       '@types/node':
-        specifier: ^20.11.0
+        specifier: ^20.11.4
         version: 20.11.4
       '@types/react':
-        specifier: ^18.2.47
+        specifier: ^18.2.48
         version: 18.2.48
       '@types/react-dom':
         specifier: ^18.2.18
@@ -344,7 +344,7 @@ importers:
         specifier: latest
         version: 1.0.23
       drizzle-kit:
-        specifier: ^0.20.12
+        specifier: ^0.20.13
         version: 0.20.13
 
   apps/example:
@@ -356,7 +356,7 @@ importers:
         specifier: ^4.36.1
         version: 4.36.1(@tanstack/react-query@4.36.1)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-router':
-        specifier: ^1.4.6
+        specifier: ^1.4.8
         version: 1.4.8(react-dom@18.2.0)(react@18.2.0)
       ghommerce-sdk:
         specifier: workspace:*
@@ -372,10 +372,10 @@ importers:
         version: 4.4.7(@types/react@18.2.48)(immer@10.0.3)(react@18.2.0)
     devDependencies:
       '@tanstack/router-devtools':
-        specifier: ^1.4.6
+        specifier: ^1.4.7
         version: 1.4.7(react-dom@18.2.0)(react@18.2.0)
       '@types/react':
-        specifier: ^18.2.47
+        specifier: ^18.2.48
         version: 18.2.48
       '@types/react-dom':
         specifier: ^18.2.18
@@ -456,7 +456,7 @@ importers:
         specifier: ^4.36.1
         version: 4.36.1(@tanstack/react-query@4.36.1)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-router':
-        specifier: ^1.4.6
+        specifier: ^1.4.8
         version: 1.4.8(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-virtual':
         specifier: ^3.0.1
@@ -550,10 +550,10 @@ importers:
         version: 4.4.7(@types/react@18.2.48)(immer@10.0.3)(react@18.2.0)
     devDependencies:
       '@tanstack/router-devtools':
-        specifier: ^1.4.6
+        specifier: ^1.4.7
         version: 1.4.7(react-dom@18.2.0)(react@18.2.0)
       '@types/react':
-        specifier: ^18.2.47
+        specifier: ^18.2.48
         version: 18.2.48
       '@types/react-dom':
         specifier: ^18.2.18
