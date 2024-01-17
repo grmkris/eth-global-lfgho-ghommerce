@@ -19,24 +19,23 @@ import {
 import {
   Command,
   CommandEmpty,
-  CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command";
 import { useQueryClient } from "@tanstack/react-query";
 import { ScrollArea } from "@/components/ui/scroll-area.tsx";
-import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import { CommandLoading } from "cmdk";
-import { Spinner } from "@/components/ui/Spinner";
 import { Chain } from "ghommerce-schema/src/chains.schema";
 import { Address } from "ghommerce-schema/src/address.schema";
+import AutoForm, { AutoFormSubmit } from "@/components/auto-form";
+import { AvailableToken } from "ghommerce-schema/src/tokens.schema";
+import { mappingTokenConfiguration } from "@/utils/availableTokens";
 
 /** Displays the invoices for a store */
-export const StoreInvoices = (props: { data: selectInvoiceSchema[] }) => {
+export const StoreInvoices = (props: {
+  data: selectInvoiceSchema[];
+  selectedStoreId: string;
+}) => {
   const columns = generateColumnsFromZodSchema(
     selectInvoiceSchema.pick({
       id: true,
@@ -55,7 +54,15 @@ export const StoreInvoices = (props: { data: selectInvoiceSchema[] }) => {
 
   return (
     <>
-      <DataTable data={props.data} columns={columns} />
+      <DataTable
+        data={props.data}
+        columns={columns}
+        rightToolbarActions={
+          <>
+            <CreateInvoiceComponent storeId={props.selectedStoreId} />
+          </>
+        }
+      />
     </>
   );
 };
@@ -73,11 +80,16 @@ export const CreateInvoiceComponent = (props: {
     },
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const form = useForm<insertInvoiceSchema>();
 
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <Button onClick={() => setIsModalOpen(true)}>New invoice</Button>
+      <Button
+        size={"sm"}
+        className="whitespace-nowrap h-8"
+        onClick={() => setIsModalOpen(true)}
+      >
+        New invoice
+      </Button>
       <DialogContent className="sm:max-w-lg p-0">
         <DialogHeader className={"mt-4 mx-4"}>
           <DialogTitle>Creating new invoice</DialogTitle>
@@ -86,17 +98,19 @@ export const CreateInvoiceComponent = (props: {
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="max-h-[80vh]">
-          <form>
-            <ChainListSelector />
-            <Input {...form.register("acceptedTokens.address")} />
-          </form>
-          {/* <AutoForm
+          <AutoForm
             className={"m-4"}
-            formSchema={insertInvoiceSchema.omit({
-              storeId: true,
-              status: true,
-              id: true,
-            })}
+            formSchema={insertInvoiceSchema
+              .omit({
+                storeId: true,
+                acceptedTokens: true,
+                status: true,
+                currency: true,
+                id: true,
+              })
+              .extend({
+                selectedToken: AvailableToken,
+              })}
             onSubmit={(data) => {
               if (!props.storeId) {
                 throw new Error("Store ID is required");
@@ -105,6 +119,8 @@ export const CreateInvoiceComponent = (props: {
                 ...data,
                 storeId: props.storeId,
                 status: "pending",
+                currency: "USD",
+                acceptedTokens: mappingTokenConfiguration[data.selectedToken],
               });
               toast.toast({
                 variant: "default",
@@ -115,7 +131,7 @@ export const CreateInvoiceComponent = (props: {
             }}
           >
             <AutoFormSubmit />
-          </AutoForm> */}
+          </AutoForm>
         </ScrollArea>
       </DialogContent>
     </Dialog>

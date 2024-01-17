@@ -31,7 +31,7 @@ export function DataTableToolbar<TData>({
                 icon: option.icon ?? CheckIcon,
               }))
             : Array.from(
-                table.getColumn(column.id)?.getFacetedUniqueValues() ?? [],
+                table.getColumn(column.id)?.getFacetedUniqueValues() ?? []
               )?.map(([value]) => ({
                 label: value,
                 value,
@@ -52,7 +52,7 @@ export function DataTableToolbar<TData>({
               label: value,
               value,
               icon: column.getFilterValue() === value ? CheckIcon : undefined,
-            }),
+            })
           );
 
           return {
@@ -65,7 +65,7 @@ export function DataTableToolbar<TData>({
   console.log("filteredColumns", filteredColumns);
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between w-full">
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder="Filter tasks..."

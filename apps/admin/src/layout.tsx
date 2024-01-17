@@ -21,10 +21,7 @@ import {
 
 export const Layout = () => {
   return (
-    <div>
-      <div className="flex flex-row m-2">
-        <UserNav />
-      </div>
+    <div className="p-12">
       <Outlet />
     </div>
   );

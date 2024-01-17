@@ -33,18 +33,20 @@ interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
   data: TData[];
   filterableCols?: FilterConfig<TData>[];
+  rightToolbarActions?: React.ReactNode;
 }
 
 export function DataTable<TData>({
   columns,
   data,
   filterableCols,
+  rightToolbarActions,
 }: DataTableProps<TData>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
+    []
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -73,7 +75,10 @@ export function DataTable<TData>({
   console.log("DataTable", { filterableCols });
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} filterableCols={filterableCols} />
+      <div className="flex flex-row w-full items-center gap-2">
+        <DataTableToolbar table={table} filterableCols={filterableCols} />
+        {rightToolbarActions}
+      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -86,7 +91,7 @@ export function DataTable<TData>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext(),
+                            header.getContext()
                           )}
                     </TableHead>
                   );
@@ -105,7 +110,7 @@ export function DataTable<TData>({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}

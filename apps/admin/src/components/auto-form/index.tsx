@@ -22,7 +22,7 @@ export function AutoFormSubmit({
   isLoading?: boolean;
 }) {
   return (
-    <Button type="submit" isLoading={isLoading}>
+    <Button type="submit" isLoading={isLoading} className="w-full">
       {children ?? "Submit"}
     </Button>
   );

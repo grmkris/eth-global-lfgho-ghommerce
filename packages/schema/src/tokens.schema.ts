@@ -5,6 +5,10 @@ import { ChainId, ChainNameToId, ChainSchema } from "./chains.schema.ts";
 export const ZERO_ADDRESS =
   "0x0000000000000000000000000000000000000000" as const;
 
+export const AVAILABLE_TOKENS = ["USDC", "USDT", "GHO"] as const;
+export const AvailableToken = z.enum(AVAILABLE_TOKENS);
+export type AvailableToken = z.infer<typeof AvailableToken>;
+
 export const BaseTokenSchema = z.object({
   chainId: ChainId,
   address: Address,
