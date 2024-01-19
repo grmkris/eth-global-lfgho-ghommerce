@@ -24,7 +24,7 @@ import { Loader, Receipt } from "lucide-react";
 import { trpcClient } from "@/features/trpc-client.ts";
 import { CreateStoreModal } from "./components/stores/createStore.modal";
 import { dateToTextString } from "@/utils/date";
-import { IntegrationsWrapper } from "./components/integrations/integrations";
+import { ApplicationsWrapper } from "./components/applications/applications";
 
 export const DashboardPage = () => {
   const selectedView = dashboardRoute.useSearch().view;
@@ -54,15 +54,15 @@ export const DashboardPage = () => {
                 Overview
               </TabsTrigger>
               <TabsTrigger value={ViewOption.enum.Stores}>Stores</TabsTrigger>
-              <TabsTrigger value={ViewOption.enum.Integrations}>
-                Integrations
+              <TabsTrigger value={ViewOption.enum.Applications}>
+                Applications
               </TabsTrigger>
               <TabsTrigger value={ViewOption.enum.Notifications}>
                 Notifications
               </TabsTrigger>
             </TabsList>
             <div className="flex items-center space-x-2">
-              <DateRangePicker />
+              {ViewOption.enum.Overview === selectedView && <DateRangePicker />}
               {/* <Button>Download</Button>
               <Button>New Payment</Button> */}
               <div className="pl-4">
@@ -186,10 +186,10 @@ export const DashboardPage = () => {
           </TabsContent>
 
           <TabsContent
-            value={ViewOption.enum.Integrations}
+            value={ViewOption.enum.Applications}
             className="space-y-4"
           >
-            <IntegrationsWrapper userId={userId.user.id} />
+            <ApplicationsWrapper userId={userId.user.id} />
           </TabsContent>
         </div>
       </div>

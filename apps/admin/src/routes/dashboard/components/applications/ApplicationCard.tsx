@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { ReactNode } from "react";
 import { FaExternalLinkAlt } from "react-icons/fa";
+import { ModalViewType, useApplicationModals } from "./useApplicationModals";
 
 export type IntegrationTopic =
   | "streaming"
@@ -11,43 +12,53 @@ export type IntegrationTopic =
   | "web"
   | "marketplace";
 
-export type IntegrationProps = {
+export type ApplicationCardProps = {
   name: string;
   webSite: string;
   topics: IntegrationTopic[];
   description: string;
   icon: ReactNode;
+  modal: ModalViewType | undefined;
 };
 
-export const IntegrationCard = (integrationItem: IntegrationProps) => {
+export const ApplicationCard = (applicationItem: ApplicationCardProps) => {
+  const { open } = useApplicationModals((state) => ({
+    open: state.open,
+  }));
+
   return (
-    <div className="flex flex-col h-[230px] w-[540px] rounded-2xl border-2 border-gray-300 p-8 gap-4 hover:bg-gray-50 hover:cursor-pointer">
+    <button
+      className="flex flex-col h-[230px] w-[540px] rounded-2xl border-2 border-gray-300 p-8 gap-4 hover:bg-gray-50 hover:cursor-pointer"
+      onClick={() => {
+        applicationItem.modal && open(applicationItem.modal);
+      }}
+    >
       <div className="flex flex-row gap-4">
         <div className="h-14 w-14 bg-gray-300 rounded-xl flex justify-center items-center">
-          {integrationItem.icon}{" "}
+          {applicationItem.icon}{" "}
         </div>
-        <div className="flex flex-col gap-1">
-          <h4 className="text-2xl font-semibold">{integrationItem.name}</h4>
+        <div className="flex flex-col gap-1 text-start">
+          <h4 className="text-2xl font-semibold">{applicationItem.name}</h4>
           <a
-            href={integrationItem.webSite}
+            href={applicationItem.webSite}
             target="_blank"
             rel="noreferrer"
             className="hover:text-gray-800 flex flex-row gap-1 items-center hover:underline"
           >
-            {integrationItem.webSite}
+            {applicationItem.webSite}
             <FaExternalLinkAlt size={12} />
           </a>
         </div>
       </div>
-      <p className="text-sm text-gray-600">{integrationItem.description}</p>
+      <p className="text-sm text-gray-600 text-start">{applicationItem.description}</p>
       <div className="flex flex-row gap-2">
-        {integrationItem.topics.map((topic) => (
+        {applicationItem.topics.map((topic) => (
           <Badge className={mappingBagdeColors[topic]}>
             <p className="text-base">{topic}</p>
           </Badge>
         ))}
       </div>
-    </div>
+    </button>
   );
 };
 

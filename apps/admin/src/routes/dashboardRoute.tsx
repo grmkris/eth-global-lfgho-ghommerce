@@ -6,7 +6,7 @@ import { z } from "zod";
 const viewOptions = [
   "Overview",
   "Stores",
-  "Integrations",
+  "Applications",
   "Notifications",
 ] as const;
 export const ViewOption = z.enum(viewOptions);
