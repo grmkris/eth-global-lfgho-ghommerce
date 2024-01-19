@@ -1,4 +1,4 @@
-import AutoForm from "@/components/auto-form";
+import AutoForm, { AutoFormSubmit } from "@/components/auto-form";
 import {
   FormStepsType,
   InvoiceInformation,
@@ -14,6 +14,10 @@ import {
 } from "@/components/ui/dialog";
 import { Contact2, ReceiptIcon } from "lucide-react";
 import { ReactNode } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { trpcClient } from "@/features/trpc-client";
+import { useToast } from "@/components/ui/use-toast";
+import { mappingTokenConfiguration } from "@/utils/availableTokens";
 
 type StepFormType = {
   position: number;
@@ -21,40 +25,88 @@ type StepFormType = {
   title: string;
   description: string;
   formSchema: any;
-  onSubmit: (data: any) => void;
+  onSubmit: ((data: any) => void) | ((data: any) => Promise<void>);
   icon: ReactNode;
 };
 
-export const invoiceFormSteps: StepFormType[] = [
-  {
-    position: 0,
-    name: "payer-information-form",
-    title: "Payer information",
-    description: "Introduce the payer information for the invoice",
-    formSchema: PayerInformation,
-    onSubmit: (data) => {
-      console.log(data);
+export const CreateInvoiceForm = ({
+  storeId,
+  onClose,
+}: {
+  storeId: string;
+  onClose: () => void;
+}) => {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const createInvoice = trpcClient.invoices.createInvoice.useMutation({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries();
+      toast({
+        title: "Invoice created",
+        description: "The invoice has been created successfully",
+      });
     },
-    icon: <Contact2 />,
-  },
-  {
-    position: 1,
-    name: "invoice-information-form",
-    title: "Invoice details",
-    description: "Introduce the details of the invoice",
-    formSchema: InvoiceInformation,
-    onSubmit: (data) => {
-      console.log(data);
+    onError: (error) => {
+      toast({
+        title: "Error creating an invoice",
+        description: `${error.message}`,
+      });
     },
-    icon: <ReceiptIcon />,
-  },
-];
-
-export const CreateInvoiceForm = () => {
-  const { currentStep, goToStep } = useInvoiceFormStore((state) => ({
+  });
+  const {
+    currentStep,
+    setPayerInformation,
+    setInvoiceData,
+    goToStep,
+    payerInformation,
+    invoiceData,
+    resetState,
+  } = useInvoiceFormStore((state) => ({
     currentStep: state.currentStep,
+    payerInformation: state.payerInformation,
+    invoiceData: state.invoiceData,
+    setPayerInformation: state.setPayerInformation,
+    setInvoiceData: state.setInvoiceData,
     goToStep: state.goToStep,
+    resetState: state.resetState,
   }));
+
+  const invoiceFormSteps: StepFormType[] = [
+    {
+      position: 0,
+      name: "payer-information-form",
+      title: "Payer information",
+      description: "Introduce the payer information for the invoice",
+      formSchema: PayerInformation,
+      onSubmit: (data) => {
+        setPayerInformation(data);
+        if (invoiceFormSteps.length - 1 === currentStep) return;
+        goToStep(currentStep + 1);
+      },
+      icon: <Contact2 />,
+    },
+    {
+      position: 1,
+      name: "invoice-information-form",
+      title: "Invoice details",
+      description: "Introduce the details of the invoice",
+      formSchema: InvoiceInformation,
+      onSubmit: async (data) => {
+        setInvoiceData(data);
+        await createInvoice.mutateAsync({
+          storeId: storeId,
+          status: "pending",
+          currency: "USD",
+          ...payerInformation,
+          ...data,
+          acceptedTokens: mappingTokenConfiguration[invoiceData.selectedToken],
+        });
+        resetState();
+        onClose();
+      },
+      icon: <ReceiptIcon />,
+    },
+  ];
 
   const selectedForm = invoiceFormSteps.find(
     (step) => currentStep === step.position
@@ -62,7 +114,7 @@ export const CreateInvoiceForm = () => {
 
   return (
     <DialogContent>
-      <StepperHeader />
+      <StepperHeader invoiceFormSteps={invoiceFormSteps} />
       <DialogHeader className={"mt-4 mx-4"}>
         <DialogTitle>{selectedForm?.title}</DialogTitle>
         <DialogDescription>{selectedForm?.description}</DialogDescription>
@@ -75,57 +127,36 @@ export const CreateInvoiceForm = () => {
             selectedForm?.onSubmit(data);
           }}
         >
-          <FooterFormStepper />
-          {/* <AutoFormSubmit /> */}
+          <div className="flex w-full flex-row justify-between">
+            <Button
+              disabled={currentStep === 0}
+              onClick={() => goToStep(currentStep - 1)}
+            >
+              Back
+            </Button>
+            <AutoFormSubmit
+              className="w-fit"
+              isLoading={createInvoice.isLoading}
+            >
+              {currentStep ===
+              invoiceFormSteps.find(
+                (form) => form.name === "invoice-information-form"
+              )?.position
+                ? "Submit"
+                : "Next"}
+            </AutoFormSubmit>
+          </div>
         </AutoForm>
       </div>
     </DialogContent>
   );
 };
 
-const FooterFormStepper = () => {
-  const { currentStep, goToStep, currentForm } = useInvoiceFormStore(
-    (state) => ({
-      currentStep: state.currentStep,
-      goToStep: state.goToStep,
-      currentForm: state.currentForm,
-    })
-  );
-
-  return (
-    <div className="flex w-full flex-row justify-between">
-      <Button
-        disabled={currentStep === 0}
-        onClick={() => goToStep(currentStep - 1)}
-      >
-        Back
-      </Button>
-      <Button
-        onClick={() => {
-          if (invoiceFormSteps.length - 1 === currentStep) return;
-          if (
-            currentStep ===
-            invoiceFormSteps.find(
-              (form) => form.name === "invoice-information-form"
-            )?.position
-          ) {
-            console.log("on submit");
-          }
-          goToStep(currentStep + 1);
-        }}
-      >
-        {currentStep ===
-        invoiceFormSteps.find(
-          (form) => form.name === "invoice-information-form"
-        )?.position
-          ? "Submit"
-          : "Next"}
-      </Button>
-    </div>
-  );
-};
-
-const StepperHeader = () => {
+const StepperHeader = ({
+  invoiceFormSteps,
+}: {
+  invoiceFormSteps: StepFormType[];
+}) => {
   const { currentStep, currentForm } = useInvoiceFormStore((state) => ({
     currentStep: state.currentStep,
     currentForm: state.currentForm,

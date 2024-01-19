@@ -1,8 +1,6 @@
 import { DataTable } from "@/components/table/components/data-table";
 import { generateColumnsFromZodSchema } from "@/components/table/generateColumnsFromZodSchema.tsx";
-import {
-  selectInvoiceSchema,
-} from "ghommerce-schema/src/db/invoices.ts";
+import { selectInvoiceSchema } from "ghommerce-schema/src/db/invoices.ts";
 import { useToast } from "@/components/ui/use-toast.ts";
 import { trpcClient } from "@/features/trpc-client.ts";
 import { useState } from "react";
@@ -71,7 +69,10 @@ export const CreateInvoiceComponent = (props: {
       >
         New invoice
       </Button>
-      <CreateInvoiceForm />
+      <CreateInvoiceForm
+        storeId={props.storeId ?? ""}
+        onClose={() => setIsModalOpen(false)}
+      />
     </Dialog>
   );
 };

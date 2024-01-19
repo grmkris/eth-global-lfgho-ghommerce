@@ -17,12 +17,18 @@ import { cn } from "@/components/utils.ts";
 export function AutoFormSubmit({
   children,
   isLoading,
+  className,
 }: {
   children?: React.ReactNode;
   isLoading?: boolean;
+  className?: string;
 }) {
   return (
-    <Button type="submit" isLoading={isLoading} className="w-full">
+    <Button
+      type="submit"
+      isLoading={isLoading}
+      className={`w-full ${className}`}
+    >
       {children ?? "Submit"}
     </Button>
   );
