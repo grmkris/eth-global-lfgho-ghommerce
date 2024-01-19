@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button.tsx";
 import {
   Card,
   CardContent,
@@ -16,15 +15,23 @@ import {
 import { DateRangePicker } from "@/components/ui/date-range-picker.tsx";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Overview } from "@/routes/dashboard/components/overview.tsx";
-import { StoresWrapper } from "@/routes/dashboard/components/stores.tsx";
+import { StoresWrapper } from "@/routes/dashboard/components/stores/stores";
 import { ViewOption, dashboardRoute } from "@/routes/dashboardRoute.tsx";
 import { useRouter } from "@tanstack/react-router";
 import { RecentSales } from "./components/recent-sales";
 import { UserNav } from "@/layout";
+import { Loader, Receipt } from "lucide-react";
+import { trpcClient } from "@/features/trpc-client.ts";
+import { CreateStoreModal } from "./components/stores/createStore.modal";
+import { dateToTextString } from "@/utils/date";
+import { ApplicationsWrapper } from "./components/applications/applications";
 
 export const DashboardPage = () => {
   const selectedView = dashboardRoute.useSearch().view;
   const userId = dashboardRoute.useRouteContext().session;
+  const stores = trpcClient.stores.getStores.useQuery({
+    userId: userId.user.id,
+  });
   const router = useRouter();
   return (
     <Tabs
@@ -42,21 +49,20 @@ export const DashboardPage = () => {
         <div className="flex-1 space-y-4">
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-
             <TabsList>
               <TabsTrigger value={ViewOption.enum.Overview}>
                 Overview
               </TabsTrigger>
               <TabsTrigger value={ViewOption.enum.Stores}>Stores</TabsTrigger>
-              <TabsTrigger value={ViewOption.enum.Integrations}>
-                Integrations
+              <TabsTrigger value={ViewOption.enum.Applications}>
+                Applications
               </TabsTrigger>
               <TabsTrigger value={ViewOption.enum.Notifications}>
                 Notifications
               </TabsTrigger>
             </TabsList>
             <div className="flex items-center space-x-2">
-              <DateRangePicker />
+              {ViewOption.enum.Overview === selectedView && <DateRangePicker />}
               {/* <Button>Download</Button>
               <Button>New Payment</Button> */}
               <div className="pl-4">
@@ -74,36 +80,44 @@ export const DashboardPage = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
-                  <Carousel>
-                    <CarouselContent>
-                      <CarouselItem>
-                        <SafeWalletCard
-                          name={"Freelance"}
-                          address={"0x8106B9490Fa9cCCF1f688d7315F9cA87A53c139A"}
-                          balance={"100"}
-                          lastTransaction={new Date()}
-                        />{" "}
-                      </CarouselItem>
-                      <CarouselItem>
-                        <SafeWalletCard
-                          name={"Merch website"}
-                          address={"0x8106B9490Fa9cCCF1f688d7315F9cA87A53c139A"}
-                          balance={"100"}
-                          lastTransaction={new Date()}
-                        />{" "}
-                      </CarouselItem>
-                      <CarouselItem>
-                        <SafeWalletCard
-                          name={"Book store"}
-                          address={"0x8106B9490Fa9cCCF1f688d7315F9cA87A53c139A"}
-                          balance={"100"}
-                          lastTransaction={new Date()}
-                        />{" "}
-                      </CarouselItem>
-                    </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
-                  </Carousel>
+                  {stores.isFetching || stores.isLoading ? (
+                    <div className="relative">
+                      <div className="absolute bottom-0 left-0 right-0 top-0 grid place-items-center">
+                        <Loader
+                          className="animate-spin"
+                          size={24}
+                          color="gray"
+                        />
+                      </div>
+                    </div>
+                  ) : stores.data && stores?.data?.length > 0 ? (
+                    <Carousel>
+                      <CarouselContent>
+                        {stores.data.map((store) => (
+                          <CarouselItem>
+                            <SafeWalletCard
+                              storeId={store.id}
+                              name={store.name}
+                              balance={"100"}
+                              lastTransaction={
+                                store?.updatedAt
+                                  ? new Date(store.updatedAt)
+                                  : new Date()
+                              }
+                            />{" "}
+                          </CarouselItem>
+                        ))}
+                      </CarouselContent>
+                      <CarouselPrevious />
+                      <CarouselNext />
+                    </Carousel>
+                  ) : (
+                    <div className="relative">
+                      <div className="absolute bottom-0 left-0 right-0 top-0 grid place-items-center">
+                        <CreateStoreModal />
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
               <Card>
@@ -170,6 +184,13 @@ export const DashboardPage = () => {
           <TabsContent value={ViewOption.enum.Stores} className="space-y-4">
             <StoresWrapper userId={userId.user.id} />
           </TabsContent>
+
+          <TabsContent
+            value={ViewOption.enum.Applications}
+            className="space-y-4"
+          >
+            <ApplicationsWrapper userId={userId.user.id} />
+          </TabsContent>
         </div>
       </div>
     </Tabs>
@@ -177,24 +198,32 @@ export const DashboardPage = () => {
 };
 
 const SafeWalletCard = (props: {
+  storeId: string;
   name: string;
-  address: string;
   balance: string;
   lastTransaction: Date;
 }) => {
+  const invoices = trpcClient.invoices.getInvoices.useQuery({
+    storeId: props.storeId,
+  });
+
+  const total = invoices.data?.reduce(
+    (acc, current) => acc + current.amountDue,
+    0
+  );
+
   return (
-    <div className="bg-blue-500 rounded-lg shadow-md text-white p-4">
+    <div className="bg-gray-100 rounded-lg shadow-md text-black p-4">
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-sm font-semibold">{props.name}</h2>
-          <p className="text-xs">Address: {props.address}</p>
         </div>
-        <img src="/path-to-card-logo.svg" alt="Logo" className="h-8" />
+        <Receipt />
       </div>
-      <div className="mt-4">
-        <p className="text-2xl font-bold">{props.balance} USD</p>
+      <div className="mt-4 flex flex-col gap-1">
+        <p className="text-2xl font-bold">{total?.toFixed(2)} USD</p>
         <p className="text-xs">
-          Last Transaction: {props.lastTransaction.toLocaleDateString()}
+          Last Transaction: {dateToTextString(props.lastTransaction)}
         </p>
       </div>
     </div>

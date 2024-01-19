@@ -21,7 +21,7 @@ export const invoiceRouter = router({
     .input(
       z.object({
         invoiceId: z.string().uuid().optional(),
-      }),
+      })
     )
     .output(selectInvoiceSchema)
     .query(async ({ input, ctx }) => {
@@ -44,7 +44,7 @@ export const invoiceRouter = router({
     .input(
       z.object({
         storeId: z.string().uuid().optional(),
-      }),
+      })
     )
     .output(z.array(selectInvoiceSchema))
     .query(async ({ input, ctx }) => {
@@ -82,7 +82,7 @@ export const invoiceRouter = router({
       z.object({
         invoiceId: z.string().uuid(),
         payerData: PayerInformationSchema,
-      }),
+      })
     )
     .output(selectInvoiceSchema)
     .mutation(async ({ input, ctx }) => {
@@ -102,7 +102,7 @@ export const invoiceRouter = router({
       z.object({
         invoiceId: z.string().uuid(),
         transactionHash: TransactionHash,
-      }),
+      })
     )
     .output(selectPaymentSchema)
     .mutation(async ({ input, ctx }) => {

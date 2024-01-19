@@ -185,6 +185,9 @@ importers:
       react-hotkeys-hook:
         specifier: ^4.4.4
         version: 4.4.4(react-dom@18.2.0)(react@18.2.0)
+      react-icons:
+        specifier: ^5.0.1
+        version: 5.0.1(react@18.2.0)
       react-markdown:
         specifier: ^9.0.1
         version: 9.0.1(@types/react@18.2.48)(react@18.2.0)
@@ -221,6 +224,9 @@ importers:
       zod:
         specifier: ^3.22.4
         version: 3.22.4
+      zustand:
+        specifier: ^4.4.7
+        version: 4.4.7(@types/react@18.2.48)(immer@10.0.3)(react@18.2.0)
     devDependencies:
       '@types/node':
         specifier: ^20.11.4
@@ -7966,6 +7972,7 @@ packages:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
     dev: false
+    bundledDependencies: false
 
   /event-emitter@0.3.5:
     resolution: {integrity: sha512-D9rRn9y7kLPnJ+hMq7S/nhvoKwwvVJahBi2BPmx3bvbsEdK3W9ii8cBSGjP+72/LnM4n6fo3+dkCX5FeTQruXA==}
@@ -11133,6 +11140,14 @@ packages:
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /react-icons@5.0.1(react@18.2.0):
+    resolution: {integrity: sha512-WqLZJ4bLzlhmsvme6iFdgO8gfZP17rfjYEJ2m9RsZjZ+cc4k1hTzknEz63YS1MeT50kVzoa1Nz36f4BEx+Wigw==}
+    peerDependencies:
+      react: '*'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-is@16.13.1:
