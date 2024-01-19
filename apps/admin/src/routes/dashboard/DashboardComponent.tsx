@@ -16,9 +16,7 @@ import {
 import { DateRangePicker } from "@/components/ui/date-range-picker.tsx";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Overview } from "@/routes/dashboard/components/overview.tsx";
-import {
-  StoresWrapper,
-} from "@/routes/dashboard/components/stores.tsx";
+import { StoresWrapper } from "@/routes/dashboard/components/stores.tsx";
 import { ViewOption, dashboardRoute } from "@/routes/dashboardRoute.tsx";
 import { useRouter } from "@tanstack/react-router";
 import { RecentSales } from "./components/recent-sales";

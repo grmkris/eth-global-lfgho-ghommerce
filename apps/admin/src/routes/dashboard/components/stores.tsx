@@ -71,13 +71,13 @@ const Stores = (props: { stores: Store[] }) => {
   const { stores } = props;
 
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(
-    stores[0].id
+    stores[0].id,
   );
   const invoices = trpcClient.invoices.getInvoices.useQuery(
     {
       storeId: selectedStoreId,
     },
-    { enabled: !!selectedStoreId }
+    { enabled: !!selectedStoreId },
   );
 
   const handleSelectStore = (id: string) => {
@@ -233,7 +233,7 @@ const SafesDropdown = (props: {
                 <CheckIcon
                   className={cn(
                     "ml-auto h-4 w-4",
-                    value === safe.value ? "opacity-100" : "opacity-0"
+                    value === safe.value ? "opacity-100" : "opacity-0",
                   )}
                 />
               </CommandItem>
