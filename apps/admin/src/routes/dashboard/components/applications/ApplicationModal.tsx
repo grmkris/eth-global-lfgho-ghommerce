@@ -40,14 +40,14 @@ export const ApplicationModal = () => {
       z.object({
         amount: z.coerce.number(),
         description: z.string(),
-      }),
+      })
     ),
   });
   return (
     <Dialog open={isOpen} onOpenChange={close}>
       <DialogContent>
         <DialogHeader className={"mt-4 mx-4"}>
-          <DialogTitle>Host your Twich donations</DialogTitle>
+          <DialogTitle>Host your Twitch donations</DialogTitle>
           <DialogDescription>
             Connect your store to one of the following applications to get
             started.
