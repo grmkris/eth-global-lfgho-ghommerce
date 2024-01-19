@@ -38,7 +38,7 @@ export const ApplicationModal = () => {
       z.object({
         amount: z.number(),
         description: z.string(),
-      })
+      }),
     ),
   });
   return (

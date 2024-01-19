@@ -1,15 +1,15 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
-import { RouterProvider } from "@tanstack/react-router"
-import { WagmiConfig, createConfig, configureChains } from "wagmi"
-import { ConnectKitProvider, getDefaultConfig } from "connectkit"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { RouterProvider } from "@tanstack/react-router";
+import { WagmiConfig, createConfig, configureChains } from "wagmi";
+import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import {
   arbitrum,
   avalanche,
   mainnet,
   arbitrumGoerli,
   arbitrumNova,
-} from "wagmi/chains"
+} from "wagmi/chains";
 // Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,18 +19,18 @@ const queryClient = new QueryClient({
       retry: 1,
     },
   },
-})
+});
 
-import { iframeRouter } from "./routes/Router.tsx"
-import { useState } from "react"
-import { httpBatchLink } from "@trpc/client"
-import { ENV } from "./env"
-import { apiTrpc } from "@/trpc-client.ts"
-import { Toaster } from "./components/ui/toaster.tsx"
+import { iframeRouter } from "./routes/Router.tsx";
+import { useState } from "react";
+import { httpBatchLink } from "@trpc/client";
+import { ENV } from "./env";
+import { apiTrpc } from "@/trpc-client.ts";
+import { Toaster } from "./components/ui/toaster.tsx";
 
-const projectId = "1e69158d2921d63d074cd90b66bb038a" // TODO move to env
+const projectId = "1e69158d2921d63d074cd90b66bb038a"; // TODO move to env
 if (!projectId) {
-  throw new Error("VITE_PROJECT_ID is not set")
+  throw new Error("VITE_PROJECT_ID is not set");
 }
 
 // 2. Create wagmiConfig
@@ -47,8 +47,8 @@ const config = createConfig(
     appDescription: "GHOmmerce app", // Replace with a short description of your app
     appUrl: "https://ghommerce.com", // Replace with the URL of your app
     appIcon: "https://ghommerce.com/", // Replace with the URL of your app's icon
-  })
-)
+  }),
+);
 
 function App() {
   const [trpc] = useState(() =>
@@ -58,8 +58,8 @@ function App() {
           url: `${ENV.VITE_API_URL}/trpc`,
         }),
       ],
-    })
-  )
+    }),
+  );
   return (
     <WagmiConfig config={config}>
       <ConnectKitProvider>
@@ -72,7 +72,7 @@ function App() {
         </apiTrpc.Provider>
       </ConnectKitProvider>
     </WagmiConfig>
-  )
+  );
 }
 
-export default App
+export default App;

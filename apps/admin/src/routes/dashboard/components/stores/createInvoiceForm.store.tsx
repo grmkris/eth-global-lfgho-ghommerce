@@ -75,6 +75,6 @@ export const useInvoiceFormStore = create<InvoiceFormState>()(
     })),
     {
       name: "useInvoiceFormStore",
-    }
-  )
+    },
+  ),
 );

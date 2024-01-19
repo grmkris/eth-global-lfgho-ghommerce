@@ -1,10 +1,4 @@
 import AutoForm, { AutoFormSubmit } from "@/components/auto-form";
-import {
-  FormStepsType,
-  InvoiceInformation,
-  PayerInformation,
-  useInvoiceFormStore,
-} from "./createInvoiceForm.store";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -12,20 +6,29 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useToast } from "@/components/ui/use-toast";
+import { trpcClient } from "@/features/trpc-client";
+import { useQueryClient } from "@tanstack/react-query";
+import { ERC20_TOKEN_MAPPER } from "ghommerce-schema/src/tokens.schema.ts";
 import { Contact2, ReceiptIcon } from "lucide-react";
 import { ReactNode } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { trpcClient } from "@/features/trpc-client";
-import { useToast } from "@/components/ui/use-toast";
-import { mappingTokenConfiguration } from "@/utils/availableTokens";
+import {
+  FormStepsType,
+  InvoiceInformation,
+  PayerInformation,
+  useInvoiceFormStore,
+} from "./createInvoiceForm.store";
+import type {ZodObjectOrWrapped} from "@/components/auto-form/utils.ts";
 
 type StepFormType = {
   position: number;
   name: FormStepsType;
   title: string;
   description: string;
-  formSchema: any;
-  onSubmit: ((data: any) => void) | ((data: any) => Promise<void>);
+  formSchema: ZodObjectOrWrapped;
+  onSubmit:
+    | ((data: PayerInformation) => void)
+    | ((data: InvoiceInformation) => Promise<void>);
   icon: ReactNode;
 };
 
@@ -78,7 +81,7 @@ export const CreateInvoiceForm = ({
       title: "Payer information",
       description: "Introduce the payer information for the invoice",
       formSchema: PayerInformation,
-      onSubmit: (data) => {
+      onSubmit: (data: PayerInformation) => {
         setPayerInformation(data);
         if (invoiceFormSteps.length - 1 === currentStep) return;
         goToStep(currentStep + 1);
@@ -91,7 +94,7 @@ export const CreateInvoiceForm = ({
       title: "Invoice details",
       description: "Introduce the details of the invoice",
       formSchema: InvoiceInformation,
-      onSubmit: async (data) => {
+      onSubmit: async (data : InvoiceInformation) => {
         setInvoiceData(data);
         await createInvoice.mutateAsync({
           storeId: storeId,
@@ -99,7 +102,7 @@ export const CreateInvoiceForm = ({
           currency: "USD",
           ...payerInformation,
           ...data,
-          acceptedTokens: mappingTokenConfiguration[invoiceData.selectedToken],
+          acceptedTokens: ERC20_TOKEN_MAPPER[invoiceData.selectedToken],
         });
         resetState();
         onClose();
@@ -109,8 +112,10 @@ export const CreateInvoiceForm = ({
   ];
 
   const selectedForm = invoiceFormSteps.find(
-    (step) => currentStep === step.position
+    (step) => currentStep === step.position,
   );
+
+  if (!selectedForm) return null;
 
   return (
     <DialogContent>
@@ -122,7 +127,7 @@ export const CreateInvoiceForm = ({
       <div>
         <AutoForm
           className={"m-4"}
-          formSchema={selectedForm?.formSchema}
+          formSchema={selectedForm.formSchema}
           onSubmit={(data) => {
             selectedForm?.onSubmit(data);
           }}
@@ -140,7 +145,7 @@ export const CreateInvoiceForm = ({
             >
               {currentStep ===
               invoiceFormSteps.find(
-                (form) => form.name === "invoice-information-form"
+                (form) => form.name === "invoice-information-form",
               )?.position
                 ? "Submit"
                 : "Next"}

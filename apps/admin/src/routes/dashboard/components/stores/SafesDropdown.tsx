@@ -56,7 +56,7 @@ export const SafesDropdown = (props: {
                 <CheckIcon
                   className={cn(
                     "ml-auto h-4 w-4",
-                    value === safe.value ? "opacity-100" : "opacity-0"
+                    value === safe.value ? "opacity-100" : "opacity-0",
                   )}
                 />
               </CommandItem>

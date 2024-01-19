@@ -3,8 +3,8 @@ import { ApplicationModal } from "./ApplicationModal";
 
 export type ModalViewType = "applicationModal";
 type ModalDataType = {
-  userId: string
-}
+  userId: string;
+};
 
 type IModalStore = {
   isOpen: boolean;
@@ -18,7 +18,7 @@ export const useApplicationModals = create<IModalStore>((set) => ({
   isOpen: false,
   view: undefined,
   data: undefined,
-  open: (view: IModalStore["view"], data? : ModalDataType) => {
+  open: (view: IModalStore["view"], data?: ModalDataType) => {
     set({
       isOpen: true,
       view,

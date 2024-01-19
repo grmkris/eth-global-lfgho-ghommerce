@@ -209,7 +209,7 @@ const SafeWalletCard = (props: {
 
   const total = invoices.data?.reduce(
     (acc, current) => acc + current.amountDue,
-    0
+    0,
   );
 
   return (
