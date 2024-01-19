@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import { useForm } from "react-hook-form";
 import { useApplicationModals } from "./useApplicationModals";
+import { z } from "zod";
 
 export const ApplicationModal = () => {
   const { close, isOpen } = useApplicationModals((state) => ({
@@ -31,6 +32,14 @@ export const ApplicationModal = () => {
 };
 
 const ApplicationForm = () => {
+
+    const ApplicationFormSchema = z.object({
+        storeId : z.string(),
+        description: z.string(),
+        allowedAmounts: z.array(z.number()),
+        currency: z.string(),
+    })
+
   const form = useForm();
 
   return <></>;
