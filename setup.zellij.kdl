@@ -1,0 +1,23 @@
+layout {
+    pane {
+        command "pnpm"
+        args "db:status"
+    }
+    pane {
+        command "pnpm"
+        args "dev:admin"
+    }
+    pane {
+        command "pnpm"
+        args "dev:api"
+    }
+    pane {
+        command "pnpm"
+        args "dev:example"
+    }
+    pane {
+        command "pnpm"
+        args "dev:ghommerce"
+    }
+    pane // panes can be bare
+}
