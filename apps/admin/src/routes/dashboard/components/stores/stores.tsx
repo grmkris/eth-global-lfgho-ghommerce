@@ -53,13 +53,13 @@ const Stores = (props: { stores: Store[] }) => {
   const { stores } = props;
 
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(
-    stores[0].id
+    stores[0].id,
   );
   const invoices = trpcClient.invoices.getInvoices.useQuery(
     {
       storeId: selectedStoreId,
     },
-    { enabled: !!selectedStoreId }
+    { enabled: !!selectedStoreId },
   );
 
   const handleSelectStore = (id: string) => {

@@ -25,7 +25,7 @@ export const StoreInvoices = (props: {
         console.log(invoice);
         window.open(`http://localhost:5321/invoice?id=${invoice.id}`);
       },
-    }
+    },
   );
 
   return (

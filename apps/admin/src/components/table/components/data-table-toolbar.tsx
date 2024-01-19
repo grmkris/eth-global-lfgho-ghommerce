@@ -31,7 +31,7 @@ export function DataTableToolbar<TData>({
                 icon: option.icon ?? CheckIcon,
               }))
             : Array.from(
-                table.getColumn(column.id)?.getFacetedUniqueValues() ?? []
+                table.getColumn(column.id)?.getFacetedUniqueValues() ?? [],
               )?.map(([value]) => ({
                 label: value,
                 value,
@@ -52,7 +52,7 @@ export function DataTableToolbar<TData>({
               label: value,
               value,
               icon: column.getFilterValue() === value ? CheckIcon : undefined,
-            })
+            }),
           );
 
           return {
