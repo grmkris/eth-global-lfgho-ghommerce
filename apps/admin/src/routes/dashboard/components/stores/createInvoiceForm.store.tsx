@@ -1,7 +1,4 @@
-import {
-  AvailableToken,
-  BaseTokenSchema,
-} from "ghommerce-schema/src/tokens.schema";
+import { AvailableToken } from "ghommerce-schema/src/tokens.schema";
 import { z } from "zod";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";

@@ -1,13 +1,10 @@
 import { DataTable } from "@/components/table/components/data-table";
 import { generateColumnsFromZodSchema } from "@/components/table/generateColumnsFromZodSchema.tsx";
 import { selectInvoiceSchema } from "ghommerce-schema/src/db/invoices.ts";
-import { useToast } from "@/components/ui/use-toast.ts";
-import { trpcClient } from "@/features/trpc-client.ts";
 import { useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog } from "@/components/ui/dialog.tsx";
 
-import { useQueryClient } from "@tanstack/react-query";
 import { CreateInvoiceForm } from "./stores/CreateInvoiceForm";
 
 /** Displays the invoices for a store */
@@ -50,14 +47,6 @@ export const CreateInvoiceComponent = (props: {
   storeId?: string;
   onCreated?: () => void;
 }) => {
-  const toast = useToast();
-  const queryClient = useQueryClient();
-  const createInvoice = trpcClient.invoices.createInvoice.useMutation({
-    onSuccess: async () => {
-      await queryClient.invalidateQueries();
-      setIsModalOpen(false);
-    },
-  });
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
