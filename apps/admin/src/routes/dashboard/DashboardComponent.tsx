@@ -15,7 +15,7 @@ import {
 import { DateRangePicker } from "@/components/ui/date-range-picker.tsx";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Overview } from "@/routes/dashboard/components/overview.tsx";
-import { StoresWrapper } from "@/routes/dashboard/components/stores.tsx";
+import { StoresWrapper } from "@/routes/dashboard/components/stores/stores";
 import { ViewOption, dashboardRoute } from "@/routes/dashboardRoute.tsx";
 import { useRouter } from "@tanstack/react-router";
 import { RecentSales } from "./components/recent-sales";
@@ -24,6 +24,7 @@ import { Loader, Receipt } from "lucide-react";
 import { trpcClient } from "@/features/trpc-client.ts";
 import { CreateStoreModal } from "./components/stores/createStore.modal";
 import { dateToTextString } from "@/utils/date";
+import { IntegrationsWrapper } from "./components/integrations/integrations";
 
 export const DashboardPage = () => {
   const selectedView = dashboardRoute.useSearch().view;
@@ -48,7 +49,6 @@ export const DashboardPage = () => {
         <div className="flex-1 space-y-4">
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-
             <TabsList>
               <TabsTrigger value={ViewOption.enum.Overview}>
                 Overview
@@ -183,6 +183,13 @@ export const DashboardPage = () => {
 
           <TabsContent value={ViewOption.enum.Stores} className="space-y-4">
             <StoresWrapper userId={userId.user.id} />
+          </TabsContent>
+
+          <TabsContent
+            value={ViewOption.enum.Integrations}
+            className="space-y-4"
+          >
+            <IntegrationsWrapper userId={userId.user.id} />
           </TabsContent>
         </div>
       </div>

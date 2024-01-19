@@ -26,7 +26,7 @@ import { useState } from "react";
 import { StoreInvoices } from "@/routes/dashboard/components/invoices.tsx";
 import { selectInvoiceSchema } from "ghommerce-schema/src/db/invoices.ts";
 import { MoreHorizontal } from "lucide-react";
-import { CreateStoreModal } from "./stores/createStore.modal";
+import { CreateStoreModal } from "./createStore.modal";
 
 export type Store = {
   description: string;
