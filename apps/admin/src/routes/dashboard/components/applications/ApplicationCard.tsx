@@ -21,7 +21,13 @@ export type ApplicationCardProps = {
   modal: ModalViewType | undefined;
 };
 
-export const ApplicationCard = (applicationItem: ApplicationCardProps) => {
+export const ApplicationCard = ({
+  applicationItem,
+  userId,
+}: {
+  applicationItem: ApplicationCardProps;
+  userId: string;
+}) => {
   const { open } = useApplicationModals((state) => ({
     open: state.open,
   }));
@@ -30,7 +36,8 @@ export const ApplicationCard = (applicationItem: ApplicationCardProps) => {
     <button
       className="flex flex-col h-[230px] w-[540px] rounded-2xl border-2 border-gray-300 p-8 gap-4 hover:bg-gray-50 hover:cursor-pointer"
       onClick={() => {
-        applicationItem.modal && open(applicationItem.modal);
+        applicationItem.modal &&
+          open(applicationItem.modal, { userId: userId });
       }}
     >
       <div className="flex flex-row gap-4">
@@ -50,7 +57,9 @@ export const ApplicationCard = (applicationItem: ApplicationCardProps) => {
           </a>
         </div>
       </div>
-      <p className="text-sm text-gray-600 text-start">{applicationItem.description}</p>
+      <p className="text-sm text-gray-600 text-start">
+        {applicationItem.description}
+      </p>
       <div className="flex flex-row gap-2">
         {applicationItem.topics.map((topic) => (
           <Badge className={mappingBagdeColors[topic]}>

@@ -25,7 +25,7 @@ const applicationsCards: ApplicationCardProps[] = [
     description:
       "Discord is a platform designed for creating communities ranging from gamers to education and businesses.",
     icon: <FaDiscord size={32} />,
-    modal : undefined,
+    modal: undefined,
   },
   {
     name: "WhatsApp",
@@ -34,7 +34,7 @@ const applicationsCards: ApplicationCardProps[] = [
     description:
       "WhatsApp is a free messaging app owned by Facebook that allows full end-to-end encryption for its service.",
     icon: <FaWhatsapp size={32} />,
-    modal : undefined,
+    modal: undefined,
   },
   {
     name: "WordPress",
@@ -43,7 +43,7 @@ const applicationsCards: ApplicationCardProps[] = [
     description:
       "WordPress is a free and open-source content management system written in PHP and paired with a MySQL or MariaDB database.",
     icon: <FaWordpress size={32} />,
-    modal : undefined,
+    modal: undefined,
   },
   {
     name: "Shopify",
@@ -52,7 +52,7 @@ const applicationsCards: ApplicationCardProps[] = [
     description:
       "Shopify is an e-commerce platform for online stores and retail point-of-sale systems.",
     icon: <FaShopify size={32} />,
-    modal : undefined,
+    modal: undefined,
   },
 ];
 
@@ -67,7 +67,10 @@ export const ApplicationsWrapper = (props: { userId: string }) => {
         </p>
         <div className="flex flex-wrap gap-8 w-full">
           {applicationsCards.map((application) => (
-            <ApplicationCard {...application} />
+            <ApplicationCard
+              applicationItem={application}
+              userId={props.userId}
+            />
           ))}
         </div>
       </div>
