@@ -45,9 +45,9 @@ export const ApplicationModal = () => {
   });
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent>
+      <DialogContent className="max-h-screen overflow-y-auto custom-scrollbar m-4">
         <DialogHeader className={"mt-4 mx-4"}>
-          <DialogTitle>Host your Twitch donations</DialogTitle>
+          <DialogTitle>Host your Twich donations</DialogTitle>
           <DialogDescription>
             Connect your store to one of the following applications to get
             started.
