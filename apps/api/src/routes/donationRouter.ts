@@ -2,11 +2,10 @@ import { publicProcedure, router } from "../lib/trpc";
 import { z } from "zod";
 import { db } from "../db/db";
 import { eq } from "drizzle-orm";
-
 import {
   donations,
   selectDonationSchema,
-} from "ghommerce-schema/src/db/donations";
+} from "ghommerce-schema/src/db/donations.db";
 
 export const donationRouter = router({
   getDonation: publicProcedure

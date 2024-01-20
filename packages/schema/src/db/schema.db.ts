@@ -3,21 +3,21 @@ export {
   invoicesRelations,
   insertInvoiceSchema,
   selectInvoiceSchema,
-} from "./invoices";
+} from "./invoices.db.ts";
 
 export {
   donations,
   insertDonationSchema,
   selectDonationSchema,
   donationRelations,
-} from "./donations.ts";
+} from "./donations.db.ts";
 
 export {
   payments,
   selectPaymentSchema,
   paymentsRelations,
   insertPaymentSchema,
-} from "./payments";
+} from "./payments.db.ts";
 
 export {
   users,
@@ -25,7 +25,7 @@ export {
   updateUser,
   userRelations,
   insertUser,
-} from "./users";
+} from "./users.db.ts";
 
 export {
   eoas,
@@ -40,11 +40,11 @@ export {
   insertEoaSchema,
   selectEoaSchema,
   eoaRelations,
-} from "./safes.ts";
+} from "./safes.db.ts";
 
 export {
   stores,
   insertStoreSchema,
   selectStoreSchema,
   storesRelations,
-} from "./stores.ts";
+} from "./stores.db.ts";

@@ -10,14 +10,14 @@ import {
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { Address } from "../address.schema.ts";
-import { users } from "./users.ts";
+import { users } from "./users.db.ts";
 
 /**
  * Customer entity can have multiple wallets, this table is used to store the relation between Customer and wallet
  */
 export const eoas = pgTable("eoas", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
-  wallet: text("wallet").notNull(),
+  wallet: text("wallet").notNull().$type<Address>(),
   nonce: text("nonce").notNull(),
   verified: boolean("verified").notNull(),
   userId: uuid("user_id")
@@ -48,7 +48,7 @@ export const safes = pgTable("safes", {
     .notNull()
     .references(() => users.id),
   nonce: text("nonce").notNull(),
-  address: text("address").notNull(),
+  address: text("address").notNull().$type<Address>(),
   predicted: boolean("predicted").notNull(),
   threshold: bigint("threshold", { mode: "number" }).notNull(),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),

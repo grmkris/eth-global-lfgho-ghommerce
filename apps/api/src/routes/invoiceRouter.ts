@@ -7,14 +7,17 @@ import {
   invoices,
   PayerInformationSchema,
   selectInvoiceSchema,
-} from "ghommerce-schema/src/db/invoices";
-import { Address, TransactionHash } from "ghommerce-schema/src/address.schema";
+} from "ghommerce-schema/src/db/invoices.db";
+import { TransactionHash } from "ghommerce-schema/src/address.schema";
 import {
   insertPaymentSchema,
   payments,
   selectPaymentSchema,
-} from "ghommerce-schema/src/db/payments";
-import { ZERO_ADDRESS } from "ghommerce-schema/src/tokens.schema";
+} from "ghommerce-schema/src/db/payments.db";
+import { TokenSchema, ZERO_ADDRESS } from "ghommerce-schema/src/tokens.schema";
+import { CovalentClient } from "@covalenthq/client-sdk";
+import { ChainIdToName } from "ghommerce-schema/src/chains.schema";
+import { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema";
 
 export const invoiceRouter = router({
   getInvoice: publicProcedure
@@ -23,7 +26,7 @@ export const invoiceRouter = router({
         invoiceId: z.string().uuid().optional(),
       }),
     )
-    .output(selectInvoiceSchema)
+    .output(InvoiceSchema)
     .query(async ({ input, ctx }) => {
       if (!input?.invoiceId) throw new Error("Invalid storeId");
       const result = await db.query.invoices.findFirst({
@@ -36,8 +39,55 @@ export const invoiceRouter = router({
           },
         },
       });
+      if (!result) throw new Error("Invoice not found");
 
-      return selectInvoiceSchema.parse(result);
+      const client = new CovalentClient("cqt_rQg66wvckMDgfbm3C3X8XFJGPRTP"); // Replace with your Covalent API key.
+
+      const tokens = result.acceptedTokens?.map(async (token) => {
+        const tokenData = await client.PricingService.getTokenPrices(
+          ChainIdToName[token.chainId],
+          "USD", // TODO: get quote currency from 'currency
+          token.address,
+        );
+        return {
+          ...token,
+          priceUSD: (tokenData.data[0].prices[0].price ?? 0).toString(),
+          chainId: token.chainId,
+          address: token.address,
+          symbol: tokenData.data[0].contract_ticker_symbol,
+          name: tokenData.data[0].contract_name,
+          logoURI: tokenData.data[0].logo_url,
+          decimals: tokenData.data[0].contract_decimals,
+          chain: {
+            // TODO this is incorrect
+            id: token.chainId,
+            logoURI: tokenData.data[0].logo_url,
+            name: ChainIdToName[token.chainId],
+            isTestnet: false,
+            displayName: ChainIdToName[token.chainId],
+          },
+        } satisfies TokenSchema;
+      });
+
+      return {
+        id: result.id,
+        description: result.description,
+        currency: result.currency,
+        acceptedTokens: await Promise.all(tokens),
+        dueDate: z.coerce.date().optional().parse(result.dueDate),
+        amountDue: result.amountDue,
+        status: result.status,
+        payer: {
+          payerEmail: result.payerEmail,
+          payerWallet: result.payerWallet ?? undefined,
+          payerName: result.payerName,
+        },
+        store: {
+          name: result.store.name,
+          description: result.store.description,
+          wallet: result.store.safe.address,
+        },
+      } satisfies InvoiceSchema;
     }),
 
   getInvoices: authProcedure

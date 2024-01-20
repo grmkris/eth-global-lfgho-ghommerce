@@ -17,7 +17,7 @@ import { TokenInfo } from "@/components/web3/TokenElement.tsx";
 import { TokenImage } from "@/components/web3/TokenImage.tsx";
 import { RouterOutput, apiTrpc } from "@/trpc-client.ts";
 import { Route, useNavigate } from "@tanstack/react-router";
-import { PayerInformationSchema } from "ghommerce-schema/src/db/invoices.ts";
+import { PayerInformationSchema } from "../../../../../packages/schema/src/db/invoices.db.ts";
 import { z } from "zod";
 import { rootRoute } from "../Router.tsx";
 import { Address } from "ghommerce-schema/src/address.schema.ts";

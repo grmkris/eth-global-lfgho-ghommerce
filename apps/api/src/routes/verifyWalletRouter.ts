@@ -1,16 +1,17 @@
 import { TRPCError } from "@trpc/server";
 import { and, eq } from "drizzle-orm";
-import { eoas } from "ghommerce-schema/src/db/schema";
+import { eoas } from "ghommerce-schema/src/db/schema.db";
 import { generateNonce, SiweMessage } from "siwe";
 import { z } from "zod";
 import { db } from "../db/db";
 import { authProcedure, router } from "../lib/trpc";
+import { Address } from "ghommerce-schema/src/address.schema";
 
 export const verifyWalletRouter = router({
   getNonce: authProcedure
     .input(
       z.object({
-        wallet: z.string().optional(),
+        wallet: Address,
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -51,7 +52,7 @@ export const verifyWalletRouter = router({
   verify: authProcedure
     .input(
       z.object({
-        wallet: z.string(),
+        wallet: Address,
         message: z.string(),
         signature: z.string(),
       }),
@@ -93,7 +94,7 @@ export const verifyWalletRouter = router({
   isVerified: authProcedure
     .input(
       z.object({
-        wallet: z.string().optional(),
+        wallet: Address,
       }),
     )
     .query(async ({ input, ctx }) => {

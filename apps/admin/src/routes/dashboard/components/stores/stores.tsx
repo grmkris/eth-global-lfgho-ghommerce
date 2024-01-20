@@ -24,7 +24,7 @@ import { trpcClient } from "@/features/trpc-client.ts";
 
 import { useState } from "react";
 import { StoreInvoices } from "@/routes/dashboard/components/invoices.tsx";
-import { selectInvoiceSchema } from "ghommerce-schema/src/db/invoices.ts";
+import { selectInvoiceSchema } from "../../../../../../../packages/schema/src/db/invoices.db.ts";
 import { Loader, MoreHorizontal } from "lucide-react";
 import { map, sumBy } from "remeda";
 import { CreateStoreModal } from "@/routes/dashboard/components/stores/CreateStore.modal.tsx";

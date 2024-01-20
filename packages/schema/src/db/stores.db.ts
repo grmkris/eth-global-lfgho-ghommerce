@@ -2,10 +2,10 @@ import { relations } from "drizzle-orm";
 import { jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { invoices } from "./invoices.ts";
-import { safes, selectSafeSchema } from "./safes.ts";
-import { users } from "./users.ts";
-import { donations } from "./donations.ts";
+import { invoices } from "./invoices.db.ts";
+import { safes, selectSafeSchema } from "./safes.db.ts";
+import { users } from "./users.db.ts";
+import { donations } from "./donations.db.ts";
 
 export const stores = pgTable("stores", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),

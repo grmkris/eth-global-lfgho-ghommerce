@@ -2,20 +2,16 @@ import { authProcedure, publicProcedure, router } from "../lib/trpc";
 import { z } from "zod";
 import { db } from "../db/db";
 import { and, eq } from "drizzle-orm";
-import { eoas, safeEoas, safes } from "ghommerce-schema/src/db/safes";
-import { stores } from "ghommerce-schema/src/db/stores";
-import {
-  insertInvoiceSchema,
-  invoices,
-  selectInvoiceSchema,
-} from "ghommerce-schema/src/db/invoices";
+import { eoas, safeEoas, safes } from "ghommerce-schema//src/db/safes.db";
+import { stores } from "ghommerce-schema//src/db/stores.db";
+import { Address } from "ghommerce-schema/src/address.schema";
 
 export const storeRouter = router({
   registerNewSafe: authProcedure
     .input(
       z.object({
-        wallet: z.string().optional(),
-        safeAddress: z.string(),
+        wallet: Address,
+        safeAddress: Address,
         isPredicted: z.boolean(),
         threshold: z.number(),
         nonce: z.string(),
@@ -153,7 +149,7 @@ export const storeRouter = router({
     .input(
       z
         .object({
-          wallet: z.string().optional(),
+          wallet: Address.optional(),
         })
         .optional(),
     )

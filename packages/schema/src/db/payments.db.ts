@@ -10,9 +10,9 @@ import {
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
-import { invoices } from "./invoices";
+import { invoices } from "./invoices.db.ts";
 import { TokenAmountSchema } from "../tokens.schema.ts";
-import { donations } from "./donations.ts";
+import { donations } from "./donations.db.ts";
 
 export const payments = pgTable("payments", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),

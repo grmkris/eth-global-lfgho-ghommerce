@@ -28,7 +28,7 @@ import { dateToTextString } from "@/utils/date";
 import { ApplicationsWrapper } from "./components/applications/applications";
 import { CreateStoreModal } from "@/routes/dashboard/components/stores/CreateStore.modal.tsx";
 import { filter, map, pipe, sumBy } from "remeda";
-import {z} from "znv";
+import { z } from "znv";
 
 export const DashboardPage = () => {
   const selectedView = dashboardRoute.useSearch().view;
@@ -99,10 +99,7 @@ export const DashboardPage = () => {
                       <CarouselContent>
                         {stores.data.map((store) => (
                           <CarouselItem>
-                            <StoreSafeCard
-                              store={store}
-                              name={store.name}
-                            />
+                            <StoreSafeCard store={store} name={store.name} />
                           </CarouselItem>
                         ))}
                       </CarouselContent>
@@ -225,11 +222,13 @@ const StoreSafeCard = (props: {
   const lastConfirmedInvoice = pipe(
     invoices.data ?? [],
     filter((invoice) => invoice.status === "paid"),
-      (invoices) => invoices.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
-      (invoices) => invoices[0],
+    (invoices) =>
+      invoices.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      ),
+    (invoices) => invoices[0],
   );
-
-
 
   return (
     <div className="bg-gray-100 rounded-lg shadow-md text-black p-4">
@@ -241,13 +240,18 @@ const StoreSafeCard = (props: {
       </div>
       <div className="mt-4 flex flex-col gap-1">
         <p className="text-2xl font-bold">
-            ${totalConfirmedInvoices.toFixed(2)}
+          ${totalConfirmedInvoices.toFixed(2)}
         </p>
         <p className="text-xs">
           Total Amount in SAFE: ${totalAmountInStore.toFixed(2)}
         </p>
         <p className="text-xs">
-          Last Transaction: {lastConfirmedInvoice?.createdAt ? dateToTextString(z.coerce.date().parse(lastConfirmedInvoice.createdAt)) : "No transactions yet"}
+          Last Transaction:{" "}
+          {lastConfirmedInvoice?.createdAt
+            ? dateToTextString(
+                z.coerce.date().parse(lastConfirmedInvoice.createdAt),
+              )
+            : "No transactions yet"}
         </p>
       </div>
     </div>

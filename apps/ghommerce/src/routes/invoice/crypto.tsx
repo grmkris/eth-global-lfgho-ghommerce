@@ -20,6 +20,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { invoiceRoute } from "@/routes/invoice/invoice.tsx";
 import { z } from "zod";
 import { Address } from "ghommerce-schema/src/address.schema.ts";
+import type { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema";
 
 export type Token =
   RouterOutput["tokens"]["getTokensForAddress"]["items"][0] & {
@@ -27,7 +28,7 @@ export type Token =
   };
 
 export const CryptoScreen = (props: {
-  invoice: RouterOutput["invoices"]["getInvoice"];
+  invoice: InvoiceSchema;
 }) => {
   const params = invoiceRoute.useSearch();
   const navigate = useNavigate({ from: invoiceRoute.fullPath });

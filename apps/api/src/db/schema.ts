@@ -1,1 +1,1 @@
-export * from "ghommerce-schema/src/db/schema";
+export * from "ghommerce-schema/src/db/schema.db";

@@ -4,6 +4,7 @@ import {
   SafeAuthPack,
 } from "@safe-global/auth-kit";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Address } from "ghommerce-schema/src/address.schema.ts";
 import {
   useDisconnect,
   useWeb3Modal,
@@ -18,7 +19,7 @@ export type WalletContext = {
     signIn: () => void;
     signOut: () => void;
     signer?: Signer;
-    address?: string;
+    address?: Address;
   };
   web3Modal?: {
     signIn: () => void;
@@ -28,7 +29,7 @@ export type WalletContext = {
   };
   signOut: () => void;
   signer?: Signer;
-  address?: string;
+  address?: Address;
   signMessage: (message: string) => Promise<string>;
 };
 // Define the context
@@ -47,6 +48,12 @@ export const WalletContextProvider = ({
   const [provider, setProvider] = useState<Eip1193Provider | null>(null);
   const [safeAuthSignInResponse, setSafeAuthSignInResponse] =
     useState<AuthKitSignInData | null>(null);
+
+  console.log("WalletContextProvider provider", provider);
+  console.log(
+    "WalletContextProvider safeAuthSignInResponse",
+    safeAuthSignInResponse,
+  );
 
   useEffect(() => {
     const init = async () => {
@@ -144,20 +151,20 @@ export const WalletContextProvider = ({
       signIn: signInWeb3Auth.mutate,
       signOut: signOutWeb3Auth.mutate,
       signer: signerWeb3Auth.data,
-      address: signInWeb3Auth.data?.eoa,
+      address: Address.optional().parse(signInWeb3Auth.data?.eoa),
     },
     web3Modal: {
       signIn: signInWeb3Modal.mutate,
       signOut: signOutWeb3Modal.mutate,
       signer: signerWeb3Modal.data,
-      address: address,
+      address: Address.optional().parse(address),
     },
     signOut: () => {
       if (signInWeb3Auth.data?.eoa) signOutWeb3Auth.mutate();
       if (address) signOutWeb3Modal.mutate();
     },
     signer: signerWeb3Auth.data ?? signerWeb3Modal.data,
-    address: signInWeb3Auth.data?.eoa ?? address,
+    address: Address.optional().parse(signInWeb3Auth.data?.eoa) ?? address,
     signMessage: async (message: string) => {
       if (signerWeb3Auth.data) {
         const signature = await signerWeb3Auth.data.signMessage(message);

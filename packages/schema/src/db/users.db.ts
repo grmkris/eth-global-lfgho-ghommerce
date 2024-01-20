@@ -2,8 +2,8 @@ import { relations } from "drizzle-orm";
 import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { eoas, safes } from "./safes.ts";
-import { stores } from "./stores.ts";
+import { eoas, safes } from "./safes.db.ts";
+import { stores } from "./stores.db.ts";
 
 /**
  * Customer entity is used to store the Customer information

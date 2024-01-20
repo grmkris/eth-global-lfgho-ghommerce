@@ -15,9 +15,9 @@ import { trpcClient } from "@/features/trpc-client.ts";
 import { authOnboardingRoute } from "@/routes/authRoute.tsx";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, Route } from "@tanstack/react-router";
-import { insertStoreSchema } from "ghommerce-schema/src/db/schema.ts";
 import { SiweMessage } from "siwe";
 import { SLIDE_IN_SLIDE_OUT_LEFT } from "@/features/animations.ts";
+import { insertStoreSchema } from "ghommerce-schema/src/db/stores.db.ts";
 
 export const indexRoute = new Route({
   getParentRoute: () => authOnboardingRoute,
@@ -164,6 +164,7 @@ const DeploySafeComponent = () => {
   const verify = trpcClient.verifyWallet.verify.useMutation({
     onSuccess: async () => {
       console.log("verified");
+      if (!address) throw new Error("No address");
       const result = await createSafe.mutateAsync({
         wallet: address,
         safeAddress: safeSdk.safeAddress.data ?? "",

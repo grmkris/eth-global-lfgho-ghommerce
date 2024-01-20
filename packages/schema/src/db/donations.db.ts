@@ -1,10 +1,10 @@
 import { jsonb, pgTable, timestamp, uuid } from "drizzle-orm/pg-core";
-import { users } from "./users.ts";
+import { users } from "./users.db.ts";
 import { z } from "zod";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { selectStoreSchema, stores } from "./stores.ts";
+import { selectStoreSchema, stores } from "./stores.db.ts";
 import { relations } from "drizzle-orm";
-import { payments } from "./payments.ts";
+import { payments } from "./payments.db.ts";
 
 export const donations = pgTable("donations", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),

@@ -17,15 +17,16 @@ import { TokenInfo } from "@/components/web3/TokenElement.tsx";
 import { TokenImage } from "@/components/web3/TokenImage.tsx";
 import { CryptoScreen } from "@/routes/invoice/crypto.tsx";
 import { Gatefi, useGateFi } from "@/routes/invoice/gatefi.tsx";
-import { RouterOutput, apiTrpc } from "@/trpc-client.ts";
+import { apiTrpc } from "@/trpc-client.ts";
 import { Route, useNavigate } from "@tanstack/react-router";
-import { PayerInformationSchema } from "ghommerce-schema/src/db/invoices.ts";
+import { PayerInformationSchema } from "ghommerce-schema/src/db/invoices.db.ts";
 import { z } from "zod";
 import { rootRoute } from "../Router.tsx";
 import { Address } from "ghommerce-schema/src/address.schema.ts";
 import { ChainId } from "ghommerce-schema/src/chains.schema.ts";
 import { useState, useEffect } from "react";
 import JSConfetti from "js-confetti";
+import { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema.ts";
 
 export const InvoiceSteps = z.enum(["payment", "crypto", "gatefi"]);
 export type InvoiceSteps = z.infer<typeof InvoiceSteps>;
@@ -69,13 +70,13 @@ function Invoice() {
 
   return (
     <div className={SLIDE_IN_SLIDE_OUT_LEFT}>
-      <PaymentScreen invoice={invoice.data} />
+      <PaymentScreen invoice={InvoiceSchema.parse(invoice.data)} />
     </div>
   );
 }
 
 function PaymentScreen(props: {
-  invoice: RouterOutput["invoices"]["getInvoice"];
+  invoice: InvoiceSchema;
 }) {
   const { selectedPaymentMethod, step } = invoiceRoute.useSearch();
   const navigate = useNavigate({ from: invoiceRoute.fullPath });
@@ -196,7 +197,7 @@ export const PaymentSelector = () => {
 };
 
 export const InvoiceInformation = (props: {
-  invoice: RouterOutput["invoices"]["getInvoice"];
+  invoice: InvoiceSchema;
 }) => {
   const invoice = props.invoice;
   const [showMore, setShowMore] = useState(false);
@@ -207,7 +208,7 @@ export const InvoiceInformation = (props: {
     <CardContent className="flex flex-row items-center justify-between p-4">
       <div className="flex flex-col">
         <span className="text-sm font-medium text-gray-600">Payer:</span>
-        <span className="text-lg">{invoice?.payerName}</span>
+        <span className="text-lg">{invoice?.payer.payerName}</span>
       </div>
       <div className="flex flex-col">
         <span className="text-sm font-medium text-gray-600">Due:</span>
@@ -231,16 +232,16 @@ export const InvoiceInformation = (props: {
         <CardContent className="grid gap-6">
           {/* Invoice Information */}
           <div className="grid grid-cols-2 gap-4">
-            {invoice?.payerName && (
+            {invoice?.payer.payerName && (
               <div>
                 <p className="font-medium text-gray-600">Payer:</p>
-                <p>{invoice?.payerName}</p>
+                <p>{invoice?.payer.payerName}</p>
               </div>
             )}
-            {invoice?.payerEmail && (
+            {invoice?.payer.payerEmail && (
               <div>
                 <p className="font-medium text-gray-600">Email:</p>
-                <p>{invoice?.payerEmail}</p>
+                <p>{invoice?.payer.payerEmail}</p>
               </div>
             )}
             <div>
@@ -258,10 +259,10 @@ export const InvoiceInformation = (props: {
               <p>{invoice?.description}</p>
             </div>
             <div className="col-span-2">
-              {invoice?.payerWallet && (
+              {invoice?.payer.payerWallet && (
                 <div>
                   <p className="font-medium text-gray-600">Wallet Address:</p>
-                  <p className="truncate">{invoice?.payerWallet}</p>
+                  <p className="truncate">{invoice?.payer.payerWallet}</p>
                 </div>
               )}
             </div>

@@ -1,6 +1,6 @@
 import { DataTable } from "@/components/table/components/data-table";
 import { generateColumnsFromZodSchema } from "@/components/table/generateColumnsFromZodSchema.tsx";
-import { selectInvoiceSchema } from "ghommerce-schema/src/db/invoices.ts";
+import { selectInvoiceSchema } from "../../../../../../packages/schema/src/db/invoices.db.ts";
 import { useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog } from "@/components/ui/dialog.tsx";
