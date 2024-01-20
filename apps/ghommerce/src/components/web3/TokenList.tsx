@@ -13,40 +13,26 @@ import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
 export const TokenList = (props: {
   selectedToken?: TokenSchema;
   tokens: TokenAmountSchema[];
-  onSelect?: (token: TokenSchema) => void;
+  onSelect?: (token: TokenAmountSchema) => void;
 }) => {
-  console.log("TokenList1234", props);
-  const [selected, setSelected] = useState<TokenAmountSchema[]>(
-    props.tokens.filter((x) => x.address === props.selectedToken?.address),
+  const [selected, setSelected] = useState<TokenAmountSchema>(
+    props.tokens.filter(
+      (x) =>
+        x.address === props.selectedToken?.address &&
+        x.chain?.id === props.selectedToken?.chain?.id,
+    )[0] || props.tokens[0],
   );
   const handleSelect = (token: TokenAmountSchema) => {
     if (props.onSelect) props.onSelect(token);
-    const index = selected?.findIndex(
-      (x) => x.address === token.address && x.chain?.name === token.chain?.name,
-    );
-    if (index === -1) {
-      setSelected([...(selected ?? []), token]);
-    } else {
-      setSelected(
-        selected?.filter(
-          (x) =>
-            x.address !== token.address || x.chain?.name !== token.chain?.name,
-        ),
-      );
-    }
+    setSelected(token);
   };
 
   return (
     <div>
       {props.tokens.map((token) => {
         const isSelected =
-          selected?.findIndex(
-            (x) =>
-              x.address === token.address &&
-              x.chain?.name === token.chain?.name,
-          ) !== -1;
-
-        console.log("isSelected", isSelected);
+          token.address === selected.address &&
+          token.chain?.id === selected.chain?.id;
         return (
           <TokenCard
             tokenData={token}

@@ -6,6 +6,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
@@ -14,7 +15,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { useToast } from "@/components/ui/use-toast.ts";
 import { TokenInfo } from "@/components/web3/TokenElement.tsx";
-import { TokenImage } from "@/components/web3/TokenImage.tsx";
 import { CryptoScreen } from "@/routes/invoice/crypto.tsx";
 import { Gatefi, useGateFi } from "@/routes/invoice/gatefi.tsx";
 import { apiTrpc } from "@/trpc-client.ts";
@@ -101,14 +101,6 @@ function PaymentScreen(props: {
 
   return (
     <div className="flex flex-col space-y-2 h-screen custom-scrollbar">
-      {/* Sticky Header */}
-      <Card className="sticky top-0 z-10 shadow-md">
-        <CardHeader>
-          <CardTitle>Payment</CardTitle>
-          <CardDescription>Invoice ID: {props.invoice?.id}</CardDescription>
-        </CardHeader>
-      </Card>
-
       {/* Scrollable Content */}
       <div className="flex-grow overflow-auto space-y-2 custom-scrollbar">
         <InvoiceInformation invoice={props.invoice} />
@@ -207,7 +199,7 @@ function FullInvoiceInformation(props: {
   return (
     <div className="overflow-auto max-h-96 custom-scrollbar">
       {
-        <CardContent className="grid gap-6">
+        <CardContent className={`grid gap-6 ${SLIDE_IN_SLIDE_OUT_LEFT}`}>
           {/* Invoice Information */}
           <div className="grid grid-cols-2 gap-4">
             {invoice?.payer.payerName && (
@@ -268,23 +260,15 @@ const MinimalInvoiceInfo = (props: {
 }) => {
   const invoice = props.invoice;
   return (
-    <CardContent className="flex flex-row items-center justify-between p-4">
+    <CardContent
+      className={`flex flex-col items-center justify-between p-4 ${SLIDE_IN_SLIDE_OUT_LEFT} space-y-2`}
+    >
       <div className="flex flex-col">
-        <span className="text-sm font-medium text-gray-600">Payer:</span>
-        <span className="text-lg">{invoice?.payer.payerName}</span>
-      </div>
-      <div className="flex flex-col">
-        <span className="text-sm font-medium text-gray-600">Due:</span>
         <span className="text-lg">{`${invoice?.amountDue} ${invoice?.currency}`}</span>
       </div>
       <div className="flex flex-col">
         <span className="text-sm font-medium text-gray-600">Status:</span>
         <Badge>{invoice?.status}</Badge>
-      </div>
-      <div className="flex items-center">
-        {invoice?.acceptedTokens.map((x) => (
-          <TokenImage tokenData={x} />
-        ))}
       </div>
     </CardContent>
   );
@@ -302,9 +286,7 @@ export const InvoiceInformation = (props: {
     <Card>
       <CardHeader>
         <CardTitle>{invoice?.store?.name}</CardTitle>
-        <Button onClick={toggleShowMore}>
-          {showMore ? "Show Less" : "Show More"}
-        </Button>
+        <CardDescription>{invoice.description}</CardDescription>
       </CardHeader>
       <CardContent>
         {showMore ? (
@@ -313,6 +295,11 @@ export const InvoiceInformation = (props: {
           <MinimalInvoiceInfo invoice={invoice} />
         )}
       </CardContent>
+      <CardFooter>
+        <Button onClick={toggleShowMore} variant={"ghost"} size={"sm"}>
+          {showMore ? "Show Less" : "Show More"}
+        </Button>
+      </CardFooter>
     </Card>
   );
 };

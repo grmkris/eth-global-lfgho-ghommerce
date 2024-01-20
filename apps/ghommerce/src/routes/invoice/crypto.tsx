@@ -5,8 +5,8 @@ import { SLIDE_IN_SLIDE_OUT_LEFT } from "@/animations.ts";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
+  CardTitle,
 } from "@/components/ui/card.tsx";
 import {
   TokenAmountSchema,
@@ -72,12 +72,9 @@ export const CryptoScreen = (props: {
   return (
     <Card className={SLIDE_IN_SLIDE_OUT_LEFT}>
       <CardHeader>
-        <ConnectKitButton theme="retro" />
-        <CardDescription>
-          <h3 className="text-md">
-            Invoice Total: ${props.invoice?.amountDue}
-          </h3>
-        </CardDescription>
+        <CardTitle>
+          <ConnectKitButton theme="retro" />
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className={"flex flex-col space-y-1"}>
