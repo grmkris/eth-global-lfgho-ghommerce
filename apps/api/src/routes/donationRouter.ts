@@ -30,4 +30,34 @@ export const donationRouter = router({
 
       return selectDonationSchema.parse(result);
     }),
+  createDonationInvoice: publicProcedure
+    .input(
+      z.object({
+        donationId: z.string().uuid().optional(),
+        option: z.number().optional(), // TODO add params as needed
+        email: z.string().email().optional(), // TODO add params as needed
+      }),
+    )
+    .output(selectDonationSchema)
+    .query(async ({ input, ctx }) => {
+      if (!input?.donationId) throw new Error("Invalid donationId");
+      const result = await db.query.donations.findFirst({
+        where: eq(donations.id, input.donationId),
+        with: {
+          store: {
+            with: {
+              safe: true,
+            },
+          },
+        },
+      });
+
+      // TOOD create invoice
+
+      // TODO create enttiy in invoiceToDonation table
+
+      // return invoice
+
+      return selectDonationSchema.parse(result);
+    }),
 });
