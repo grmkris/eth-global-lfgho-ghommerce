@@ -41,6 +41,7 @@ export const CreateInvoiceForm = ({
 }) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const store = trpcClient.stores.getStore.useQuery({ storeId: storeId });
   const createInvoice = trpcClient.invoices.createInvoice.useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries();
@@ -95,6 +96,7 @@ export const CreateInvoiceForm = ({
       description: "Introduce the details of the invoice",
       formSchema: InvoiceInformation,
       onSubmit: async (data: InvoiceInformation) => {
+        if (!store.data) throw new Error("Store not found");
         setInvoiceData(data);
         await createInvoice.mutateAsync({
           storeId: storeId,
@@ -102,7 +104,10 @@ export const CreateInvoiceForm = ({
           currency: "USD",
           ...payerInformation,
           ...data,
-          acceptedTokens: ERC20_TOKEN_MAPPER[invoiceData.selectedToken],
+          acceptedTokens:
+            ERC20_TOKEN_MAPPER[store.data?.isTestnet ? "testnet" : "mainnet"][
+              invoiceData.selectedToken
+            ],
         });
         resetState();
         onClose();

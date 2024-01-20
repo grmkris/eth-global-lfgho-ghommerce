@@ -3,12 +3,12 @@
 import * as React from "react";
 import { ChainSchema } from "ghommerce-schema/src/chains.schema.ts";
 import { TokenSchema } from "ghommerce-schema/src/tokens.schema.ts";
-import { VirtualizedCombobox } from "@/components/VirtualCombobox.tsx";
 import { CheckIcon, Link } from "lucide-react";
 import { Badge } from "@/components/ui/badge.tsx";
 import { ZERO_ADDRESS } from "ghommerce-schema/src/tokens.schema.ts";
-import { apiTrpc } from "@/trpc-client.ts";
 import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
+import { VirtualizedCombobox } from "@/components/VirtualCombobox.tsx";
+import { trpcClient } from "@/features/trpc-client.ts";
 
 const TokenDropdownElement = (props: {
   token: TokenSchema;
@@ -50,7 +50,7 @@ export const TokenDropdown = (props: {
   value?: TokenSchema[];
   options: TokenSchema[];
 }) => {
-  const tokens = apiTrpc.tokens.getTokens.useQuery({
+  const tokens = trpcClient.tokens.getTokens.useQuery({
     chain: props.chain?.name ?? "eth-mainnet",
   });
   const [selectedValues, setSelectedValues] = React.useState<TokenSchema[]>(

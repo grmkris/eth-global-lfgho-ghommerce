@@ -279,9 +279,8 @@ export const CreateStoreComponent = (props: {
               return;
             }
             const result = createStore.mutateAsync({
-              name: data.name,
-              description: data.description,
               safeId: props.safeId,
+              ...data,
             });
             toast.toast({
               variant: "default",

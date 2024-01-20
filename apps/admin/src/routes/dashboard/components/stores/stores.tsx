@@ -24,10 +24,13 @@ import { trpcClient } from "@/features/trpc-client.ts";
 
 import { useState } from "react";
 import { StoreInvoices } from "@/routes/dashboard/components/invoices.tsx";
-import { selectInvoiceSchema } from "../../../../../../../packages/schema/src/db/invoices.db.ts";
+import { selectInvoiceSchema } from "ghommerce-schema/src/db/invoices.db.ts";
 import { Loader, MoreHorizontal } from "lucide-react";
 import { map, sumBy } from "remeda";
 import { CreateStoreModal } from "@/routes/dashboard/components/stores/CreateStore.modal.tsx";
+import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
+import { Address } from "ghommerce-schema/src/address.schema";
+import { Badge } from "@/components/ui/badge.tsx";
 
 export type Store = {
   description: string;
@@ -35,10 +38,11 @@ export type Store = {
   name: string;
   createdAt: string | null;
   updatedAt: string | null;
+  isTestnet: boolean;
   userId: string;
   safeId: string;
   safe: {
-    address: string;
+    address: Address;
   };
 };
 
@@ -121,7 +125,7 @@ export const StoreCard = (props: {
 }) => {
   const { store, selectedStoreId, handleSelectStore } = props;
   const tokens = trpcClient.tokens.getTokensForAddress.useQuery({
-    address: store.safe.address,
+    address: store.safe?.address,
     quoteCurrency: "USD",
   });
 
@@ -163,6 +167,14 @@ export const StoreCard = (props: {
             </p>
           )}
           <p className="text-sm">{store.description}</p>
+          <p className="text-sm">
+            <CopyAddressLabel address={store.safe.address} />
+          </p>
+          {store.isTestnet && (
+            <p className="text-sm">
+              <Badge variant={"outline"}>Testnet</Badge>
+            </p>
+          )}
         </div>
       </CardContent>
     </Card>

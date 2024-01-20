@@ -5,8 +5,8 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { selectStoreSchema, stores } from "./stores.db.ts";
 import { relations } from "drizzle-orm";
 import { payments } from "./payments.db.ts";
-import {invoices} from "./invoices.db.ts";
-import {invoiceToDonation} from "./invoiceToDonation.db.ts";
+import { invoices } from "./invoices.db.ts";
+import { invoiceToDonation } from "./invoiceToDonation.db.ts";
 
 export const donations = pgTable("donations", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),

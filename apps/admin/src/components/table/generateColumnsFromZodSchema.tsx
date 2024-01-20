@@ -8,11 +8,67 @@ import {
   DataTableRowActions,
   DataTableRowActionsProps,
 } from "@/components/table/components/data-table-row-actions.tsx";
-import { TableConfig } from "@/features/auto-admin/createEntityRoute.tsx";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, FilterFnOption } from "@tanstack/react-table";
 import { z } from "zod";
 
+/**
+ * Utility type to extract keys from a zod schema
+ */
+type ExtractKeys<T> = T extends z.ZodObject<infer U> ? keyof U : never;
+
+/**
+ * FilterConfig object that can be applied to each key in the schema.
+ */
+export type FilterConfig<TData> = {
+  id: string;
+  filterFn?: FilterFnOption<TData>;
+  title: string;
+  options?: {
+    label: string;
+    value: string;
+    icon?: React.ComponentType<{ className?: string }>;
+  }[];
+};
+
+/**
+ * ColumnConfig object that can be applied to each key in the schema.
+ */
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+type ColumnConfig<TSchema extends z.ZodObject<any>> = {
+  id?: string;
+  name?: string;
+  type?: string;
+  relation?: string;
+  enableSearch?: boolean;
+  enableSorting?: boolean;
+  filterConfig?: FilterConfig<z.infer<TSchema>> | true;
+  render?: (row: z.infer<TSchema>) => React.ReactNode;
+};
+
+/**
+ * Generic config type that can be applied to each key in the schema.
+ * It is used for form customization.
+ */
+type FormFieldConfig = {
+  name: string;
+  label?: string;
+};
+
+/**
+ * FormConfig object describing the form fields.
+ */
+// biome-ignore lint/suspicious/noExplicitAny: <🥸>
+export type FormConfig<TSchema extends z.ZodObject<any>> = {
+  [K in ExtractKeys<TSchema>]?: FormFieldConfig;
+};
+
+// biome-ignore lint/suspicious/noExplicitAny: <🥸>
+export type TableConfig<TSchema extends z.ZodObject<any>> = {
+  [K in ExtractKeys<TSchema>]?: ColumnConfig<TSchema>;
+};
+
 export function generateColumnsFromZodSchema<
+  // biome-ignore lint/suspicious/noExplicitAny: <🥸>
   TSchema extends z.ZodObject<any>,
   TData = z.infer<TSchema>,
 >(
@@ -37,6 +93,9 @@ export function generateColumnsFromZodSchema<
         <DataTableColumnHeader column={column.column} title={itemName} />
       ),
       cell: (info) => {
+        if (columnConfig?.render) {
+          return columnConfig.render(info.row.original);
+        }
         const cellValue = info.row.getValue(key);
         // Check if the value is a ZodDate
         if (zodBaseType === "ZodDate") {
@@ -47,6 +106,7 @@ export function generateColumnsFromZodSchema<
         if (zodBaseType === "ZodObject") {
           if (columnConfig?.relation) {
             // Assuming 'id' and 'name' are properties of your ZodObject
+            // @ts-ignore // biome-ignore lint/suspicious/noExplicitAny: <🥸>
             const id = cellValue.id;
             // Render a clickable element
             return <a href={`/${columnConfig?.relation}s/${id}/edit`}>{id}</a>;

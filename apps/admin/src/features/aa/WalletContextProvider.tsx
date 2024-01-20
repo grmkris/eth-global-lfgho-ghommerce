@@ -25,7 +25,7 @@ export type WalletContext = {
     signIn: () => void;
     signOut: () => void;
     signer?: Signer;
-    address?: string;
+    address?: Address;
   };
   signOut: () => void;
   signer?: Signer;

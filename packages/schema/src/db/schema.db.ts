@@ -14,7 +14,7 @@ export {
 
 export {
   invoiceToDonation,
-    invoiceToDonationRelations,
+  invoiceToDonationRelations,
 } from "./invoiceToDonation.db.ts";
 
 export {

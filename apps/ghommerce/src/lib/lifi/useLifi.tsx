@@ -12,6 +12,9 @@ export const useLifiRoutes = (props: {
 }) => {
   const account = useAccount();
   return useQuery({
+    retry: false,
+    cacheTime: Infinity,
+    staleTime: Infinity,
     enabled: !!account.address && !!props.swap.fromAmount,
     queryKey: ["lifi", "routes", props],
     queryFn: async () => {

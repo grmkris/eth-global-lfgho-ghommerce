@@ -120,7 +120,9 @@ export const SwapProviderCard = (props: {
           {/*</div>*/}
           <span className={"font-bold"}>Required tokens</span>
           <span>
-            {props.swapOffer.sellAmount} {props.swapOffer.sellTokenAddress.symbol} ➡️ {props.swapOffer.buyAmount}{" "}
+            {props.swapOffer.sellAmount}{" "}
+            {props.swapOffer.sellTokenAddress.symbol} ➡️{" "}
+            {props.swapOffer.buyAmount}{" "}
             {props.swapOffer.sellTokenAddress.symbol}
           </span>
           <span>

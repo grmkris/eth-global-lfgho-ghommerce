@@ -1,5 +1,12 @@
 import { relations } from "drizzle-orm";
-import { jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  jsonb,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { invoices } from "./invoices.db.ts";
@@ -17,6 +24,7 @@ export const stores = pgTable("stores", {
     .notNull()
     .references(() => safes.id),
   description: text("description").notNull(),
+  isTestnet: boolean("is_testnet").notNull(),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow(),
 });

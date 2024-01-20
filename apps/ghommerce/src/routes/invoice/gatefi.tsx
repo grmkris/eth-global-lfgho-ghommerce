@@ -1,7 +1,7 @@
 import { GateFiDisplayModeEnum, GateFiSDK } from "@gatefi/js-sdk";
 import { useEffect, useRef, useState } from "react";
-import { apiTrpc } from "@/trpc-client.ts";
 import { Label } from "@/components/ui/label.tsx";
+import { apiTrpc } from "@/trpc-client.ts";
 
 export const Gatefi = () => {
   return (
@@ -33,7 +33,7 @@ export const useGateFi = (props: {
   }, []);
 
   const handleOnClick = () => {
-    if (!invoice.data?.store?.safe?.address) throw new Error("No safe address");
+    if (!invoice.data?.store?.wallet) throw new Error("No wallet address");
     if (overlayInstanceSDK.current) {
       if (isOverlayVisible) {
         overlayInstanceSDK.current.hide();
@@ -48,8 +48,8 @@ export const useGateFi = (props: {
         displayMode: GateFiDisplayModeEnum.Overlay,
         nodeSelector: "#unlimit-overlay",
         isSandbox: true,
-        walletAddress: invoice.data.store.safe.address,
-        email: invoice.data?.payerEmail ?? "dein@joni.com",
+        walletAddress: invoice.data.store.wallet,
+        email: invoice.data.payer.payerEmail ?? "",
         externalId: invoice.data.id,
         defaultFiat: {
           currency: invoice.data.currency ?? "USD",

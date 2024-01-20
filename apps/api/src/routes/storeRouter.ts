@@ -69,6 +69,7 @@ export const storeRouter = router({
         safeId: z.string().uuid(),
         name: z.string(),
         description: z.string(),
+        isTestnet: z.boolean(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -88,6 +89,7 @@ export const storeRouter = router({
           name: input.name,
           description: input.description,
           userId: ctx.session.user.id,
+          isTestnet: input.isTestnet,
           createdAt: new Date(),
         })
         .returning()

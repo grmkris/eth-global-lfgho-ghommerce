@@ -1,6 +1,6 @@
 {
-  "id": "9170048d-6ded-4fb3-8f2e-bbf3c117e42d",
-  "prevId": "77fefd8b-03ef-488b-9c9c-b64662daa95c",
+  "id": "abe91b4a-1ee9-45ea-bf89-572182faa534",
+  "prevId": "9170048d-6ded-4fb3-8f2e-bbf3c117e42d",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -506,6 +506,12 @@
         "description": {
           "name": "description",
           "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_testnet": {
+          "name": "is_testnet",
+          "type": "boolean",
           "primaryKey": false,
           "notNull": true
         },

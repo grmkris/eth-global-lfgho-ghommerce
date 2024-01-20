@@ -94,7 +94,7 @@ export const verifyWalletRouter = router({
   isVerified: authProcedure
     .input(
       z.object({
-        wallet: Address,
+        wallet: Address.optional(),
       }),
     )
     .query(async ({ input, ctx }) => {

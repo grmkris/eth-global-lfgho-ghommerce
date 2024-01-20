@@ -6,8 +6,8 @@ import {
   donations,
   selectDonationSchema,
 } from "ghommerce-schema/src/db/donations.db";
-import {selectInvoiceSchema} from "ghommerce-schema/src/db/invoices.db";
-import {InvoiceSchema} from "ghommerce-schema/src/api/invoice.api.schema";
+import { selectInvoiceSchema } from "ghommerce-schema/src/db/invoices.db";
+import { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema";
 
 export const donationRouter = router({
   getDonation: publicProcedure

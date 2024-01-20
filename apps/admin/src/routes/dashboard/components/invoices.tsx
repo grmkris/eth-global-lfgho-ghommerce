@@ -1,11 +1,12 @@
 import { DataTable } from "@/components/table/components/data-table";
 import { generateColumnsFromZodSchema } from "@/components/table/generateColumnsFromZodSchema.tsx";
-import { selectInvoiceSchema } from "../../../../../../packages/schema/src/db/invoices.db.ts";
+import { selectInvoiceSchema } from "ghommerce-schema/src/db/invoices.db.ts";
 import { useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog } from "@/components/ui/dialog.tsx";
 
 import { CreateInvoiceForm } from "./stores/CreateInvoiceForm";
+import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
 
 /** Displays the invoices for a store */
 export const StoreInvoices = (props: {
@@ -18,8 +19,20 @@ export const StoreInvoices = (props: {
       createdAt: true,
       status: true,
       amountDue: true,
+      payerWallet: true,
+      payerEmail: true,
     }),
-    {},
+    {
+      payerWallet: {
+        render: (value) => {
+          return value.payerWallet ? (
+            <CopyAddressLabel address={value.payerWallet} />
+          ) : (
+            <span>Unknown</span>
+          );
+        },
+      },
+    },
     {
       onOpen: (invoice) => {
         console.log(invoice);

@@ -16,6 +16,7 @@ import {
   rootRouteWithContext,
 } from "@tanstack/react-router";
 import { createWeb3Modal, defaultConfig } from "@web3modal/ethers/react";
+import { Toaster } from "@/components/ui/toaster.tsx";
 
 const projectId = "bb5b12992cbf95ff3d7bc9bb1526c9d9";
 
@@ -55,6 +56,7 @@ export const App = () => {
       <WalletContextProvider>
         <RouterProvider router={router} />
       </WalletContextProvider>
+      <Toaster />
     </TrpcProvider>
   );
 };

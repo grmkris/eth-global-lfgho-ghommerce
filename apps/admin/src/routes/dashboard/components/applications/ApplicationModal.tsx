@@ -40,7 +40,7 @@ export const ApplicationModal = () => {
       z.object({
         amount: z.coerce.number(),
         description: z.string(),
-      })
+      }),
     ),
   });
   return (

@@ -9,6 +9,7 @@ import {
 import { PlusCircleIcon } from "lucide-react";
 import { SafesDropdown } from "./SafesDropdown";
 import { CreateStoreComponent } from "@/routes/indexRoute";
+import { Button } from "@/components/ui/button.tsx";
 
 export const CreateStoreModal = () => {
   const safes = trpcClient.stores.getSafes.useQuery();
@@ -16,12 +17,9 @@ export const CreateStoreModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <PlusCircleIcon
-        size={64}
-        color="gray"
-        className="hover:cursor-pointer"
-        onClick={() => setIsModalOpen(true)}
-      />
+      <Button size={"icon"} variant={"ghost"}>
+        <PlusCircleIcon size={64} onClick={() => setIsModalOpen(true)} />
+      </Button>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Creating new store</DialogTitle>

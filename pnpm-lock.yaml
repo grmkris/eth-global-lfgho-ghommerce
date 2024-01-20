@@ -119,6 +119,9 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.11.6
         version: 8.11.6(react-dom@18.2.0)(react@18.2.0)
+      '@tanstack/react-virtual':
+        specifier: ^3.0.2
+        version: 3.0.2(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/router-devtools':
         specifier: ^1.4.7
         version: 1.4.7(react-dom@18.2.0)(react@18.2.0)
@@ -4600,6 +4603,17 @@ packages:
 
   /@tanstack/react-virtual@3.0.1(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-IFOFuRUTaiM/yibty9qQ9BfycQnYXIDHGP2+cU+0LrFFGNhVxCXSQnaY6wkX8uJVteFEBjUondX0Hmpp7TNcag==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@tanstack/virtual-core': 3.0.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@tanstack/react-virtual@3.0.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-9XbRLPKgnhMwwmuQMnJMv+5a9sitGNCSEtf/AZXzmJdesYk7XsjYHaEDny+IrJzvPNwZliIIDwCRiaUqR3zzCA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
