@@ -1,45 +1,45 @@
-import { Outlet, RootRoute, Router } from "@tanstack/react-router"
-import * as React from "react"
-import { Suspense, useEffect, useRef, useState } from "react"
-import { z } from "zod"
-import { indexRoute } from "./index.tsx"
-import { aboutRoute } from "@/routes/about.tsx"
+import { Outlet, RootRoute, Router } from "@tanstack/react-router";
+import * as React from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { z } from "zod";
+import { indexRoute } from "./index.tsx";
+import { aboutRoute } from "@/routes/about.tsx";
 import {
   subPage1,
   subPage2,
   subPage3,
   subPage4,
   subPage5,
-} from "@/routes/dynamic.tsx"
-import { AppDrawer } from "@/drawers/AppDrawer.tsx"
-import { swapRoute } from "@/routes/swap/swap.tsx"
-import { donationRoute } from "./donation/donation.tsx"
-import { invoiceRoute } from "./invoice/invoice.tsx"
+} from "@/routes/dynamic.tsx";
+import { AppDrawer } from "@/drawers/AppDrawer.tsx";
+import { swapRoute } from "@/routes/swap/swap.tsx";
+import { donationRoute } from "./donation/donation.tsx";
+import { invoiceRoute } from "./invoice/invoice.tsx";
 
 const TanStackRouterDevtools =
   process.env.NODE_ENV === "production"
     ? () => null // Render nothing in production
     : React.lazy(() =>
         // Lazy load in development
-        import("@tanstack/router-devtools").then(res => ({
+        import("@tanstack/router-devtools").then((res) => ({
           default: res.TanStackRouterDevtools,
-        }))
-      )
+        })),
+      );
 
 // Create a root route
 export const rootRoute = new RootRoute({
   component: Root,
-})
+});
 
 function Root() {
-  const customContainerRef = useRef(null)
-  const [container, setContainer] = useState(null)
+  const customContainerRef = useRef(null);
+  const [container, setContainer] = useState(null);
 
   useEffect(() => {
     if (customContainerRef.current) {
-      setContainer(customContainerRef.current)
+      setContainer(customContainerRef.current);
     }
-  }, [])
+  }, []);
 
   //remove scorllbar - overflow-hidden
   return (
@@ -59,7 +59,7 @@ function Root() {
         <TanStackRouterDevtools />
       </Suspense>
     </div>
-  )
+  );
 }
 
 // Create the route tree using your routes
@@ -74,15 +74,15 @@ const routeTree = rootRoute.addChildren([
   subPage3,
   subPage4,
   subPage5,
-])
+]);
 
 // Create the router using your route tree
-export const iframeRouter = new Router({ routeTree })
+export const iframeRouter = new Router({ routeTree });
 
 // Register your router for maximum type safety
 declare module "@tanstack/react-router" {
   interface Register {
-    routerC: typeof iframeRouter
+    routerC: typeof iframeRouter;
   }
 }
 
@@ -96,4 +96,4 @@ export const Paths = z.enum([
   "/sub-page-3",
   "/sub-page-4",
   "/sub-page-5",
-])
+]);

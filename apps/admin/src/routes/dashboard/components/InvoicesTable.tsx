@@ -7,9 +7,22 @@ import { Dialog } from "@/components/ui/dialog.tsx";
 
 import { CreateInvoiceForm } from "./stores/CreateInvoiceForm";
 import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
+import { Badge } from "@/components/ui/badge.tsx";
+import { InvoiceStatus } from "ghommerce-schema/src/invoice.schema.ts";
+
+const InvoiceStatusBadge = (props: { status: InvoiceStatus }) => {
+  switch (props.status) {
+    case "paid":
+      return <Badge variant="default">Paid</Badge>;
+    case "pending":
+      return <Badge variant="outline">Unpaid</Badge>;
+    case "handled":
+      return <Badge variant="secondary">Handled</Badge>;
+  }
+};
 
 /** Displays the invoices for a store */
-export const StoreInvoices = (props: {
+export const InvoicesTable = (props: {
   data: selectInvoiceSchema[];
   selectedStoreId: string;
 }) => {
@@ -31,6 +44,11 @@ export const StoreInvoices = (props: {
           ) : (
             <span>Unknown</span>
           );
+        },
+      },
+      status: {
+        render: (value) => {
+          return <InvoiceStatusBadge status={value.status} />;
         },
       },
     },

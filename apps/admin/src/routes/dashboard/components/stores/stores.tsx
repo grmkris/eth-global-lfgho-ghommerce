@@ -23,7 +23,7 @@ import {
 import { trpcClient } from "@/features/trpc-client.ts";
 
 import { useState } from "react";
-import { StoreInvoices } from "@/routes/dashboard/components/invoices.tsx";
+import { InvoicesTable } from "@/routes/dashboard/components/InvoicesTable.tsx";
 import { selectInvoiceSchema } from "ghommerce-schema/src/db/invoices.db.ts";
 import { Loader, MoreHorizontal } from "lucide-react";
 import { map, sumBy } from "remeda";
@@ -108,7 +108,7 @@ const Stores = (props: { stores: Store[] }) => {
       {!selectedStoreId && <p>no data</p>}
       {invoices.data && selectedStoreId && (
         <div>
-          <StoreInvoices
+          <InvoicesTable
             data={selectInvoiceSchema.array().parse(invoices.data)}
             selectedStoreId={selectedStoreId}
           />
