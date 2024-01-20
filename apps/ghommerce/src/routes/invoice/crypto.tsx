@@ -46,6 +46,9 @@ export const CryptoScreen = (props: {
       enabled: !!account.address,
     },
   );
+  const selectedToken = tokens.data?.items.find(
+    (x) => x.address === params.token,
+  );
 
   const handleTokenChange = async (token: TokenSchema) => {
     console.log("handleTokenChange", token);
@@ -79,11 +82,11 @@ export const CryptoScreen = (props: {
         <div className={"flex flex-col space-y-1"}>
              <TokenSwapInformationCard swapData={{
                fromToken: {}, // TODO
-               toToken: {}, // TODO
+               toToken: selectedToken,
                fromAddress: account.address,
-               toAddress: props.invoice.store.safe?.address,
-               fromAmount: 0, // TODO
-               toAmount: 0, // TODO
+               toAddress: props.invoice.store?.safe?.address,
+               fromAmount: params.amount,
+               toAmount: 120
              }}/>
           {tokens.data && (
             <TokenList
