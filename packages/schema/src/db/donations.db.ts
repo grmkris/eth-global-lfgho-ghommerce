@@ -42,6 +42,8 @@ export const selectDonationSchema = createSelectSchema(donations, {
   store: selectStoreSchema.optional(),
 });
 
+export type selectDonationSchema = z.infer<typeof selectDonationSchema>;
+
 export const donationRelations = relations(donations, ({ many, one }) => ({
   invoiceToDonation: many(invoiceToDonation),
   store: one(stores, {

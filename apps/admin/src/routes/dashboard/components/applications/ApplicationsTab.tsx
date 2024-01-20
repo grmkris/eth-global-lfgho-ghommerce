@@ -20,6 +20,9 @@ import {
 } from "@/routes/dashboard/components/applications/ApplicationCard.tsx";
 import { Church, Contact, FileQuestion, Flame, Store } from "lucide-react";
 import { trpcClient } from "@/features/trpc-client.ts";
+import { selectDonationSchema } from "ghommerce-schema/src/db/donations.db.ts";
+import { generateColumnsFromZodSchema } from "@/components/table/generateColumnsFromZodSchema.tsx";
+import { DataTable } from "@/components/table/components/data-table.tsx";
 
 const integrationCards: IntegrationCardProps[] = [
   {
@@ -109,48 +112,82 @@ export const ApplicationsTab = (props: { userId: string }) => {
 
   console.log("donations", donations.data);
   return (
-      <>
-        <ApplicationModals />
-        <div className="py-8 flex flex-col gap-4">
-          <p className="text-gray-600">
-            Create a new application or connect to an integration to start selling
-          </p>
-          <Card>
-            <CardHeader>
-              <CardTitle>Applications</CardTitle>
-              <CardDescription>
-                Create a new internal application to quickly start monetizing your
-                content, products or services
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-row flex-wrap gap-4">
-              {applicationCards.map((application) => (
-                  <ApplicationCard
-                      key={application.name}
-                      applicationItem={application}
-                      userId={props.userId}
-                  />
-              ))}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Integrations</CardTitle>
-              <CardDescription>
-                You can connect 3rd party applications to your store to start
-                selling in your favorite platform.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-row flex-wrap gap-4">
-              {integrationCards.map((application) => (
-                  <IntegrationCard
-                      applicationItem={application}
-                      userId={props.userId}
-                  />
-              ))}
-            </CardContent>
-          </Card>
-        </div>
-      </>
-  )
+    <>
+      <ApplicationModals />
+      <div className="py-8 flex flex-col gap-4">
+        <p className="text-gray-600">
+          Create a new application or connect to an integration to start selling
+        </p>
+        <Card>
+          <CardHeader>
+            <CardTitle>Applications</CardTitle>
+            <CardDescription>
+              Create a new internal application to quickly start monetizing your
+              content, products or services
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-row flex-wrap gap-4">
+            {applicationCards.map((application) => (
+              <ApplicationCard
+                key={application.name}
+                applicationItem={application}
+                userId={props.userId}
+              />
+            ))}
+          </CardContent>
+        </Card>
+        <DonationsTable data={selectDonationSchema.array().parse(donations.data ?? [])} />
+        <Card>
+          <CardHeader>
+            <CardTitle>Integrations</CardTitle>
+            <CardDescription>
+              You can connect 3rd party applications to your store to start
+              selling in your favorite platform.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-row flex-wrap gap-4">
+            {integrationCards.map((application) => (
+              <IntegrationCard
+                applicationItem={application}
+                userId={props.userId}
+              />
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    </>
+  );
+};
+
+export const DonationsTable = (props: { data: selectDonationSchema[] }) => {
+  const columns = generateColumnsFromZodSchema(
+    selectDonationSchema.pick({
+      id: true,
+      donationData: true,
+      storeId: true,
+    }),
+    {
+      donationData: {
+        render: (value) => {
+          return value.donationData ? (
+            <span>{value.donationData.name}</span>
+          ) : (
+            <span>Unknown</span>
+          );
+        },
+      },
+    },
+    {
+      onOpen: (donation) => {
+        console.log(donation);
+        window.open(`http://localhost:5321/donation?id=${donation.id}`);
+      },
+    },
+  );
+
+  return (
+    <>
+      <DataTable data={props.data} columns={columns} />
+    </>
+  );
 };
