@@ -9,7 +9,6 @@ import { CreateInvoiceForm } from "./stores/CreateInvoiceForm";
 import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { InvoiceStatus } from "ghommerce-schema/src/invoice.schema.ts";
-import { useApplicationModals } from "@/routes/dashboard/components/applications/useApplicationModals.tsx";
 
 const InvoiceStatusBadge = (props: { status: InvoiceStatus }) => {
   switch (props.status) {
@@ -27,7 +26,6 @@ export const InvoicesTable = (props: {
   data: selectInvoiceSchema[];
   selectedStoreId: string;
 }) => {
-  const modal = useApplicationModals((state) => state.open);
   const columns = generateColumnsFromZodSchema(
     selectInvoiceSchema.pick({
       id: true,
@@ -63,17 +61,15 @@ export const InvoicesTable = (props: {
   );
 
   return (
-    <>
-      <DataTable
-        data={props.data}
-        columns={columns}
-        rightToolbarActions={
-          <Button size={"sm"} onClick={() => modal("donations")}>
-            New invoice
-          </Button>
-        }
-      />
-    </>
+        <DataTable
+            data={props.data}
+            columns={columns}
+            rightToolbarActions={
+                <>
+                    <CreateInvoiceComponent storeId={props.selectedStoreId} />
+                </>
+            }
+        />
   );
 };
 
