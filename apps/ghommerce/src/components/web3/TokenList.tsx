@@ -11,7 +11,7 @@ import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
 import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
 
 export const TokenList = (props: {
-  selectedToken?: TokenAmountSchema;
+  selectedToken?: TokenSchema;
   tokens: TokenAmountSchema[];
   onSelect?: (token: TokenSchema) => void;
 }) => {

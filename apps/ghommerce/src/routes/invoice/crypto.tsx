@@ -35,7 +35,10 @@ export const CryptoScreen = (props: {
   const updatePayerInformation = apiTrpc.invoices.updatePayerData.useMutation();
   const account = useAccount({
     onConnect: () => {
-      if (account.address && account.address !== props.invoice.payerWallet)
+      if (
+        account.address &&
+        account.address !== props.invoice.payer.payerWallet
+      )
         updatePayerInformation.mutate({
           invoiceId: props.invoice.id,
           payerData: { payerWallet: account.address },
@@ -86,12 +89,11 @@ export const CryptoScreen = (props: {
                   fromToken: selectedToken,
                   toToken: x,
                   fromAddress: Address.parse(account.address),
-                  toAddress: Address.parse(props.invoice.store?.safe?.address),
+                  toAddress: Address.parse(props.invoice.store.wallet),
                   fromAmount: (
                     props.invoice.amountDue /
                     z.coerce.number().parse(selectedToken.priceUSD)
                   ).toString(),
-                  toAmount: props.invoice.amountDue.toString(), // TODO: calculate this based on the price of the token
                 }}
               />
             ))}
@@ -100,7 +102,7 @@ export const CryptoScreen = (props: {
             <TokenList
               onSelect={handleTokenChange}
               tokens={TokenAmountSchema.array().parse(tokens.data.items)}
-              selectedToken={selectedToken?.[0]}
+              selectedToken={selectedToken}
             />
           )}
         </div>

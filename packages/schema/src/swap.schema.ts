@@ -6,7 +6,6 @@ export const SwapSchema = z.object({
   fromToken: TokenSchema,
   toToken: TokenSchema,
   fromAmount: z.string(),
-  toAmount: z.string(),
   toAddress: Address,
   fromAddress: Address,
 });

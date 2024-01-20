@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import { BaseTokenSchema } from "ghommerce-schema/src/tokens.schema.ts";
+import { TokenSchema } from "ghommerce-schema/src/tokens.schema.ts";
 import { formatUnits } from "viem";
 
 const SWAP_PROVIDERS = ["1inch", "0x", "lifi", "paraswap"] as const;
@@ -24,8 +24,8 @@ const SwapOfferSchema = z.object({
   gas: z.string().optional(),
   sellAmount: z.string(),
   buyAmount: z.string(),
-  buyTokenAddress: BaseTokenSchema,
-  sellTokenAddress: BaseTokenSchema,
+  buyTokenAddress: TokenSchema,
+  sellTokenAddress: TokenSchema,
   allowanceTarget: z.string().optional(),
 });
 export type SwapOfferSchema = z.infer<typeof SwapOfferSchema>;

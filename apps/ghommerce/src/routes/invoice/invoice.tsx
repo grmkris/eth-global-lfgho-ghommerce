@@ -54,7 +54,7 @@ function Invoice() {
     invoiceId: invoiceId,
   });
   useEffect(() => {
-    if (invoice.data?.status === "pending") {
+    if (invoice.data?.status === "paid") {
       // Configure and start the confetti
       const jsConfetti = new JSConfetti();
 
@@ -88,6 +88,7 @@ function PaymentScreen(props: {
       gateFi.handleOnClick();
     }
     if (selectedPaymentMethod === "crypto") {
+      // @ts-ignore https://discord.com/channels/719702312431386674/1007702008448426065/1198246465970110484
       navigate({ search: (prev) => ({ ...prev, step: "crypto" }) });
     } else {
       toaster.toast({
@@ -111,22 +112,25 @@ function PaymentScreen(props: {
       {/* Scrollable Content */}
       <div className="flex-grow overflow-auto space-y-2 custom-scrollbar">
         <InvoiceInformation invoice={props.invoice} />
-        {step === "payment" && (
-          <div className={SLIDE_IN_SLIDE_OUT_LEFT}>
-            <PaymentSelector />
+        {
+          // STEP 1
+          step === "payment" && (
+            <div className={SLIDE_IN_SLIDE_OUT_LEFT}>
+              <PaymentSelector />
 
-            <div className="mt-4">
-              <Button
-                variant={isPayActionDisabled ? "outline" : "default"}
-                disabled={isPayActionDisabled}
-                className="w-full"
-                onClick={handleClick}
-              >
-                Pay now
-              </Button>{" "}
+              <div className="mt-4">
+                <Button
+                  variant={isPayActionDisabled ? "outline" : "default"}
+                  disabled={isPayActionDisabled}
+                  className="w-full"
+                  onClick={handleClick}
+                >
+                  Pay now
+                </Button>{" "}
+              </div>
             </div>
-          </div>
-        )}
+          )
+        }
 
         {
           // STEP 2
@@ -165,7 +169,7 @@ export const PaymentSelector = () => {
       </CardHeader>
       <CardContent className="grid gap-6">
         <RadioGroup
-          defaultValue={undefined}
+          defaultValue={params.selectedPaymentMethod}
           className="grid grid-cols-2 gap-4"
           onValueChange={(value) => onSelectedChange(value)}
         >
@@ -189,44 +193,18 @@ export const PaymentSelector = () => {
         </RadioGroup>
         <InvoicePayerInformation
           invoiceId={invoice.data?.id}
-          payerData={invoice.data}
+          payerData={invoice.data?.payer}
         />
       </CardContent>
     </Card>
   );
 };
 
-export const InvoiceInformation = (props: {
+function FullInvoiceInformation(props: {
   invoice: InvoiceSchema;
-}) => {
+}) {
   const invoice = props.invoice;
-  const [showMore, setShowMore] = useState(false);
-
-  const toggleShowMore = () => setShowMore(!showMore);
-
-  const MinimalInvoiceInfo = () => (
-    <CardContent className="flex flex-row items-center justify-between p-4">
-      <div className="flex flex-col">
-        <span className="text-sm font-medium text-gray-600">Payer:</span>
-        <span className="text-lg">{invoice?.payer.payerName}</span>
-      </div>
-      <div className="flex flex-col">
-        <span className="text-sm font-medium text-gray-600">Due:</span>
-        <span className="text-lg">{`${invoice?.amountDue} ${invoice?.currency}`}</span>
-      </div>
-      <div className="flex flex-col">
-        <span className="text-sm font-medium text-gray-600">Status:</span>
-        <Badge>{invoice?.status}</Badge>
-      </div>
-      <div className="flex items-center">
-        {invoice?.acceptedTokens.map((x) => (
-          <TokenImage tokenData={x} />
-        ))}
-      </div>
-    </CardContent>
-  );
-
-  const FullInvoiceInfo = () => (
+  return (
     <div className="overflow-auto max-h-96 custom-scrollbar">
       {
         <CardContent className="grid gap-6">
@@ -283,6 +261,42 @@ export const InvoiceInformation = (props: {
       }
     </div>
   );
+}
+
+const MinimalInvoiceInfo = (props: {
+  invoice: InvoiceSchema;
+}) => {
+  const invoice = props.invoice;
+  return (
+    <CardContent className="flex flex-row items-center justify-between p-4">
+      <div className="flex flex-col">
+        <span className="text-sm font-medium text-gray-600">Payer:</span>
+        <span className="text-lg">{invoice?.payer.payerName}</span>
+      </div>
+      <div className="flex flex-col">
+        <span className="text-sm font-medium text-gray-600">Due:</span>
+        <span className="text-lg">{`${invoice?.amountDue} ${invoice?.currency}`}</span>
+      </div>
+      <div className="flex flex-col">
+        <span className="text-sm font-medium text-gray-600">Status:</span>
+        <Badge>{invoice?.status}</Badge>
+      </div>
+      <div className="flex items-center">
+        {invoice?.acceptedTokens.map((x) => (
+          <TokenImage tokenData={x} />
+        ))}
+      </div>
+    </CardContent>
+  );
+};
+
+export const InvoiceInformation = (props: {
+  invoice: InvoiceSchema;
+}) => {
+  const invoice = props.invoice;
+  const [showMore, setShowMore] = useState(false);
+
+  const toggleShowMore = () => setShowMore(!showMore);
 
   return (
     <Card>
@@ -293,7 +307,11 @@ export const InvoiceInformation = (props: {
         </Button>
       </CardHeader>
       <CardContent>
-        {showMore ? <FullInvoiceInfo /> : <MinimalInvoiceInfo />}
+        {showMore ? (
+          <FullInvoiceInformation invoice={invoice} />
+        ) : (
+          <MinimalInvoiceInfo invoice={invoice} />
+        )}
       </CardContent>
     </Card>
   );
