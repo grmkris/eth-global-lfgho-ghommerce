@@ -6,6 +6,8 @@ import {
   donations,
   selectDonationSchema,
 } from "ghommerce-schema/src/db/donations.db";
+import {selectInvoiceSchema} from "ghommerce-schema/src/db/invoices.db";
+import {InvoiceSchema} from "ghommerce-schema/src/api/invoice.api.schema";
 
 export const donationRouter = router({
   getDonation: publicProcedure
@@ -38,7 +40,7 @@ export const donationRouter = router({
         email: z.string().email().optional(), // TODO add params as needed
       }),
     )
-    .output(selectDonationSchema)
+    .output(InvoiceSchema)
     .query(async ({ input, ctx }) => {
       if (!input?.donationId) throw new Error("Invalid donationId");
       const result = await db.query.donations.findFirst({
@@ -58,6 +60,6 @@ export const donationRouter = router({
 
       // return invoice
 
-      return selectDonationSchema.parse(result);
+      return InvoiceSchema.parse({});
     }),
 });
