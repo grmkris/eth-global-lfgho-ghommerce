@@ -11,9 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import {
-  BaseTokenSchema,
-} from "ghommerce-schema/src/tokens.schema.ts";
+import { BaseTokenSchema } from "ghommerce-schema/src/tokens.schema.ts";
 import { formatUnits } from "viem";
 
 const SWAP_PROVIDERS = ["1inch", "0x", "lifi", "paraswap"] as const;

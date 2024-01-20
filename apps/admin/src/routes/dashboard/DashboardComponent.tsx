@@ -14,7 +14,10 @@ import {
 } from "@/components/ui/carousel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Overview } from "@/routes/dashboard/components/overview.tsx";
-import { StoresWrapper } from "@/routes/dashboard/components/stores/stores";
+import {
+  Store,
+  StoresWrapper,
+} from "@/routes/dashboard/components/stores/stores";
 import { ViewOption, dashboardRoute } from "@/routes/dashboardRoute.tsx";
 import { useRouter } from "@tanstack/react-router";
 import { RecentSales } from "./components/recent-sales";
@@ -23,7 +26,9 @@ import { Loader, Receipt } from "lucide-react";
 import { trpcClient } from "@/features/trpc-client.ts";
 import { dateToTextString } from "@/utils/date";
 import { ApplicationsWrapper } from "./components/applications/applications";
-import {CreateStoreModal} from "@/routes/dashboard/components/stores/CreateStore.modal.tsx";
+import { CreateStoreModal } from "@/routes/dashboard/components/stores/CreateStore.modal.tsx";
+import { filter, map, pipe, sumBy } from "remeda";
+import {z} from "znv";
 
 export const DashboardPage = () => {
   const selectedView = dashboardRoute.useSearch().view;
@@ -94,16 +99,10 @@ export const DashboardPage = () => {
                       <CarouselContent>
                         {stores.data.map((store) => (
                           <CarouselItem>
-                            <SafeWalletCard
-                              storeId={store.id}
+                            <StoreSafeCard
+                              store={store}
                               name={store.name}
-                              balance={"100"}
-                              lastTransaction={
-                                store?.updatedAt
-                                  ? new Date(store.updatedAt)
-                                  : new Date()
-                              }
-                            />{" "}
+                            />
                           </CarouselItem>
                         ))}
                       </CarouselContent>
@@ -196,20 +195,41 @@ export const DashboardPage = () => {
   );
 };
 
-const SafeWalletCard = (props: {
-  storeId: string;
+const StoreSafeCard = (props: {
+  store: Store;
   name: string;
-  balance: string;
-  lastTransaction: Date;
 }) => {
   const invoices = trpcClient.invoices.getInvoices.useQuery({
-    storeId: props.storeId,
+    storeId: props.store.id,
+  });
+  const tokens = trpcClient.tokens.getTokensForAddress.useQuery({
+    address: props.store.safe.address,
+    quoteCurrency: "USD",
   });
 
-  const total = invoices.data?.reduce(
-    (acc, current) => acc + current.amountDue,
-    0,
+  const totalAmountInStore = sumBy(
+    map(
+      tokens.data?.items ?? [],
+      (item) => Number(item.amount) * Number(item?.priceUSD ?? 0),
+    ),
+    (amount) => amount ?? 0,
   );
+
+  // filter ony by confirmed invoices
+  const totalConfirmedInvoices = pipe(
+    invoices.data ?? [],
+    filter((invoice) => invoice.status === "paid"),
+    sumBy((invoice) => Number(invoice.amountDue)),
+  );
+
+  const lastConfirmedInvoice = pipe(
+    invoices.data ?? [],
+    filter((invoice) => invoice.status === "paid"),
+      (invoices) => invoices.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+      (invoices) => invoices[0],
+  );
+
+
 
   return (
     <div className="bg-gray-100 rounded-lg shadow-md text-black p-4">
@@ -220,9 +240,14 @@ const SafeWalletCard = (props: {
         <Receipt />
       </div>
       <div className="mt-4 flex flex-col gap-1">
-        <p className="text-2xl font-bold">{total?.toFixed(2)} USD</p>
+        <p className="text-2xl font-bold">
+            ${totalConfirmedInvoices.toFixed(2)}
+        </p>
         <p className="text-xs">
-          Last Transaction: {dateToTextString(props.lastTransaction)}
+          Total Amount in SAFE: ${totalAmountInStore.toFixed(2)}
+        </p>
+        <p className="text-xs">
+          Last Transaction: {lastConfirmedInvoice?.createdAt ? dateToTextString(z.coerce.date().parse(lastConfirmedInvoice.createdAt)) : "No transactions yet"}
         </p>
       </div>
     </div>

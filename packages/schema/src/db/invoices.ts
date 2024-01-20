@@ -30,8 +30,8 @@ export const invoices = pgTable("invoices", {
   acceptedTokens: jsonb("accepted_tokens").notNull(),
   dueDate: timestamp("due_date", { mode: "date" }),
   status: text("status", { enum: ["pending", "paid", "handled"] }).notNull(),
-  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow().notNull(),
 });
 
 export const selectInvoiceSchema = createSelectSchema(invoices, {
@@ -42,8 +42,8 @@ export const selectInvoiceSchema = createSelectSchema(invoices, {
   payerWallet: Address.optional(),
   payerName: z.string().optional(),
   dueDate: z.coerce.date(),
-  createdAt: () => z.coerce.date().default(new Date()),
-  updatedAt: () => z.coerce.date().default(new Date()),
+  createdAt: () => z.coerce.date(),
+  updatedAt: () => z.coerce.date(),
 }).extend({
   store: selectStoreSchema.optional(),
 });

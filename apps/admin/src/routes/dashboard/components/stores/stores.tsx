@@ -114,15 +114,12 @@ const Stores = (props: { stores: Store[] }) => {
   );
 };
 
-export const StoreCard = ({
-  store,
-  selectedStoreId,
-  handleSelectStore,
-}: {
+export const StoreCard = (props: {
   store: Store;
   selectedStoreId?: string;
   handleSelectStore: (storeId: string) => void;
 }) => {
+  const { store, selectedStoreId, handleSelectStore } = props;
   const tokens = trpcClient.tokens.getTokensForAddress.useQuery({
     address: store.safe.address,
     quoteCurrency: "USD",

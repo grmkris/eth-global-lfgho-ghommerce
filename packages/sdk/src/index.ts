@@ -2,11 +2,15 @@
 /// <reference lib="dom" />
 /// <reference lib="dom.iterable" />
 
-import {createTRPCProxyClient} from "@trpc/client";
-import {windowLink} from "trpc-browser/link";
-import {createIframe, hideIframeModal, showIframeModal} from "./iframe.ts";
-import {HelloSdkInput, HelloSdkOutput, initTrpcWindowHandler} from "./router.ts";
-import type {IframeRouter} from "ghommerce/src/trpc.ts";
+import { createTRPCProxyClient } from "@trpc/client";
+import { windowLink } from "trpc-browser/link";
+import { createIframe, hideIframeModal, showIframeModal } from "./iframe.ts";
+import {
+  HelloSdkInput,
+  HelloSdkOutput,
+  initTrpcWindowHandler,
+} from "./router.ts";
+import type { IframeRouter } from "ghommerce/src/trpc.ts";
 
 export type Actions = {
   onHelloWorld: (
