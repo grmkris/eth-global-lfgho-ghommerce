@@ -1,16 +1,17 @@
 import { create } from "zustand";
-import { ApplicationModal } from "./ApplicationModal";
+import { CreateDonationModal } from "./CreateDonationModal.tsx";
+import {ApplicationType} from "@/routes/dashboard/components/applications/ApplicationCard.tsx";
 
-export type ModalViewType = "applicationModal";
+export type ApplicationModalType = ApplicationType;
 type ModalDataType = {
   userId: string;
 };
 
 type IModalStore = {
   isOpen: boolean;
-  view?: ModalViewType;
+  view?: ApplicationModalType;
   data?: ModalDataType;
-  open: (view: ModalViewType, data?: ModalDataType) => void;
+  open: (view: ApplicationModalType, data?: ModalDataType) => void;
   close: () => void;
 };
 
@@ -40,6 +41,6 @@ export const ApplicationModals = () => {
   if (!modals.view) return null;
 
   return (
-    <div>{modals.view === "applicationModal" && <ApplicationModal />}</div>
+    <div>{modals.view === "donations" && <CreateDonationModal />}</div>
   );
 };

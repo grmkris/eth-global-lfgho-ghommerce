@@ -25,10 +25,11 @@ import { UserNav } from "@/layout";
 import { Loader, Receipt } from "lucide-react";
 import { trpcClient } from "@/features/trpc-client.ts";
 import { dateToTextString } from "@/utils/date";
-import { ApplicationsWrapper } from "./components/applications/applications";
+
 import { CreateStoreModal } from "@/routes/dashboard/components/stores/CreateStore.modal.tsx";
 import { filter, map, pipe, sumBy } from "remeda";
 import { z } from "znv";
+import { ApplicationsTab } from "@/routes/dashboard/components/applications/ApplicationsTab.tsx";
 
 export const DashboardPage = () => {
   const selectedView = dashboardRoute.useSearch().view;
@@ -184,7 +185,7 @@ export const DashboardPage = () => {
             value={ViewOption.enum.Applications}
             className="space-y-4"
           >
-            <ApplicationsWrapper userId={userId.user.id} />
+            <ApplicationsTab userId={userId.user.id} />
           </TabsContent>
         </div>
       </div>

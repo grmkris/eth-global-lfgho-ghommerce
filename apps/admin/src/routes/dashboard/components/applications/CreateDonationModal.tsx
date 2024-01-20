@@ -10,7 +10,20 @@ import { z } from "zod";
 import AutoForm, { AutoFormSubmit } from "@/components/auto-form";
 import { trpcClient } from "@/features/trpc-client";
 
-export const ApplicationModal = () => {
+const DonationDataSchema = z.object({
+    name: z.string(),
+    description: z.string(),
+    // storeId: z.enum(STORE_IDS),
+    storeId: z.string(),
+    options: z.array(
+        z.object({
+            amount: z.coerce.number(),
+            description: z.string(),
+        }),
+    ),
+});
+
+export const CreateDonationModal = () => {
   const { close, isOpen, data } = useApplicationModals((state) => ({
     close: state.close,
     isOpen: state.isOpen,
@@ -22,27 +35,6 @@ export const ApplicationModal = () => {
   });
 
   if (!stores.data) return <></>;
-
-  // const storesIds = stores.data?.map((store) => {
-  //   return store.id;
-  // });
-
-  // if (!storesIds) return <></>;
-
-  // const STORE_IDS = [...storesIds] as const;
-
-  const DonationDataSchema = z.object({
-    name: z.string(),
-    description: z.string(),
-    // storeId: z.enum(STORE_IDS),
-    storeId: z.string(),
-    options: z.array(
-      z.object({
-        amount: z.coerce.number(),
-        description: z.string(),
-      }),
-    ),
-  });
   return (
     <Dialog open={isOpen} onOpenChange={close}>
       <DialogContent className="max-h-screen overflow-y-auto custom-scrollbar m-4">
