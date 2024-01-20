@@ -1,7 +1,7 @@
 import { LiFi, Route } from "@lifi/sdk";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEthersSigner } from "@/lib/useEthersSigner.tsx";
-import { useAccount } from "wagmi";
+import { useAccount, useSwitchNetwork } from "wagmi";
 import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
 
 const getLifiClient = (props: {
@@ -13,10 +13,10 @@ const getLifiClient = (props: {
       apiUrl: "https://staging.li.quest/v1",
     });
   }
-    return new LiFi({
-        integrator: "Your dApp/company name",
-    });
-}
+  return new LiFi({
+    integrator: "Your dApp/company name",
+  });
+};
 
 export const useLifiRoutes = (props: {
   swap: SwapSchema;
@@ -56,8 +56,12 @@ export const useExecuteLifi = (props?: {
   isTestnet?: boolean;
 }) => {
   const signer = useEthersSigner();
+  const { switchNetworkAsync } = useSwitchNetwork();
 
   return useMutation({
+    onSuccess: () => {
+
+    },
     mutationFn: async (variables: {
       route: Route;
       isTestnet?: boolean;
@@ -66,7 +70,13 @@ export const useExecuteLifi = (props?: {
       const lifi = getLifiClient({
         isTestnet: variables.isTestnet ?? props?.isTestnet,
       });
-      return await lifi.executeRoute(signer, variables.route);
+      return await lifi.executeRoute(signer, variables.route, {
+        switchChainHook: async (chainId) => {
+          if (!switchNetworkAsync) throw new Error("No switchNetworkAsync");
+          await switchNetworkAsync(chainId);
+          return signer;
+        },
+      });
     },
   });
 };

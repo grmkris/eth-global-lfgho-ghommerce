@@ -16,9 +16,10 @@ const SwapOfferSchema = z.object({
   gas: z.string().optional(),
   sellAmount: z.string(),
   buyAmount: z.string(),
-  buyTokenAddress: TokenSchema,
-  sellTokenAddress: TokenSchema,
+  buyToken: TokenSchema,
+  sellToken: TokenSchema,
   allowanceTarget: z.string().optional(),
+  isTestnet: z.boolean().optional(),
 });
 export type SwapOfferSchema = z.infer<typeof SwapOfferSchema>;
 
@@ -48,8 +49,8 @@ export const useSwapProviders = (props: {
       gas: zeroExPrice.data?.gas,
       sellAmount: zeroExPrice.data?.sellAmount ?? "0",
       buyAmount: zeroExPrice.data?.buyAmount ?? "0",
-      buyTokenAddress: props.swap.toToken,
-      sellTokenAddress: props.swap.fromToken,
+      buyToken: props.swap.toToken,
+      sellToken: props.swap.fromToken,
       allowanceTarget: zeroExPrice.data?.allowanceTarget,
     },
     {
@@ -58,8 +59,8 @@ export const useSwapProviders = (props: {
       // gas: lifiRoutes.data?.routes[0].ga
       sellAmount: lifiRoutes.data?.routes[0]?.fromAmount.toString() ?? "0",
       buyAmount: lifiRoutes.data?.routes[0]?.toAmount.toString() ?? "0",
-      buyTokenAddress: props.swap.toToken,
-      sellTokenAddress: props.swap.fromToken,
+      buyToken: props.swap.toToken,
+      sellToken: props.swap.fromToken,
     },
     {
       provider: "paraswap",
@@ -67,8 +68,8 @@ export const useSwapProviders = (props: {
       gas: paraswap.data?.gasCost,
       sellAmount: paraswap.data?.srcAmount.toString() ?? "0",
       buyAmount: paraswap.data?.destAmount.toString() ?? "0",
-      buyTokenAddress: props.swap.toToken,
-      sellTokenAddress: props.swap.fromToken,
+      buyToken: props.swap.toToken,
+      sellToken: props.swap.fromToken,
       // allowanceTarget: paraswap.data?. TODO
     },
   ];

@@ -17,7 +17,7 @@ import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
 import {
   TokenAmountSchema,
   TokenSchema,
-  ZERO_ADDRESS
+  ZERO_ADDRESS,
 } from "ghommerce-schema/src/tokens.schema.ts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { z } from "zod";

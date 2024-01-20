@@ -8,7 +8,8 @@ import {
   Chain,
   ChainNameToId,
   Chains,
-  ChainSchema, EnabledChains,
+  ChainSchema,
+  EnabledChains,
 } from "ghommerce-schema/src/chains.schema";
 import { QuoteCurrency } from "ghommerce-schema/src/swap.schema";
 import { GetTokensOutput } from "ghommerce-schema/src/api/tokens.api.schema";
@@ -32,14 +33,15 @@ export type GetTokensForAddressParams = z.infer<
 
 async function getTokensForAddress(input: GetTokensForAddressParams) {
   return cachified({
-    key: `getTokensForAddress-${input.address}-${
-      input.quoteCurrency
-    }-${input.isTestnet}-
-    ${input.chains?.map((chain) => chain).join("-")}` ,
+    key: `getTokensForAddress-${input.address}-${input.quoteCurrency}-${
+      input.isTestnet
+    }-
+    ${input.chains?.map((chain) => chain).join("-")}`,
     cache: lruCache,
     async getFreshValue() {
       const client = new CovalentClient("cqt_rQg66wvckMDgfbm3C3X8XFJGPRTP"); // Replace with your Covalent API key.
-      const chains = input.chains ?? input.isTestnet ? EnabledChains.testnet : Chains;
+      const chains =
+        input.chains ?? input.isTestnet ? EnabledChains.testnet : Chains;
       const combined = [];
       for (const chain of chains) {
         const tokens =

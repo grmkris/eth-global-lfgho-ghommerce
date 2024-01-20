@@ -1,23 +1,15 @@
-import {SwapSchema} from "ghommerce-schema/src/swap.schema.ts";
-import {SwapProviderList, useSwapProviders} from "@/lib/useSwapProviders.tsx";
+import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
+import { LifiScreen } from "@/lib/lifi/LifiScreen.tsx";
 
 export const TokenSwapInformationCard = (props: {
-    swapData: SwapSchema;
+  swapData: SwapSchema;
 }) => {
-    console.log("TokenSwapInformationCard", props.swapData);
-    const { offers } = useSwapProviders({
-        swap: props.swapData,
-    });
-    return (
-        <div className="flex flex-col space-y-2">
-            <div className="flex justify-between items-center">
-                <h2 className="text-md">Tokens needed: {props.swapData.fromAmount}</h2>
-            </div>
-            {offers ? (
-                <SwapProviderList swapOffers={offers} />
-            ) : (
-                <div>Loading...</div>
-            )}
-        </div>
-    );
+  return (
+    <div className="flex flex-col space-y-2">
+      <div className="flex justify-between items-center">
+        <h2 className="text-md">Tokens needed: {props.swapData.fromAmount}</h2>
+      </div>
+      <LifiScreen swap={props.swapData} />
+    </div>
+  );
 };

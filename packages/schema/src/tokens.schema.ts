@@ -22,7 +22,7 @@ export const StaticTokenSchema = BaseTokenSchema.extend({
   chain: ChainSchema,
 });
 export const TokenSchema = StaticTokenSchema.extend({
-  priceUSD: z.string().optional(),
+  priceUSD: z.string(),
 });
 export const TokenAmountSchema = TokenSchema.extend({
   amount: z.string(),

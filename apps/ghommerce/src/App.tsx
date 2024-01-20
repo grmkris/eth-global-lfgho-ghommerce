@@ -12,6 +12,7 @@ import {
   arbitrumNova,
   polygonMumbai,
   polygon,
+  goerli,
 } from "wagmi/chains";
 // Create a client
 const queryClient = new QueryClient({
@@ -47,6 +48,7 @@ const config = createConfig(
       arbitrumNova,
       polygonMumbai,
       polygon,
+      goerli,
     ],
     infuraId: "f0bda4965cbc4c7ab43f96d2cb7840d0", // TODO move to env
     walletConnectProjectId: projectId, // Replace with your WalletConnect Project ID

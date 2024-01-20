@@ -19,7 +19,7 @@ export const TokenList = (props: {
       (x) =>
         x.address === props.selectedToken?.address &&
         x.chain?.id === props.selectedToken?.chain?.id,
-    )?.[0]
+    )?.[0],
   );
   const handleSelect = (token: TokenAmountSchema) => {
     if (props.onSelect) props.onSelect(token);

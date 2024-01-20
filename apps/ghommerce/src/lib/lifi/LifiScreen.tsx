@@ -1,15 +1,17 @@
 import { Card, CardContent } from "@/components/ui/card.tsx";
-import { formatUnits } from "viem";
 import { Button } from "@/components/ui/button.tsx";
 import { useExecuteLifi, useLifiRoutes } from "@/lib/lifi/useLifi.tsx";
 import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
+import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
+import { Address } from "ghommerce-schema/src/address.schema.ts";
 
 export const LifiScreen = (props: {
   swap: SwapSchema;
 }) => {
+  console.log("LifiScreen", props.swap);
   const { data: routes } = useLifiRoutes(props);
   const { mutate: executeLifi } = useExecuteLifi({
-      isTestnet: props.swap.isTestnet,
+    isTestnet: props.swap.isTestnet,
   });
 
   return (
@@ -24,27 +26,27 @@ export const LifiScreen = (props: {
                 {route.id.substring(56, 64)}
               </h2>
               <p>
-                <strong>From:</strong>{" "}
-                {formatUnits(
-                  BigInt(route.fromAmount),
-                  route.fromToken.decimals,
-                )}
+                <strong>From:</strong> {route.fromAmount}{" "}
                 {route.fromToken.symbol} ({route.fromToken.name})
+                {`Chain:${route.fromChainId}`}
               </p>
               <p>
-                <strong>To:</strong>{" "}
-                {formatUnits(BigInt(route.toAmount), route.toToken.decimals)}
-                {route.toToken.symbol} ({route.toToken.name})
+                <strong>To:</strong> {route.toAmount} {route.toToken.symbol} (
+                {route.toToken.name}){`Chain:${route.toChainId}`}
               </p>
               {route.fromAddress && (
-                <p>
-                  <strong>From Address:</strong> {route.fromAddress}
-                </p>
+                <div>
+                  <strong>From:</strong>{" "}
+                  <CopyAddressLabel
+                    address={Address.parse(route.fromAddress)}
+                  />
+                </div>
               )}
               {route.toAddress && (
-                <p>
-                  <strong>To Address:</strong> {route.toAddress}
-                </p>
+                <div>
+                  <strong>To Address:</strong>{" "}
+                  <CopyAddressLabel address={Address.parse(route.toAddress)} />
+                </div>
               )}
               {route.gasCostUSD && (
                 <p>

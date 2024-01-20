@@ -11,16 +11,13 @@ import {
 import {
   TokenAmountSchema,
   TokenSchema,
-  ZERO_ADDRESS
+  ZERO_ADDRESS,
 } from "ghommerce-schema/src/tokens.schema.ts";
-import {
-  TokenList,
-} from "@/components/web3/TokenList.tsx";
+import { TokenList } from "@/components/web3/TokenList.tsx";
 import { useNavigate } from "@tanstack/react-router";
 import { invoiceRoute } from "@/routes/invoice/invoice.tsx";
 import { Address } from "ghommerce-schema/src/address.schema.ts";
 import type { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema";
-import { parseUnits } from "viem";
 import { TokenSwapInformationCard } from "@/components/web3/TokenSwapInformationCard";
 
 export type Token =
@@ -82,23 +79,47 @@ export const CryptoScreen = (props: { invoice: InvoiceSchema }) => {
             {selectedToken &&
               account.address &&
               props.invoice.acceptedTokens.map((x) => {
-                const amount =
-                  BigInt(
-                    parseUnits(props.invoice.amountDue.toString(), x.decimals),
-                  ) /
-                  BigInt(parseUnits(x.priceUSD?.toString() ?? "1", x.decimals));
+                const PRICE_DECIMALS = 6; // Number of decimal places in priceUSD, adjust as needed
+                const TOKEN_DECIMAL_FACTOR = BigInt(10) ** BigInt(18); // Adjust 18 to the max decimals you need to handle for tokens
+
+                const invoiceAmountUSD = BigInt(props.invoice.amountDue.toString());
+                const tokenDecimals = BigInt(selectedToken.decimals);
+
+                // Convert priceUSD to a BigInt-compatible integer by scaling up
+                const scaledPriceUSD = BigInt(Math.round(parseFloat("1") * 10 ** PRICE_DECIMALS));
+
+                // Scale up the amounts for precision
+                const scaledInvoiceAmount = invoiceAmountUSD * TOKEN_DECIMAL_FACTOR;
+                const scaledTokenPrice = scaledPriceUSD * TOKEN_DECIMAL_FACTOR;
+
+                // Calculate the amount of selectedToken needed to pay the invoice
+                const fromAmountScaled = (scaledInvoiceAmount * (BigInt(10) ** tokenDecimals)) / scaledTokenPrice;
+
+                const fromAmount = fromAmountScaled * (BigInt(10) ** BigInt(tokenDecimals))
+
+                console.log("fromAmount", {
+                    invoiceAmountUSD,
+                    tokenDecimals,
+                    scaledPriceUSD,
+                    scaledInvoiceAmount,
+                    scaledTokenPrice,
+                    fromAmountScaled,
+                    fromAmount,
+                });
+
                 return (
-                  <TokenSwapInformationCard
-                    swapData={{
-                      fromToken: selectedToken,
-                      toToken: x,
-                      fromAddress: Address.parse(account.address),
-                      toAddress: Address.parse(props.invoice.store.wallet),
-                      fromAmount: amount.toString(),
-                      isTestnet: props.invoice.isTestnet,
-                    }}
-                  />
+                    <TokenSwapInformationCard
+                        swapData={{
+                          fromToken: selectedToken,
+                          toToken: x,
+                          fromAddress: Address.parse(account.address),
+                          toAddress: Address.parse(props.invoice.store.wallet),
+                          fromAmount: fromAmount.toString(),
+                          isTestnet: props.invoice.isTestnet,
+                        }}
+                    />
                 );
+
               })}
 
             {tokens.data && (
