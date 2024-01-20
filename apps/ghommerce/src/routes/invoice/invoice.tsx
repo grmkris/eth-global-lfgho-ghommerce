@@ -37,7 +37,6 @@ export const InvoiceParams = z.object({
   step: InvoiceSteps.default("payment"),
   token: Address.optional(),
   chainId: ChainId.optional(),
-  amount: z.string().optional(),
 });
 
 export const invoiceRoute = new Route({
@@ -96,7 +95,7 @@ function PaymentScreen(props: {
     }
   };
 
-    const isPayActionDisabled = selectedPaymentMethod === undefined;
+  const isPayActionDisabled = selectedPaymentMethod === undefined;
 
   return (
     <div className="flex flex-col space-y-2 h-screen custom-scrollbar">
@@ -111,7 +110,7 @@ function PaymentScreen(props: {
       {/* Scrollable Content */}
       <div className="flex-grow overflow-auto space-y-2 custom-scrollbar">
         <InvoiceInformation invoice={props.invoice} />
-        {(step === "payment") && (
+        {step === "payment" && (
           <div className={SLIDE_IN_SLIDE_OUT_LEFT}>
             <PaymentSelector />
 

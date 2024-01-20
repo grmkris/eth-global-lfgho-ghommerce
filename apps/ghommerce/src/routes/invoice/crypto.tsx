@@ -12,10 +12,14 @@ import {
   TokenAmountSchema,
   TokenSchema,
 } from "ghommerce-schema/src/tokens.schema.ts";
-import {TokenList, TokenSwapInformationCard} from "@/components/web3/TokenList.tsx";
+import {
+  TokenList,
+  TokenSwapInformationCard,
+} from "@/components/web3/TokenList.tsx";
 import { useNavigate } from "@tanstack/react-router";
 import { invoiceRoute } from "@/routes/invoice/invoice.tsx";
-import {z} from "zod";
+import { z } from "zod";
+import { Address } from "ghommerce-schema/src/address.schema.ts";
 
 export type Token =
   RouterOutput["tokens"]["getTokensForAddress"]["items"][0] & {
@@ -51,19 +55,12 @@ export const CryptoScreen = (props: {
   );
 
   const handleTokenChange = async (token: TokenSchema) => {
-    console.log("handleTokenChange", token);
     if (!token) return;
-    const tokenData = tokens.data?.items.find(
-      (x) => x.address === token.address,
-    );
-    const amount = props.invoice.amountDue / z.coerce.number().parse(tokenData?.priceUSD ?? 1)
-    if (!tokenData) return;
     navigate({
       search: {
         ...params,
         token: token.address,
         chainId: token.chainId,
-        amount: amount,
       },
     });
   };
@@ -80,19 +77,30 @@ export const CryptoScreen = (props: {
       </CardHeader>
       <CardContent>
         <div className={"flex flex-col space-y-1"}>
-          {/*<TokenSwapInformationCard swapData={{*/}
-          {/*  fromToken: {}, // TODO*/}
-          {/*  toToken: selectedToken,*/}
-          {/*  fromAddress: account.address,*/}
-          {/*  toAddress: props.invoice.store?.safe?.address,*/}
-          {/*  fromAmount: params.amount,*/}
-          {/*  toAmount: 120*/}
-          {/*}}/>*/}
+          {selectedToken &&
+            account.address &&
+            props.invoice.acceptedTokens.map((x) => (
+              <TokenSwapInformationCard
+                swapData={{
+                  fromToken: selectedToken,
+                  toToken: x,
+                  fromAddress: Address.parse(account.address),
+                  toAddress: Address.parse(props.invoice.store?.safe?.address),
+                  fromAmount: (
+                    props.invoice.amountDue /
+                    z.coerce.number().parse(selectedToken.priceUSD)
+                  ).toString(),
+                  toAmount: props.invoice.amountDue.toString(), // TODO: calculate this based on the price of the token
+                }}
+              />
+            ))}
+
           {tokens.data && (
             <TokenList
-                onSelect={handleTokenChange}
-                tokens={TokenAmountSchema.array().parse(tokens.data.items)}
-            />
+
+              onSelect={handleTokenChange}
+              tokens={TokenAmountSchema.array().parse(tokens.data.items)}
+             selectedToken={selectedToken?.[0]}/>
           )}
         </div>
       </CardContent>

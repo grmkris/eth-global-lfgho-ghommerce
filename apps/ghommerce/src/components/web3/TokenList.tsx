@@ -11,35 +11,38 @@ import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
 import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
 
 export const TokenList = (props: {
+  selectedToken?: TokenAmountSchema;
   tokens: TokenAmountSchema[];
   onSelect?: (token: TokenSchema) => void;
 }) => {
-  const [selected, setSelected] = useState<TokenAmountSchema[]>([]);
+  console.log("TokenList1234", props);
+  const [selected, setSelected] = useState<TokenAmountSchema[]>(props.tokens.filter(x => x.address === props.selectedToken?.address));
   const handleSelect = (token: TokenAmountSchema) => {
     if (props.onSelect) props.onSelect(token);
-      const index = selected?.findIndex(
-        (x) => x.address === token.address && x.chain?.name === token.chain?.name,
+    const index = selected?.findIndex(
+      (x) => x.address === token.address && x.chain?.name === token.chain?.name,
+    );
+    if (index === -1) {
+      setSelected([...(selected ?? []), token]);
+    } else {
+      setSelected(
+        selected?.filter(
+          (x) =>
+            x.address !== token.address || x.chain?.name !== token.chain?.name,
+        ),
       );
-      if (index === -1) {
-        setSelected([...(selected ?? []), token]);
-      } else {
-        setSelected(
-          selected?.filter(
-            (x) =>
-              x.address !== token.address || x.chain?.name !== token.chain?.name,
-          ),
-        );
-      }
-  }
+    }
+  };
 
   return (
     <div>
       {props.tokens.map((token) => {
         const isSelected =
-            selected?.findIndex(
-                (x) =>
-                x.address === token.address && x.chain?.name === token.chain?.name,
-            ) !== -1;
+          selected?.findIndex(
+            (x) =>
+              x.address === token.address &&
+              x.chain?.name === token.chain?.name,
+          ) !== -1;
 
         console.log("isSelected", isSelected);
         return (
@@ -62,7 +65,6 @@ function TokenCard(props: {
   isSelected?: boolean;
   onSelect?: (token: TokenAmountSchema) => void;
 }) {
-
   const formattedBalance =
     props.tokenData.amount &&
     props.tokenData.decimals &&
@@ -84,8 +86,7 @@ function TokenCard(props: {
         props.onSelect ? "cursor-pointer hover:bg-gray-100" : "" // Replace 'hover:bg-gray-100' with your desired hover style
       }`}
       onClick={() => {
-        if (props.onSelect)
-          props.onSelect(props.tokenData);
+        if (props.onSelect) props.onSelect(props.tokenData);
       }}
     >
       <CardContent>
