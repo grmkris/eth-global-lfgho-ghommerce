@@ -17,6 +17,7 @@ import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
 import {
   TokenAmountSchema,
   TokenSchema,
+  ZERO_ADDRESS
 } from "ghommerce-schema/src/tokens.schema.ts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { z } from "zod";
@@ -109,7 +110,7 @@ export const WalletBalance = () => {
   const tokens = apiTrpc.tokens.getTokensForAddress.useQuery(
     {
       quoteCurrency: "USD",
-      address: account.address,
+      address: account.address ?? ZERO_ADDRESS,
       chains: selectedWalletChains?.map((x) => x.name),
     },
     {
@@ -143,9 +144,7 @@ export const WalletBalance = () => {
               (x) => x.priceUSD ?? z.coerce.bigint(x.priceUSD).gt(BigInt(0)),
             ),
           )}
-          selectedTokens={
-            swap.fromToken ? [TokenSchema.parse(swap.fromToken)] : []
-          }
+          selectedToken={TokenSchema.parse(swap.fromToken)}
         />
       ) : (
         <Skeleton className={"h-10"} />

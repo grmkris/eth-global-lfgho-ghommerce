@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
-import { SwapProviderList, useSwapProviders } from "@/lib/useSwapProviders.tsx";
 import {
   TokenAmountSchema,
   TokenSchema,
 } from "ghommerce-schema/src/tokens.schema.ts";
 import { ZERO_ADDRESS } from "ghommerce-schema/src/tokens.schema.ts";
-import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
 import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
 
 export const TokenList = (props: {
@@ -110,24 +108,3 @@ function TokenCard(props: {
     </Card>
   );
 }
-
-export const TokenSwapInformationCard = (props: {
-  swapData: SwapSchema;
-}) => {
-  console.log("TokenSwapInformationCard", props.swapData);
-  const { offers } = useSwapProviders({
-    swap: props.swapData,
-  });
-  return (
-    <div className="flex flex-col space-y-2">
-      <div className="flex justify-between items-center">
-        <h2 className="text-md">Tokens needed: {props.swapData.fromAmount}</h2>
-      </div>
-      {offers ? (
-        <SwapProviderList swapOffers={offers} />
-      ) : (
-        <div>Loading...</div>
-      )}
-    </div>
-  );
-};

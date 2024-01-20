@@ -10,6 +10,7 @@ export const SwapSchema = z.object({
     .describe("Amount of fromToken to swap in wei ( 1 USDT = 1 000 000"),
   toAddress: Address,
   fromAddress: Address,
+  isTestnet: z.boolean().optional(),
 });
 export type SwapSchema = z.infer<typeof SwapSchema>;
 

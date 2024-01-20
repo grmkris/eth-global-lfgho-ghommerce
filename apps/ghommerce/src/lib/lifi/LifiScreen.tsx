@@ -8,7 +8,9 @@ export const LifiScreen = (props: {
   swap: SwapSchema;
 }) => {
   const { data: routes } = useLifiRoutes(props);
-  const { mutate: executeLifi } = useExecuteLifi();
+  const { mutate: executeLifi } = useExecuteLifi({
+      isTestnet: props.swap.isTestnet,
+  });
 
   return (
     <div>

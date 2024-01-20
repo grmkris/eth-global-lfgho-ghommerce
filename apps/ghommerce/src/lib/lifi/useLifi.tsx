@@ -4,9 +4,20 @@ import { useEthersSigner } from "@/lib/useEthersSigner.tsx";
 import { useAccount } from "wagmi";
 import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
 
-const lifi = new LiFi({
-  integrator: "Your dApp/company name",
-});
+const getLifiClient = (props: {
+  isTestnet?: boolean;
+}) => {
+  if (props.isTestnet) {
+    return new LiFi({
+      integrator: "Your dApp/company name",
+      apiUrl: "https://staging.li.quest/v1",
+    });
+  }
+    return new LiFi({
+        integrator: "Your dApp/company name",
+    });
+}
+
 export const useLifiRoutes = (props: {
   swap: SwapSchema;
 }) => {
@@ -18,6 +29,9 @@ export const useLifiRoutes = (props: {
     enabled: !!account.address && !!props.swap.fromAmount,
     queryKey: ["lifi", "routes", props],
     queryFn: async () => {
+      const lifi = getLifiClient({
+        isTestnet: props.swap.isTestnet,
+      });
       if (!props.swap.fromToken.chain?.id) throw new Error("Invalid chain");
       if (!props.swap.toToken.chain?.id) throw new Error("Invalid chain");
       if (!props.swap) throw new Error("Invalid order");
@@ -38,14 +52,20 @@ export const useLifiRoutes = (props: {
   });
 };
 
-export const useExecuteLifi = () => {
+export const useExecuteLifi = (props?: {
+  isTestnet?: boolean;
+}) => {
   const signer = useEthersSigner();
 
   return useMutation({
     mutationFn: async (variables: {
       route: Route;
+      isTestnet?: boolean;
     }) => {
       if (!signer) throw new Error("No signer");
+      const lifi = getLifiClient({
+        isTestnet: variables.isTestnet ?? props?.isTestnet,
+      });
       return await lifi.executeRoute(signer, variables.route);
     },
   });

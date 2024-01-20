@@ -15,13 +15,13 @@ import {
 } from "ghommerce-schema/src/tokens.schema.ts";
 import {
   TokenList,
-  TokenSwapInformationCard,
 } from "@/components/web3/TokenList.tsx";
 import { useNavigate } from "@tanstack/react-router";
 import { invoiceRoute } from "@/routes/invoice/invoice.tsx";
 import { Address } from "ghommerce-schema/src/address.schema.ts";
 import type { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema";
 import { parseUnits } from "viem";
+import { TokenSwapInformationCard } from "@/components/web3/TokenSwapInformationCard";
 
 export type Token =
   RouterOutput["tokens"]["getTokensForAddress"]["items"][0] & {
@@ -95,6 +95,7 @@ export const CryptoScreen = (props: { invoice: InvoiceSchema }) => {
                       fromAddress: Address.parse(account.address),
                       toAddress: Address.parse(props.invoice.store.wallet),
                       fromAmount: amount.toString(),
+                      isTestnet: props.invoice.isTestnet,
                     }}
                   />
                 );
