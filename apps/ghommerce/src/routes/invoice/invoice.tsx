@@ -27,11 +27,14 @@ import { ChainId } from "ghommerce-schema/src/chains.schema.ts";
 import { useState, useEffect } from "react";
 import JSConfetti from "js-confetti";
 
+export const InvoiceSteps = z.enum(["payment", "crypto", "gatefi"]);
+export type InvoiceSteps = z.infer<typeof InvoiceSteps>;
 export const InvoiceParams = z.object({
   id: z.string(),
   selectedPaymentMethod: z
     .union([z.literal("card"), z.literal("crypto")])
     .optional(),
+  step: InvoiceSteps.default("payment"),
   token: Address.optional(),
   chainId: ChainId.optional(),
   amount: z.string().optional(),
@@ -75,19 +78,25 @@ function Invoice() {
 function PaymentScreen(props: {
   invoice: RouterOutput["invoices"]["getInvoice"];
 }) {
-  const selectedPaymentMethod = invoiceRoute.useSearch().selectedPaymentMethod;
+  const { selectedPaymentMethod, step } = invoiceRoute.useSearch();
+  const navigate = useNavigate({ from: invoiceRoute.fullPath });
+
   const gateFi = useGateFi({ invoiceId: props.invoice?.id });
   const toaster = useToast();
   const handleClick = () => {
     if (selectedPaymentMethod === "card") {
       gateFi.handleOnClick();
+    }
+    if (selectedPaymentMethod === "crypto") {
+      navigate({ search: (prev) => ({ ...prev, step: "crypto" }) });
     } else {
-      toaster.toast({ title: "Please select a payment method" });
+      toaster.toast({
+        title: "Select a payment method",
+      });
     }
   };
 
-  // Conditionally render the "Pay now" button
-  const renderPayNowButton = selectedPaymentMethod !== undefined;
+    const isPayActionDisabled = selectedPaymentMethod === undefined;
 
   return (
     <div className="flex flex-col space-y-2 h-screen custom-scrollbar">
@@ -102,36 +111,37 @@ function PaymentScreen(props: {
       {/* Scrollable Content */}
       <div className="flex-grow overflow-auto space-y-2 custom-scrollbar">
         <InvoiceInformation invoice={props.invoice} />
-        {/* Pass selectedPaymentMethod as a prop to PaymentSelector */}
-        {selectedPaymentMethod && (
-          <PaymentSelector selectedPaymentMethod={selectedPaymentMethod} />
-        )}
+        {(step === "payment") && (
+          <div className={SLIDE_IN_SLIDE_OUT_LEFT}>
+            <PaymentSelector />
 
-        {/* Other components */}
-
-        {/* Payment Button */}
-        {renderPayNowButton && (
-          <div className="mt-4">
-            {" "}
-            {/* Added margin here */}
-            <Button
-              variant="secondary"
-              className="w-full"
-              onClick={handleClick}
-            >
-              Pay now
-            </Button>{" "}
-            <CryptoScreen invoice={props.invoice} />
+            <div className="mt-4">
+              <Button
+                variant={isPayActionDisabled ? "outline" : "default"}
+                disabled={isPayActionDisabled}
+                className="w-full"
+                onClick={handleClick}
+              >
+                Pay now
+              </Button>{" "}
+            </div>
           </div>
         )}
+
+        {
+          // STEP 2
+          step === "crypto" && (
+            <div className={SLIDE_IN_SLIDE_OUT_LEFT}>
+              <CryptoScreen invoice={props.invoice} />
+            </div>
+          )
+        }
       </div>
     </div>
   );
 }
 
-export const PaymentSelector = (props: {
-  selectedPaymentMethod: "card" | "crypto";
-}) => {
+export const PaymentSelector = () => {
   const params = invoiceRoute.useSearch();
   const navigate = useNavigate({ from: invoiceRoute.fullPath });
   const invoice = apiTrpc.invoices.getInvoice.useQuery({
@@ -148,9 +158,9 @@ export const PaymentSelector = (props: {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Payment Method</CardTitle>
+        <CardTitle>Payer Information</CardTitle>
         <CardDescription>
-          Add a new payment method to your account.
+          Select how you would like to pay for this invoice
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-6">
@@ -177,14 +187,10 @@ export const PaymentSelector = (props: {
             </Label>
           </div>
         </RadioGroup>
-
-        {/* Conditionally render InvoicePayerInformation if "crypto" is selected */}
-        {props.selectedPaymentMethod === "crypto" && (
-          <InvoicePayerInformation
-            invoiceId={invoice.data?.id}
-            payerData={invoice.data}
-          />
-        )}
+        <InvoicePayerInformation
+          invoiceId={invoice.data?.id}
+          payerData={invoice.data}
+        />
       </CardContent>
     </Card>
   );
@@ -299,13 +305,22 @@ export const InvoicePayerInformation = (props: {
   const update = apiTrpc.invoices.updatePayerData.useMutation();
   return (
     <AutoForm
-      formSchema={PayerInformationSchema}
+      formSchema={z.object({
+        email: z.string().optional(),
+      })}
       onSubmit={(data) => console.log(data)}
-      values={props.payerData}
+      values={{
+        email:
+          props.payerData?.payerEmail !== null
+            ? props.payerData?.payerEmail
+            : undefined,
+      }}
       onParsedValuesChange={(data) =>
         update.mutate({
           invoiceId: props.invoiceId,
-          payerData: data,
+          payerData: {
+            payerEmail: data.email,
+          },
         })
       }
     />

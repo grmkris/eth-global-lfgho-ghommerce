@@ -36,10 +36,9 @@ export default function AutoFormObject<
   fieldConfig?: FieldConfig<z.infer<SchemaType>>;
   path?: string[];
 }) {
-  console.log("AutoFormObject", schema);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { shape } = getBaseSchema<SchemaType>(schema);
-
+  if (!shape) return null;
   return (
     <div className="space-y-5">
       {Object.keys(
@@ -48,12 +47,12 @@ export default function AutoFormObject<
       ).map((name) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         const item = getBaseSchema(shape[name] as z.ZodAny);
+
         const zodBaseType = getBaseType(item);
         const itemName = item._def.description ?? beautifyObjectName(name);
         const key = [...path, name].join(".");
 
         if (zodBaseType === "ZodObject") {
-          console.log("ZodObject", name);
           return (
             <Accordion
               type="multiple"
@@ -81,7 +80,6 @@ export default function AutoFormObject<
           );
         }
         if (zodBaseType === "ZodArray") {
-          console.log("ZodArray", name);
           return (
             <Accordion
               type="multiple"
@@ -100,9 +98,8 @@ export default function AutoFormObject<
             </Accordion>
           );
         }
-
         const fieldConfigItem: FieldConfigItem = fieldConfig?.[name] ?? {};
-        const zodInputProps = zodToHtmlInputProps(item);
+        const zodInputProps = zodToHtmlInputProps(shape[name]);
         const isRequired =
           zodInputProps.required ??
           fieldConfigItem.inputProps?.required ??
@@ -135,6 +132,7 @@ export default function AutoFormObject<
                     label={itemName}
                     isRequired={isRequired}
                     zodItem={item}
+                    placeholder={itemName}
                     fieldProps={{
                       ...zodInputProps,
                       ...field,

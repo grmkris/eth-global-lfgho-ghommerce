@@ -1,9 +1,9 @@
 "use client";
 
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
 import type { DefaultValues } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
@@ -11,11 +11,27 @@ import type { z } from "zod";
 import AutoFormObject from "./fields/object";
 import type { FieldConfig } from "./types";
 import type { ZodObjectOrWrapped } from "./utils";
-import { getDefaultValues, getObjectFormSchema } from "./utils";
-import { cn } from "@/lib/utils.ts";
+import { getBaseSchema, getDefaultValues, getObjectFormSchema } from "./utils";
+import { cn } from "@/lib/utils";
 
-export function AutoFormSubmit({ children }: { children?: React.ReactNode }) {
-  return <Button type="submit">{children ?? "Submit"}</Button>;
+export function AutoFormSubmit({
+  children,
+  isLoading,
+  className,
+}: {
+  children?: React.ReactNode;
+  isLoading?: boolean;
+  className?: string;
+}) {
+  return (
+    <Button
+      type="submit"
+      disabled={isLoading}
+      className={`w-full ${className}`}
+    >
+      {children ?? "Submit"}
+    </Button>
+  );
 }
 
 function AutoForm<SchemaType extends ZodObjectOrWrapped>({
@@ -37,7 +53,7 @@ function AutoForm<SchemaType extends ZodObjectOrWrapped>({
   children?: React.ReactNode;
   className?: string;
 }) {
-  const objectFormSchema = getObjectFormSchema(formSchema);
+  const objectFormSchema = getObjectFormSchema(getBaseSchema(formSchema));
   const defaultValues: DefaultValues<z.infer<typeof objectFormSchema>> =
     getDefaultValues(objectFormSchema);
 
@@ -54,7 +70,6 @@ function AutoForm<SchemaType extends ZodObjectOrWrapped>({
     }
   }
 
-  console.log("AutoForm", form);
   return (
     <Form {...form}>
       <form
@@ -63,12 +78,13 @@ function AutoForm<SchemaType extends ZodObjectOrWrapped>({
           void form.handleSubmit(onSubmit)(e);
         }}
         onChange={() => {
-          console.log("on change");
           const values = form.getValues();
+          console.log("on change", { values });
           onValuesChangeProp?.(values);
-          const parsedValues = formSchema.safeParse(values);
-          if (parsedValues.success) {
-            onParsedValuesChange?.(parsedValues.data);
+          const parsed = objectFormSchema.safeParse(values);
+          if (parsed.success) {
+            console.log("on parsed values change", parsed.data);
+            onParsedValuesChange?.(parsed.data);
           }
         }}
         className={cn("space-y-5", className)}
