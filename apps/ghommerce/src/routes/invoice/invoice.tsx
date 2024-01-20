@@ -1,7 +1,7 @@
-import { SLIDE_IN_SLIDE_OUT_LEFT } from "@/animations.ts";
-import AutoForm from "@/components/auto-form";
-import { Badge } from "@/components/ui/badge.tsx";
-import { Button } from "@/components/ui/button.tsx";
+import { SLIDE_IN_SLIDE_OUT_LEFT } from "@/animations.ts"
+import AutoForm from "@/components/auto-form"
+import { Badge } from "@/components/ui/badge.tsx"
+import { Button } from "@/components/ui/button.tsx"
 import {
   Card,
   CardContent,
@@ -9,27 +9,27 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card.tsx";
-import { Label } from "@/components/ui/label.tsx";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
-import { Skeleton } from "@/components/ui/skeleton.tsx";
-import { useToast } from "@/components/ui/use-toast.ts";
-import { TokenInfo } from "@/components/web3/TokenElement.tsx";
-import { CryptoScreen } from "@/routes/invoice/crypto.tsx";
-import { Gatefi, useGateFi } from "@/routes/invoice/gatefi.tsx";
-import { apiTrpc } from "@/trpc-client.ts";
-import { Route, useNavigate } from "@tanstack/react-router";
-import { PayerInformationSchema } from "ghommerce-schema/src/db/invoices.db.ts";
-import { z } from "zod";
-import { rootRoute } from "../Router.tsx";
-import { Address } from "ghommerce-schema/src/address.schema.ts";
-import { ChainId } from "ghommerce-schema/src/chains.schema.ts";
-import { useState, useEffect } from "react";
-import JSConfetti from "js-confetti";
-import { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema.ts";
+} from "@/components/ui/card.tsx"
+import { Label } from "@/components/ui/label.tsx"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx"
+import { Skeleton } from "@/components/ui/skeleton.tsx"
+import { useToast } from "@/components/ui/use-toast.ts"
+import { TokenInfo } from "@/components/web3/TokenElement.tsx"
+import { CryptoScreen } from "@/routes/invoice/crypto.tsx"
+import { Gatefi, useGateFi } from "@/routes/invoice/gatefi.tsx"
+import { apiTrpc } from "@/trpc-client.ts"
+import { Route, useNavigate } from "@tanstack/react-router"
+import { PayerInformationSchema } from "ghommerce-schema/src/db/invoices.db.ts"
+import { z } from "zod"
+import { rootRoute } from "../Router.tsx"
+import { Address } from "ghommerce-schema/src/address.schema.ts"
+import { ChainId } from "ghommerce-schema/src/chains.schema.ts"
+import { useState, useEffect } from "react"
+import JSConfetti from "js-confetti"
+import { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema.ts"
 
-export const InvoiceSteps = z.enum(["payment", "crypto", "gatefi"]);
-export type InvoiceSteps = z.infer<typeof InvoiceSteps>;
+export const InvoiceSteps = z.enum(["payment", "crypto", "gatefi"])
+export type InvoiceSteps = z.infer<typeof InvoiceSteps>
 export const InvoiceParams = z.object({
   id: z.string(),
   selectedPaymentMethod: z
@@ -38,72 +38,72 @@ export const InvoiceParams = z.object({
   step: InvoiceSteps.default("payment"),
   token: Address.optional(),
   chainId: ChainId.optional(),
-});
+})
 
 export const invoiceRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "/invoice",
-  validateSearch: (search) => InvoiceParams.parse(search),
+  validateSearch: search => InvoiceParams.parse(search),
   component: Invoice,
-});
+})
 
 function Invoice() {
-  const invoiceId = invoiceRoute.useSearch().id;
+  const invoiceId = invoiceRoute.useSearch().id
 
   const invoice = apiTrpc.invoices.getInvoice.useQuery({
     invoiceId: invoiceId,
-  });
+  })
   useEffect(() => {
     if (invoice.data?.status === "paid") {
       // Configure and start the confetti
-      const jsConfetti = new JSConfetti();
+      const jsConfetti = new JSConfetti()
 
-      jsConfetti.addConfetti();
+      jsConfetti.addConfetti()
     }
-  }, [invoice.data?.status]);
+  }, [invoice.data?.status])
   if (invoice.isLoading || !invoice.data)
     return (
       <div className="bg-primary-900">
         <Skeleton className="w-full mt-5" />
       </div>
-    );
+    )
 
   return (
     <div className={SLIDE_IN_SLIDE_OUT_LEFT}>
       <PaymentScreen invoice={InvoiceSchema.parse(invoice.data)} />
     </div>
-  );
+  )
 }
 
-function PaymentScreen(props: {
-  invoice: InvoiceSchema;
-}) {
-  const { selectedPaymentMethod, step } = invoiceRoute.useSearch();
-  const navigate = useNavigate({ from: invoiceRoute.fullPath });
+function PaymentScreen(props: { invoice: InvoiceSchema }) {
+  const { selectedPaymentMethod, step } = invoiceRoute.useSearch()
+  const navigate = useNavigate({ from: invoiceRoute.fullPath })
 
-  const gateFi = useGateFi({ invoiceId: props.invoice?.id });
-  const toaster = useToast();
+  const gateFi = useGateFi({ invoiceId: props.invoice?.id })
+  const toaster = useToast()
   const handleClick = () => {
     if (selectedPaymentMethod === "card") {
-      gateFi.handleOnClick();
+      gateFi.handleOnClick()
     }
     if (selectedPaymentMethod === "crypto") {
       // @ts-ignore https://discord.com/channels/719702312431386674/1007702008448426065/1198246465970110484
-      navigate({ search: (prev) => ({ ...prev, step: "crypto" }) });
+      navigate({ search: prev => ({ ...prev, step: "crypto" }) })
     } else {
       toaster.toast({
         title: "Select a payment method",
-      });
+      })
     }
-  };
+  }
 
-  const isPayActionDisabled = selectedPaymentMethod === undefined;
+  const isPayActionDisabled = selectedPaymentMethod === undefined
 
   return (
-    <div className="flex flex-col space-y-2 h-screen custom-scrollbar">
+    <div className="flex flex-col space-y-2 max-h-screen custom-scrollbar">
       {/* Scrollable Content */}
       <div className="flex-grow overflow-auto space-y-2 custom-scrollbar">
-        <InvoiceInformation invoice={props.invoice} />
+        <div className="w-[450px] overflow-auto">
+          <InvoiceInformation invoice={props.invoice} />
+        </div>
         {
           // STEP 1
           step === "payment" && (
@@ -134,22 +134,22 @@ function PaymentScreen(props: {
         }
       </div>
     </div>
-  );
+  )
 }
 
 export const PaymentSelector = () => {
-  const params = invoiceRoute.useSearch();
-  const navigate = useNavigate({ from: invoiceRoute.fullPath });
+  const params = invoiceRoute.useSearch()
+  const navigate = useNavigate({ from: invoiceRoute.fullPath })
   const invoice = apiTrpc.invoices.getInvoice.useQuery({
     invoiceId: params.id,
-  });
+  })
 
   const onSelectedChange = (value: string) => {
-    console.log("onSelectedChange", value);
-    navigate({ search: { id: params.id, selectedPaymentMethod: value } });
-  };
+    console.log("onSelectedChange", value)
+    navigate({ search: { id: params.id, selectedPaymentMethod: value } })
+  }
 
-  if (!invoice.data) return <>No invoice found</>;
+  if (!invoice.data) return <>No invoice found</>
 
   return (
     <Card>
@@ -163,7 +163,7 @@ export const PaymentSelector = () => {
         <RadioGroup
           defaultValue={params.selectedPaymentMethod}
           className="grid grid-cols-2 gap-4"
-          onValueChange={(value) => onSelectedChange(value)}
+          onValueChange={value => onSelectedChange(value)}
         >
           <div>
             <RadioGroupItem value="card" id="card" className="peer sr-only" />
@@ -189,13 +189,11 @@ export const PaymentSelector = () => {
         />
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-function FullInvoiceInformation(props: {
-  invoice: InvoiceSchema;
-}) {
-  const invoice = props.invoice;
+function FullInvoiceInformation(props: { invoice: InvoiceSchema }) {
+  const invoice = props.invoice
   return (
     <div className="overflow-auto max-h-96 custom-scrollbar">
       {
@@ -243,7 +241,7 @@ function FullInvoiceInformation(props: {
             <div className="col-span-1">
               <p className="font-medium text-gray-600">Accepted tokens:</p>
               <p>
-                {invoice?.acceptedTokens.map((x) => (
+                {invoice?.acceptedTokens.map(x => (
                   <TokenInfo tokenData={x} />
                 ))}
               </p>
@@ -252,13 +250,11 @@ function FullInvoiceInformation(props: {
         </CardContent>
       }
     </div>
-  );
+  )
 }
 
-const MinimalInvoiceInfo = (props: {
-  invoice: InvoiceSchema;
-}) => {
-  const invoice = props.invoice;
+const MinimalInvoiceInfo = (props: { invoice: InvoiceSchema }) => {
+  const invoice = props.invoice
   return (
     <CardContent
       className={`flex flex-col items-center justify-between p-4 ${SLIDE_IN_SLIDE_OUT_LEFT} space-y-2`}
@@ -271,16 +267,14 @@ const MinimalInvoiceInfo = (props: {
         <Badge>{invoice?.status}</Badge>
       </div>
     </CardContent>
-  );
-};
+  )
+}
 
-export const InvoiceInformation = (props: {
-  invoice: InvoiceSchema;
-}) => {
-  const invoice = props.invoice;
-  const [showMore, setShowMore] = useState(false);
+export const InvoiceInformation = (props: { invoice: InvoiceSchema }) => {
+  const invoice = props.invoice
+  const [showMore, setShowMore] = useState(false)
 
-  const toggleShowMore = () => setShowMore(!showMore);
+  const toggleShowMore = () => setShowMore(!showMore)
 
   return (
     <Card>
@@ -295,32 +289,32 @@ export const InvoiceInformation = (props: {
           <MinimalInvoiceInfo invoice={invoice} />
         )}
       </CardContent>
-      <CardFooter>
-        <Button onClick={toggleShowMore} variant={"ghost"} size={"sm"}>
+      <CardFooter className="flex justify-center">
+        <Button onClick={toggleShowMore} variant={"outline"} size={"sm"}>
           {showMore ? "Show Less" : "Show More"}
         </Button>
       </CardFooter>
     </Card>
-  );
-};
+  )
+}
 export const InvoicePayerInformation = (props: {
-  invoiceId: string;
-  payerData: PayerInformationSchema;
+  invoiceId: string
+  payerData: PayerInformationSchema
 }) => {
-  const update = apiTrpc.invoices.updatePayerData.useMutation();
+  const update = apiTrpc.invoices.updatePayerData.useMutation()
   return (
     <AutoForm
       formSchema={z.object({
         email: z.string().optional(),
       })}
-      onSubmit={(data) => console.log(data)}
+      onSubmit={data => console.log(data)}
       values={{
         email:
           props.payerData?.payerEmail !== null
             ? props.payerData?.payerEmail
             : undefined,
       }}
-      onParsedValuesChange={(data) =>
+      onParsedValuesChange={data =>
         update.mutate({
           invoiceId: props.invoiceId,
           payerData: {
@@ -329,5 +323,5 @@ export const InvoicePayerInformation = (props: {
         })
       }
     />
-  );
-};
+  )
+}
