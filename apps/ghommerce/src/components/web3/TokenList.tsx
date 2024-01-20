@@ -12,26 +12,42 @@ import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
 
 export const TokenList = (props: {
   tokens: TokenAmountSchema[];
-  handleTokenChange?: (token: TokenSchema, amount: string) => void;
   onSelect?: (token: TokenSchema) => void;
-  selectedTokens?: TokenSchema[];
 }) => {
+  const [selected, setSelected] = useState<TokenAmountSchema[]>([]);
+  const handleSelect = (token: TokenAmountSchema) => {
+    if (props.onSelect) props.onSelect(token);
+      const index = selected?.findIndex(
+        (x) => x.address === token.address && x.chain?.name === token.chain?.name,
+      );
+      if (index === -1) {
+        setSelected([...(selected ?? []), token]);
+      } else {
+        setSelected(
+          selected?.filter(
+            (x) =>
+              x.address !== token.address || x.chain?.name !== token.chain?.name,
+          ),
+        );
+      }
+  }
+
   return (
     <div>
       {props.tokens.map((token) => {
+        const isSelected =
+            selected?.findIndex(
+                (x) =>
+                x.address === token.address && x.chain?.name === token.chain?.name,
+            ) !== -1;
+
+        console.log("isSelected", isSelected);
         return (
           <TokenCard
             tokenData={token}
             key={token.address + token.chain?.id}
-            onAmountChange={props.handleTokenChange}
-            onSelect={props.onSelect}
-            isSelected={
-              !!props.selectedTokens?.find?.(
-                (x) =>
-                  x.address === token.address &&
-                  x.chain?.name === token.chain?.name,
-              )
-            }
+            onSelect={handleSelect}
+            isSelected={isSelected}
           />
         );
       })}
@@ -44,10 +60,8 @@ const selectedCardClassName = "border-2 border-blue-500";
 function TokenCard(props: {
   tokenData: TokenAmountSchema;
   isSelected?: boolean;
-  onAmountChange?: (token: TokenAmountSchema, amount: string) => void;
   onSelect?: (token: TokenAmountSchema) => void;
 }) {
-  const [selected, setSelected] = useState(props.isSelected);
 
   const formattedBalance =
     props.tokenData.amount &&
@@ -66,13 +80,12 @@ function TokenCard(props: {
 
   return (
     <Card
-      className={`${selected ? selectedCardClassName : ""} ${
+      className={`${props.isSelected ? selectedCardClassName : ""} ${
         props.onSelect ? "cursor-pointer hover:bg-gray-100" : "" // Replace 'hover:bg-gray-100' with your desired hover style
       }`}
       onClick={() => {
-        props.onSelect
-          ? props.onSelect(props.tokenData)
-          : setSelected(!selected);
+        if (props.onSelect)
+          props.onSelect(props.tokenData);
       }}
     >
       <CardContent>
@@ -110,13 +123,12 @@ function TokenCard(props: {
 
 export const TokenSwapInformationCard = (props: {
   swapData: SwapSchema;
-  tokenData: TokenAmountSchema;
 }) => {
   const { offers } = useSwapProviders({
     swap: props.swapData,
   });
   const totalAmount =
-    Number(props.swapData.fromAmount) / 10 ** props.tokenData.decimals;
+    Number(props.swapData.fromAmount) / 10 ** props.swapData.fromToken.decimals;
   return (
     <div className="flex flex-col space-y-2">
       <div className="flex justify-between items-center">

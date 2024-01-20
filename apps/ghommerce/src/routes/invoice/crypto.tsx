@@ -12,9 +12,10 @@ import {
   TokenAmountSchema,
   TokenSchema,
 } from "ghommerce-schema/src/tokens.schema.ts";
-import { TokenList } from "@/components/web3/TokenList.tsx";
+import {TokenList, TokenSwapInformationCard} from "@/components/web3/TokenList.tsx";
 import { useNavigate } from "@tanstack/react-router";
 import { invoiceRoute } from "@/routes/invoice/invoice.tsx";
+import {z} from "zod";
 
 export type Token =
   RouterOutput["tokens"]["getTokensForAddress"]["items"][0] & {
@@ -46,12 +47,13 @@ export const CryptoScreen = (props: {
     },
   );
 
-  const handleTokenChange = async (token: TokenSchema, amount: string) => {
+  const handleTokenChange = async (token: TokenSchema) => {
     console.log("handleTokenChange", token);
     if (!token) return;
     const tokenData = tokens.data?.items.find(
       (x) => x.address === token.address,
     );
+    const amount = props.invoice.amountDue / z.coerce.number().parse(tokenData?.priceUSD ?? 1)
     if (!tokenData) return;
     navigate({
       search: {
@@ -75,13 +77,18 @@ export const CryptoScreen = (props: {
       </CardHeader>
       <CardContent>
         <div className={"flex flex-col space-y-1"}>
-          {
-            // <TokenSwapInformationCard/>
-          }
+             <TokenSwapInformationCard swapData={{
+               fromToken: {}, // TODO
+               toToken: {}, // TODO
+               fromAddress: account.address,
+               toAddress: props.invoice.store.safe?.address,
+               fromAmount: 0, // TODO
+               toAmount: 0, // TODO
+             }}/>
           {tokens.data && (
             <TokenList
-              handleTokenChange={handleTokenChange}
-              tokens={TokenAmountSchema.array().parse(tokens.data.items)}
+                onSelect={handleTokenChange}
+                tokens={TokenAmountSchema.array().parse(tokens.data.items)}
             />
           )}
         </div>
