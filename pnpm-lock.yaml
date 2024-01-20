@@ -203,6 +203,9 @@ importers:
       remark-math:
         specifier: ^6.0.0
         version: 6.0.0
+      remeda:
+        specifier: ^1.36.0
+        version: 1.36.0
       siwe:
         specifier: ^2.1.4
         version: 2.1.4(ethers@6.10.0)
@@ -625,6 +628,9 @@ importers:
       bun-types:
         specifier: latest
         version: 1.0.23
+      ghommerce:
+        specifier: workspace:*
+        version: link:../../apps/ghommerce
 
 packages:
 

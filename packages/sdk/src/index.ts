@@ -2,12 +2,11 @@
 /// <reference lib="dom" />
 /// <reference lib="dom.iterable" />
 
-import { createTRPCProxyClient } from "@trpc/client";
-import type { IframeRouter } from "iframe/src/trpc";
-import { windowLink } from "trpc-browser/link";
-import { createIframe, hideIframeModal, showIframeModal } from "./iframe.ts";
-import { initTrpcWindowHandler } from "./router.ts";
-import { HelloSdkInput, HelloSdkOutput } from "./router.ts";
+import {createTRPCProxyClient} from "@trpc/client";
+import {windowLink} from "trpc-browser/link";
+import {createIframe, hideIframeModal, showIframeModal} from "./iframe.ts";
+import {HelloSdkInput, HelloSdkOutput, initTrpcWindowHandler} from "./router.ts";
+import type {IframeRouter} from "ghommerce/src/trpc.ts";
 
 export type Actions = {
   onHelloWorld: (
@@ -34,7 +33,7 @@ export const IframeSDK = async (props: {
     throw new Error("Iframe has not been initialized.");
 
   const iframeClient = getTrpcClientIframe(iframe.contentWindow);
-  const iframeSdkInstance = {
+  return {
     iframeClient,
     showIframeModal: () => {
       if (!iframe) throw new Error("Iframe has not been initialized.");
@@ -45,7 +44,6 @@ export const IframeSDK = async (props: {
       hideIframeModal(iframe);
     },
   };
-  return iframeSdkInstance;
 };
 
 /**

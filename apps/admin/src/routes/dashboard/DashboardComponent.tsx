@@ -12,7 +12,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { DateRangePicker } from "@/components/ui/date-range-picker.tsx";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Overview } from "@/routes/dashboard/components/overview.tsx";
 import { StoresWrapper } from "@/routes/dashboard/components/stores/stores";
@@ -22,9 +21,9 @@ import { RecentSales } from "./components/recent-sales";
 import { UserNav } from "@/layout";
 import { Loader, Receipt } from "lucide-react";
 import { trpcClient } from "@/features/trpc-client.ts";
-import { CreateStoreModal } from "./components/stores/createStore.modal";
 import { dateToTextString } from "@/utils/date";
 import { ApplicationsWrapper } from "./components/applications/applications";
+import {CreateStoreModal} from "@/routes/dashboard/components/stores/CreateStore.modal.tsx";
 
 export const DashboardPage = () => {
   const selectedView = dashboardRoute.useSearch().view;
@@ -45,9 +44,9 @@ export const DashboardPage = () => {
         });
       }}
     >
-      <div className="flex flex-col mx-2">
+      <div className="flex flex-col">
         <div className="flex-1 space-y-4">
-          <div className="relative flex items-center justify-between space-y-2 h-28">
+          <div className="relative flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
             <TabsList
               className=" absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
@@ -65,9 +64,6 @@ export const DashboardPage = () => {
               </TabsTrigger>
             </TabsList>
             <div className="flex items-center space-x-2">
-              {ViewOption.enum.Overview === selectedView && <DateRangePicker />}
-              {/* <Button>Download</Button>
-              <Button>New Payment</Button> */}
               <div className="pl-4">
                 <UserNav />
               </div>
@@ -212,7 +208,7 @@ const SafeWalletCard = (props: {
 
   const total = invoices.data?.reduce(
     (acc, current) => acc + current.amountDue,
-    0
+    0,
   );
 
   return (

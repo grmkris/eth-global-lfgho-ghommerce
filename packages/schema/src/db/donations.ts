@@ -26,7 +26,7 @@ export const DonationDataSchema = z.object({
     z.object({
       amount: z.number(),
       description: z.string(),
-    })
+    }),
   ),
 });
 

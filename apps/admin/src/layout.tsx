@@ -21,7 +21,7 @@ import {
 
 export const Layout = () => {
   return (
-    <div className="p-12">
+    <div className="p-4">
       <Outlet />
     </div>
   );

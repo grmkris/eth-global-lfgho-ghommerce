@@ -26,9 +26,8 @@ import { useState } from "react";
 import { StoreInvoices } from "@/routes/dashboard/components/invoices.tsx";
 import { selectInvoiceSchema } from "ghommerce-schema/src/db/invoices.ts";
 import { Loader, MoreHorizontal } from "lucide-react";
-import { CreateStoreModal } from "./createStore.modal";
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/Spinner";
+import { map, sumBy } from "remeda";
+import { CreateStoreModal } from "@/routes/dashboard/components/stores/CreateStore.modal.tsx";
 
 export type Store = {
   description: string;
@@ -62,13 +61,13 @@ const Stores = (props: { stores: Store[] }) => {
   const { stores } = props;
 
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(
-    stores[0].id
+    stores[0].id,
   );
   const invoices = trpcClient.invoices.getInvoices.useQuery(
     {
       storeId: selectedStoreId,
     },
-    { enabled: !!selectedStoreId }
+    { enabled: !!selectedStoreId },
   );
 
   const handleSelectStore = (id: string) => {
@@ -129,12 +128,13 @@ export const StoreCard = ({
     quoteCurrency: "USD",
   });
 
-  const arrayOfAmounts = tokens.data?.items.map(
-    (item) => Number(item.amount) * Number(item?.priceUSD ?? 0)
+  const totalAmountInStore = sumBy(
+    map(
+      tokens.data?.items ?? [],
+      (item) => Number(item.amount) * Number(item?.priceUSD ?? 0),
+    ),
+    (amount) => amount ?? 0,
   );
-
-  const totalAmountInStore =
-    arrayOfAmounts?.reduce((acc, cur) => acc + cur, 0) ?? 0;
 
   return (
     <Card

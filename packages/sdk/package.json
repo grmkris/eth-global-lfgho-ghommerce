@@ -14,7 +14,8 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "latest",
+    "ghommerce": "workspace:*"
   },
   "peerDependencies": {
     "typescript": "^5.3.3"

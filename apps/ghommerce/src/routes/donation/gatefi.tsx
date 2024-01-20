@@ -1,7 +1,7 @@
-import { GateFiDisplayModeEnum, GateFiSDK } from "@gatefi/js-sdk"
-import { useEffect, useRef, useState } from "react"
-import { apiTrpc } from "@/trpc-client.ts"
-import { Label } from "@/components/ui/label.tsx"
+import { GateFiDisplayModeEnum, GateFiSDK } from "@gatefi/js-sdk";
+import { useEffect, useRef, useState } from "react";
+import { apiTrpc } from "@/trpc-client.ts";
+import { Label } from "@/components/ui/label.tsx";
 
 export const Gatefi = () => {
   return (
@@ -12,33 +12,34 @@ export const Gatefi = () => {
     >
       Card
     </Label>
-  )
-}
+  );
+};
 
 export const useGateFi = (props: { donationId?: string }) => {
   const donation = apiTrpc.donations.getDonation.useQuery(
     { donationId: props.donationId },
-    { enabled: !!props.donationId }
-  )
-  const [isOverlayVisible, setIsOverlayVisible] = useState(false)
-  const overlayInstanceSDK = useRef<GateFiSDK | null>(null)
+    { enabled: !!props.donationId },
+  );
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+  const overlayInstanceSDK = useRef<GateFiSDK | null>(null);
 
   useEffect(() => {
     return () => {
-      overlayInstanceSDK.current?.destroy()
-      overlayInstanceSDK.current = null
-    }
-  }, [])
+      overlayInstanceSDK.current?.destroy();
+      overlayInstanceSDK.current = null;
+    };
+  }, []);
 
   const handleOnClick = () => {
-    if (!donation.data?.store?.safe?.address) throw new Error("No safe address")
+    if (!donation.data?.store?.safe?.address)
+      throw new Error("No safe address");
     if (overlayInstanceSDK.current) {
       if (isOverlayVisible) {
-        overlayInstanceSDK.current.hide()
-        setIsOverlayVisible(false)
+        overlayInstanceSDK.current.hide();
+        setIsOverlayVisible(false);
       } else {
-        overlayInstanceSDK.current.show()
-        setIsOverlayVisible(true)
+        overlayInstanceSDK.current.show();
+        setIsOverlayVisible(true);
       }
     } else {
       overlayInstanceSDK.current = new GateFiSDK({
@@ -62,13 +63,13 @@ export const useGateFi = (props: { donationId?: string }) => {
         fiatCurrencyLock: true,
         cryptoCurrencyLock: true,
         fiatAmountLock: true,
-      })
+      });
     }
-    overlayInstanceSDK.current?.show()
-    setIsOverlayVisible(true)
-  }
+    overlayInstanceSDK.current?.show();
+    setIsOverlayVisible(true);
+  };
 
   return {
     handleOnClick,
-  }
-}
+  };
+};

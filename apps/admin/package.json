@@ -75,6 +75,7 @@
     "recharts": "^2.10.4",
     "remark-gfm": "^4.0.0",
     "remark-math": "^6.0.0",
+    "remeda": "^1.36.0",
     "siwe": "^2.1.4",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",

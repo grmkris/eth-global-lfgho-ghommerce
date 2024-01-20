@@ -13,7 +13,7 @@ export const donationRouter = router({
     .input(
       z.object({
         donationId: z.string().uuid().optional(),
-      })
+      }),
     )
     .output(selectDonationSchema)
     .query(async ({ input, ctx }) => {

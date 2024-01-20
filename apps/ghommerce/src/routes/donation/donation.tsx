@@ -1,35 +1,35 @@
-import { SLIDE_IN_SLIDE_OUT_LEFT } from "@/animations.ts"
-import AutoForm from "@/components/auto-form"
-import { Badge } from "@/components/ui/badge.tsx"
-import { Button } from "@/components/ui/button.tsx"
+import { SLIDE_IN_SLIDE_OUT_LEFT } from "@/animations.ts";
+import AutoForm from "@/components/auto-form";
+import { Badge } from "@/components/ui/badge.tsx";
+import { Button } from "@/components/ui/button.tsx";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card.tsx"
-import { Label } from "@/components/ui/label.tsx"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx"
-import { Skeleton } from "@/components/ui/skeleton.tsx"
-import { useToast } from "@/components/ui/use-toast.ts"
-import { TokenInfo } from "@/components/web3/TokenElement.tsx"
-import { TokenImage } from "@/components/web3/TokenImage.tsx"
-import { RouterOutput, apiTrpc } from "@/trpc-client.ts"
-import { Route, useNavigate } from "@tanstack/react-router"
-import { PayerInformationSchema } from "ghommerce-schema/src/db/invoices.ts"
-import { z } from "zod"
-import { rootRoute } from "../Router.tsx"
-import { Address } from "ghommerce-schema/src/address.schema.ts"
-import { ChainId } from "ghommerce-schema/src/chains.schema.ts"
-import { useState, useEffect } from "react"
-import JSConfetti from "js-confetti"
-import { Gatefi, useGateFi } from "./gatefi.tsx"
-import { Input } from "@/components/ui/input.tsx"
-import { CryptoScreen } from "./crypto.tsx"
+} from "@/components/ui/card.tsx";
+import { Label } from "@/components/ui/label.tsx";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
+import { Skeleton } from "@/components/ui/skeleton.tsx";
+import { useToast } from "@/components/ui/use-toast.ts";
+import { TokenInfo } from "@/components/web3/TokenElement.tsx";
+import { TokenImage } from "@/components/web3/TokenImage.tsx";
+import { RouterOutput, apiTrpc } from "@/trpc-client.ts";
+import { Route, useNavigate } from "@tanstack/react-router";
+import { PayerInformationSchema } from "ghommerce-schema/src/db/invoices.ts";
+import { z } from "zod";
+import { rootRoute } from "../Router.tsx";
+import { Address } from "ghommerce-schema/src/address.schema.ts";
+import { ChainId } from "ghommerce-schema/src/chains.schema.ts";
+import { useState, useEffect } from "react";
+import JSConfetti from "js-confetti";
+import { Gatefi, useGateFi } from "./gatefi.tsx";
+import { Input } from "@/components/ui/input.tsx";
+import { CryptoScreen } from "./crypto.tsx";
 
-export const DonationSteps = z.enum(["payment", "crypto", "gatefi"])
-export type DonationSteps = z.infer<typeof DonationSteps>
+export const DonationSteps = z.enum(["payment", "crypto", "gatefi"]);
+export type DonationSteps = z.infer<typeof DonationSteps>;
 export const DonationParams = z.object({
   id: z.string(),
   selectedPaymentMethod: z
@@ -38,58 +38,58 @@ export const DonationParams = z.object({
   step: DonationSteps.default("payment"),
   token: Address.optional(),
   chainId: ChainId.optional(),
-})
+});
 
 export const donationRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "/donation",
-  validateSearch: search => DonationParams.parse(search),
+  validateSearch: (search) => DonationParams.parse(search),
   component: Donation,
-})
+});
 
 function Donation() {
-  const donationId = donationRoute.useSearch().id
+  const donationId = donationRoute.useSearch().id;
 
   const donation = apiTrpc.donations.getDonation.useQuery({
     donationId: donationId,
-  })
+  });
 
   if (donation.isLoading || !donation.data)
     return (
       <div className="bg-primary-900">
         <Skeleton className="w-full mt-5" />
       </div>
-    )
+    );
 
   return (
     <div className={SLIDE_IN_SLIDE_OUT_LEFT}>
       <PaymentScreen donation={donation.data} />
     </div>
-  )
+  );
 }
 
 function PaymentScreen(props: {
-  donation: RouterOutput["donations"]["getDonation"]
+  donation: RouterOutput["donations"]["getDonation"];
 }) {
-  const { selectedPaymentMethod, step } = donationRoute.useSearch()
-  const navigate = useNavigate({ from: donationRoute.fullPath })
+  const { selectedPaymentMethod, step } = donationRoute.useSearch();
+  const navigate = useNavigate({ from: donationRoute.fullPath });
 
-  const gateFi = useGateFi({ donationId: props.donation?.id })
-  const toaster = useToast()
+  const gateFi = useGateFi({ donationId: props.donation?.id });
+  const toaster = useToast();
   const handleClick = () => {
     if (selectedPaymentMethod === "card") {
-      gateFi.handleOnClick()
+      gateFi.handleOnClick();
     }
     if (selectedPaymentMethod === "crypto") {
-      navigate({ search: prev => ({ ...prev, step: "crypto" }) })
+      navigate({ search: (prev) => ({ ...prev, step: "crypto" }) });
     } else {
       toaster.toast({
         title: "Select a payment method",
-      })
+      });
     }
-  }
+  };
 
-  const isPayActionDisabled = selectedPaymentMethod === undefined
+  const isPayActionDisabled = selectedPaymentMethod === undefined;
 
   return (
     <div className="flex flex-col space-y-2 h-screen custom-scrollbar">
@@ -128,21 +128,21 @@ function PaymentScreen(props: {
         )}
       </div>
     </div>
-  )
+  );
 }
 
 export const PaymentSelector = () => {
-  const params = donationRoute.useSearch()
-  const navigate = useNavigate({ from: donationRoute.fullPath })
+  const params = donationRoute.useSearch();
+  const navigate = useNavigate({ from: donationRoute.fullPath });
   const donation = apiTrpc.donations.getDonation.useQuery({
     donationId: params.id,
-  })
+  });
 
   const onSelectedChange = (value: string) => {
-    navigate({ search: { id: params.id, selectedPaymentMethod: value } })
-  }
+    navigate({ search: { id: params.id, selectedPaymentMethod: value } });
+  };
 
-  if (!donation.data) return <>No donation found</>
+  if (!donation.data) return <>No donation found</>;
 
   return (
     <Card>
@@ -156,7 +156,7 @@ export const PaymentSelector = () => {
         <RadioGroup
           defaultValue={undefined}
           className="grid grid-cols-2 gap-4"
-          onValueChange={value => onSelectedChange(value)}
+          onValueChange={(value) => onSelectedChange(value)}
         >
           <div>
             <RadioGroupItem value="card" id="card" className="peer sr-only" />
@@ -178,17 +178,17 @@ export const PaymentSelector = () => {
         </RadioGroup>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
 export const DonationInformation = (props: {
-  donation: RouterOutput["donations"]["getDonation"]
+  donation: RouterOutput["donations"]["getDonation"];
 }) => {
-  const donation = props.donation
+  const donation = props.donation;
 
   const DonationInformationContent = () => {
     const [selectedDonationOption, setSelectedDonationOption] =
-      useState<number>()
+      useState<number>();
 
     return (
       <CardContent className="flex flex-col items-center justify-start text-start p-4 gap-4">
@@ -211,14 +211,14 @@ export const DonationInformation = (props: {
             </p>
 
             <div className="flex flex-wrap flex-row gap-2 self-center pt-2">
-              {donation.donationData.options.map(option => {
+              {donation.donationData.options.map((option) => {
                 return (
                   <DonationOptionCard
                     donationOption={option}
                     isSelected={selectedDonationOption === option.amount}
                     onClick={() => setSelectedDonationOption(option.amount)}
                   />
-                )
+                );
               })}
             </div>
           </div>
@@ -233,8 +233,8 @@ export const DonationInformation = (props: {
           </div>
         )}
       </CardContent>
-    )
-  }
+    );
+  };
 
   return (
     <Card className="text-start">
@@ -243,8 +243,8 @@ export const DonationInformation = (props: {
       </CardHeader>
       <DonationInformationContent />
     </Card>
-  )
-}
+  );
+};
 
 const DonationOptionCard = ({
   donationOption,
@@ -252,11 +252,11 @@ const DonationOptionCard = ({
   onClick,
 }: {
   donationOption: {
-    description: string
-    amount: number
-  }
-  isSelected: boolean
-  onClick: () => void
+    description: string;
+    amount: number;
+  };
+  isSelected: boolean;
+  onClick: () => void;
 }) => {
   return (
     <Card
@@ -274,8 +274,8 @@ const DonationOptionCard = ({
         </div>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
 // export const InvoicePayerInformation = (props: {
 //   invoiceId: string

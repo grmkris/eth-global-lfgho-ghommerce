@@ -1,37 +1,37 @@
-import { apiTrpc, RouterOutput } from "@/trpc-client.ts"
-import { ConnectKitButton } from "connectkit"
-import { useAccount } from "wagmi"
-import { SLIDE_IN_SLIDE_OUT_LEFT } from "@/animations.ts"
+import { apiTrpc, RouterOutput } from "@/trpc-client.ts";
+import { ConnectKitButton } from "connectkit";
+import { useAccount } from "wagmi";
+import { SLIDE_IN_SLIDE_OUT_LEFT } from "@/animations.ts";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-} from "@/components/ui/card.tsx"
+} from "@/components/ui/card.tsx";
 import {
   TokenAmountSchema,
   TokenSchema,
-} from "ghommerce-schema/src/tokens.schema.ts"
+} from "ghommerce-schema/src/tokens.schema.ts";
 import {
   TokenList,
   TokenSwapInformationCard,
-} from "@/components/web3/TokenList.tsx"
-import { useNavigate } from "@tanstack/react-router"
-import { invoiceRoute } from "@/routes/invoice/invoice.tsx"
-import { z } from "zod"
-import { Address } from "ghommerce-schema/src/address.schema.ts"
-import { donationRoute } from "./donation"
+} from "@/components/web3/TokenList.tsx";
+import { useNavigate } from "@tanstack/react-router";
+import { invoiceRoute } from "@/routes/invoice/invoice.tsx";
+import { z } from "zod";
+import { Address } from "ghommerce-schema/src/address.schema.ts";
+import { donationRoute } from "./donation";
 
 export type Token =
   RouterOutput["tokens"]["getTokensForAddress"]["items"][0] & {
-    amount?: number
-  }
+    amount?: number;
+  };
 
 export const CryptoScreen = (props: {
-  donation: RouterOutput["donations"]["getDonation"]
+  donation: RouterOutput["donations"]["getDonation"];
 }) => {
-  const params = donationRoute.useSearch()
-  const navigate = useNavigate({ from: donationRoute.fullPath })
+  const params = donationRoute.useSearch();
+  const navigate = useNavigate({ from: donationRoute.fullPath });
   // const updatePayerInformation = apiTrpc.donations.updatePayerData.useMutation();
   // const account = useAccount({
   //   onConnect: () => {
@@ -56,19 +56,19 @@ export const CryptoScreen = (props: {
   // );
 
   const handleTokenChange = async (token: TokenSchema) => {
-    if (!token) return
+    if (!token) return;
     navigate({
       search: {
         ...params,
         token: token.address,
         chainId: token.chainId,
       },
-    })
-  }
+    });
+  };
 
   return (
     <Card className={SLIDE_IN_SLIDE_OUT_LEFT}>
       <p>This step works different than invoice</p>
     </Card>
-  )
-}
+  );
+};

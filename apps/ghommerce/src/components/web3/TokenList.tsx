@@ -16,7 +16,9 @@ export const TokenList = (props: {
   onSelect?: (token: TokenSchema) => void;
 }) => {
   console.log("TokenList1234", props);
-  const [selected, setSelected] = useState<TokenAmountSchema[]>(props.tokens.filter(x => x.address === props.selectedToken?.address));
+  const [selected, setSelected] = useState<TokenAmountSchema[]>(
+    props.tokens.filter((x) => x.address === props.selectedToken?.address),
+  );
   const handleSelect = (token: TokenAmountSchema) => {
     if (props.onSelect) props.onSelect(token);
     const index = selected?.findIndex(

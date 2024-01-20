@@ -97,10 +97,10 @@ export const CryptoScreen = (props: {
 
           {tokens.data && (
             <TokenList
-
               onSelect={handleTokenChange}
               tokens={TokenAmountSchema.array().parse(tokens.data.items)}
-             selectedToken={selectedToken?.[0]}/>
+              selectedToken={selectedToken?.[0]}
+            />
           )}
         </div>
       </CardContent>
