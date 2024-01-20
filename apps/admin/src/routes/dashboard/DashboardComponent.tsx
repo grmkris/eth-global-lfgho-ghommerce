@@ -47,9 +47,12 @@ export const DashboardPage = () => {
     >
       <div className="flex flex-col mx-2">
         <div className="flex-1 space-y-4">
-          <div className="flex items-center justify-between space-y-2">
+          <div className="relative flex items-center justify-between space-y-2 h-28">
             <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-            <TabsList>
+            <TabsList
+              className=" absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+"
+            >
               <TabsTrigger value={ViewOption.enum.Overview}>
                 Overview
               </TabsTrigger>
@@ -209,7 +212,7 @@ const SafeWalletCard = (props: {
 
   const total = invoices.data?.reduce(
     (acc, current) => acc + current.amountDue,
-    0,
+    0
   );
 
   return (

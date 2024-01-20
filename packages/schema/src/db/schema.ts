@@ -6,6 +6,13 @@ export {
 } from "./invoices";
 
 export {
+  donations,
+  insertDonationSchema,
+  selectDonationSchema,
+  donationRelations,
+} from "./donations.ts";
+
+export {
   payments,
   selectPaymentSchema,
   paymentsRelations,

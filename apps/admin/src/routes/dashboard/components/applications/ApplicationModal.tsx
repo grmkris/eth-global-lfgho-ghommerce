@@ -5,7 +5,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useForm } from "react-hook-form";
 import { useApplicationModals } from "./useApplicationModals";
 import { z } from "zod";
 import AutoForm, { AutoFormSubmit } from "@/components/auto-form";
@@ -22,23 +21,26 @@ export const ApplicationModal = () => {
     userId: data?.userId ?? "",
   });
 
-  const storesIds = stores.data?.map((store) => {
-    return store.id;
-  });
+  if (!stores.data) return <></>;
 
-  if (!storesIds) return <></>;
+  // const storesIds = stores.data?.map((store) => {
+  //   return store.id;
+  // });
 
-  const STORE_IDS = [...storesIds] as const;
+  // if (!storesIds) return <></>;
+
+  // const STORE_IDS = [...storesIds] as const;
 
   const DonationDataSchema = z.object({
     name: z.string(),
     description: z.string(),
-    storeId: z.enum(STORE_IDS),
+    // storeId: z.enum(STORE_IDS),
+    storeId: z.string(),
     options: z.array(
       z.object({
-        amount: z.number(),
+        amount: z.coerce.number(),
         description: z.string(),
-      }),
+      })
     ),
   });
   return (
@@ -53,8 +55,37 @@ export const ApplicationModal = () => {
         </DialogHeader>
         <AutoForm
           formSchema={DonationDataSchema}
-          onSubmit={(data) => {
-            console.log(data);
+          fieldConfig={{
+            // TODO: The current approach of add custom field doesnt send the information of the storeId selected to the form, because there is not "form" prop in render parent,
+            // if you dont know how to call form.setValue inside renderParent, redo the commented part of the code, that will enable a selector of stores IDs, good enogh for now
+            storeId: {
+              renderParent: () => {
+                return (
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="storeId"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      Store
+                    </label>
+                    <select
+                      id="storeId"
+                      name="storeId"
+                      className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                      onSelect={() => {}}
+                    >
+                      {stores.data?.map((store) => {
+                        return (
+                          <option key={store.id} value={store.id}>
+                            {store.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                );
+              },
+            },
           }}
         >
           <AutoFormSubmit />

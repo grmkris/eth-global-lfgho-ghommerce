@@ -12,6 +12,7 @@ import { z } from "zod";
 
 import { invoices } from "./invoices";
 import { TokenAmountSchema } from "../tokens.schema.ts";
+import { donations } from "./donations.ts";
 
 export const payments = pgTable("payments", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
@@ -43,6 +44,10 @@ export const paymentsRelations = relations(payments, ({ one }) => ({
   invoice: one(invoices, {
     fields: [payments.invoiceId],
     references: [invoices.id],
+  }),
+  donation: one(donations, {
+    fields: [payments.invoiceId],
+    references: [donations.id],
   }),
 }));
 

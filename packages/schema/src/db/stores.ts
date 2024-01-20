@@ -5,6 +5,7 @@ import { z } from "zod";
 import { invoices } from "./invoices.ts";
 import { safes, selectSafeSchema } from "./safes.ts";
 import { users } from "./users.ts";
+import { donations } from "./donations.ts";
 
 export const stores = pgTable("stores", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
@@ -34,6 +35,7 @@ export const insertStoreSchema = createInsertSchema(stores, {
 
 export const storesRelations = relations(stores, ({ many, one }) => ({
   invoices: many(invoices),
+  donations: many(donations),
   user: one(users, {
     fields: [stores.userId],
     references: [users.id],

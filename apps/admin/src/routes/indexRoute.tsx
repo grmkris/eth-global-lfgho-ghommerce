@@ -32,7 +32,7 @@ export const indexRoute = new Route({
       },
       {
         enabled: !!web3Auth?.address || !!web3Modal?.address,
-      },
+      }
     );
     const safes = trpcClient.stores.getSafes.useQuery(
       {
@@ -40,7 +40,7 @@ export const indexRoute = new Route({
       },
       {
         enabled: !!web3Auth?.address || !!web3Modal?.address,
-      },
+      }
     );
     const stores = trpcClient.stores.getStores.useQuery(
       {
@@ -49,7 +49,7 @@ export const indexRoute = new Route({
       },
       {
         enabled: !!safes.data?.[0]?.id,
-      },
+      }
     );
 
     return (

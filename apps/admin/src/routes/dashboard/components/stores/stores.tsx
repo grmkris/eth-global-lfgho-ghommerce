@@ -25,8 +25,10 @@ import { trpcClient } from "@/features/trpc-client.ts";
 import { useState } from "react";
 import { StoreInvoices } from "@/routes/dashboard/components/invoices.tsx";
 import { selectInvoiceSchema } from "ghommerce-schema/src/db/invoices.ts";
-import { MoreHorizontal } from "lucide-react";
+import { Loader, MoreHorizontal } from "lucide-react";
 import { CreateStoreModal } from "./createStore.modal";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner";
 
 export type Store = {
   description: string;
@@ -36,6 +38,9 @@ export type Store = {
   updatedAt: string | null;
   userId: string;
   safeId: string;
+  safe: {
+    address: string;
+  };
 };
 
 export const StoresWrapper = (props: { userId: string }) => {
@@ -57,13 +62,13 @@ const Stores = (props: { stores: Store[] }) => {
   const { stores } = props;
 
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(
-    stores[0].id,
+    stores[0].id
   );
   const invoices = trpcClient.invoices.getInvoices.useQuery(
     {
       storeId: selectedStoreId,
     },
-    { enabled: !!selectedStoreId },
+    { enabled: !!selectedStoreId }
   );
 
   const handleSelectStore = (id: string) => {
@@ -86,37 +91,11 @@ const Stores = (props: { stores: Store[] }) => {
           {stores?.map((store) => (
             <CarouselItem key={store.id} className="md:basis-1/2 lg:basis-1/5">
               <div className="p-1">
-                <Card
-                  onClick={() => handleSelectStore(store.id)}
-                  className={`card hover:shadow-md ${
-                    selectedStoreId === store.id ? "bg-gray-100" : ""
-                  } p-2 rounded-3xl`}
-                >
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">
-                      {store.name}
-                    </CardTitle>
-                    <DropdownMenu dir="ltr">
-                      <DropdownMenuTrigger asChild>
-                        <MoreHorizontal
-                          color="gray"
-                          className="hover:cursor-pointer"
-                        />
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuRadioGroup>
-                          <DropdownMenuItem>Delete</DropdownMenuItem>
-                        </DropdownMenuRadioGroup>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-col gap-1 text-gray-500">
-                      <p className="text-2xl font-semibold">$ 1450.00</p>
-                      <p className="text-sm">{store.description}</p>
-                    </div>
-                  </CardContent>
-                </Card>
+                <StoreCard
+                  store={store}
+                  selectedStoreId={selectedStoreId}
+                  handleSelectStore={handleSelectStore}
+                />
               </div>
             </CarouselItem>
           ))}
@@ -133,5 +112,62 @@ const Stores = (props: { stores: Store[] }) => {
         </div>
       )}
     </>
+  );
+};
+
+export const StoreCard = ({
+  store,
+  selectedStoreId,
+  handleSelectStore,
+}: {
+  store: Store;
+  selectedStoreId?: string;
+  handleSelectStore: (storeId: string) => void;
+}) => {
+  const tokens = trpcClient.tokens.getTokensForAddress.useQuery({
+    address: store.safe.address,
+    quoteCurrency: "USD",
+  });
+
+  const arrayOfAmounts = tokens.data?.items.map(
+    (item) => Number(item.amount) * Number(item?.priceUSD ?? 0)
+  );
+
+  const totalAmountInStore =
+    arrayOfAmounts?.reduce((acc, cur) => acc + cur, 0) ?? 0;
+
+  return (
+    <Card
+      onClick={() => handleSelectStore(store.id)}
+      className={`card hover:shadow-md ${
+        selectedStoreId === store.id ? "bg-gray-100" : ""
+      } p-2 rounded-3xl`}
+    >
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{store.name}</CardTitle>
+        <DropdownMenu dir="ltr">
+          <DropdownMenuTrigger asChild>
+            <MoreHorizontal color="gray" className="hover:cursor-pointer" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuRadioGroup>
+              <DropdownMenuItem>Delete</DropdownMenuItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col gap-1 text-gray-500">
+          {tokens.isLoading ? (
+            <Loader className="animate-spin" size={24} color="gray" />
+          ) : (
+            <p className="text-2xl font-semibold">
+              $ {totalAmountInStore.toFixed(2)}
+            </p>
+          )}
+          <p className="text-sm">{store.description}</p>
+        </div>
+      </CardContent>
+    </Card>
   );
 };

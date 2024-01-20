@@ -3,6 +3,8 @@ import { users } from "./users.ts";
 import { z } from "zod";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { selectStoreSchema, stores } from "./stores.ts";
+import { relations } from "drizzle-orm";
+import { payments } from "./payments.ts";
 
 export const donations = pgTable("donations", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
@@ -24,7 +26,7 @@ export const DonationDataSchema = z.object({
     z.object({
       amount: z.number(),
       description: z.string(),
-    }),
+    })
   ),
 });
 
@@ -33,8 +35,16 @@ export const selectDonationSchema = createSelectSchema(donations, {
   updatedAt: () => z.coerce.date().default(new Date()),
   donationData: DonationDataSchema,
 }).extend({
-  store: selectStoreSchema,
+  store: selectStoreSchema.optional(),
 });
+
+export const donationRelations = relations(donations, ({ many, one }) => ({
+  payments: many(payments),
+  store: one(stores, {
+    fields: [donations.storeId],
+    references: [stores.id],
+  }),
+}));
 
 export const insertDonationSchema = createInsertSchema(donations, {
   donationData: DonationDataSchema,
