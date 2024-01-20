@@ -12,10 +12,10 @@ export const DonationDataSchema = z.object({
   name: z.string(),
   description: z.string(),
   options: z.array(
-      z.object({
-        amount: z.coerce.number(),
-        description: z.string(),
-      }),
+    z.object({
+      amount: z.coerce.number(),
+      description: z.string(),
+    }),
   ),
 });
 

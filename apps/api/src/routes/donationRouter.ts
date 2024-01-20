@@ -1,13 +1,17 @@
 import { authProcedure, publicProcedure, router } from "../lib/trpc";
 import { z } from "zod";
 import { db } from "../db/db";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import {
   DonationDataSchema,
   donations,
   selectDonationSchema,
 } from "ghommerce-schema/src/db/donations.db";
 import { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema";
+import {
+  invoices,
+  selectInvoiceSchema,
+} from "ghommerce-schema/src/db/invoices.db";
 
 export const donationRouter = router({
   getDonation: publicProcedure
@@ -83,5 +87,66 @@ export const donationRouter = router({
       // return invoice
 
       return InvoiceSchema.parse({});
+    }),
+
+  getDonations: authProcedure
+    .input(
+      z
+        .object({
+          storeId: z.string().uuid().optional(),
+        })
+        .optional(),
+    )
+    .output(z.array(selectDonationSchema))
+    .query(async ({ input, ctx }) => {
+      if (!ctx.session?.user?.id) throw new Error("Unauthorized");
+      if (!input?.storeId) {
+        // return all stores for user
+        const result = await db.query.donations.findMany({
+          where: and(eq(donations.userId, ctx.session.user.id)),
+          with: {
+            store: true,
+          },
+        });
+        return result;
+      }
+      return await db.query.donations.findMany({
+        where: and(
+          eq(donations.storeId, input.storeId),
+          eq(donations.userId, ctx.session.user.id),
+        ),
+        with: {
+          store: true,
+        },
+      });
+    }),
+
+  getDonationInvoices: authProcedure
+    .input(
+      z.object({
+        donationId: z.string().uuid(),
+      }),
+    )
+    .output(z.array(selectInvoiceSchema))
+    .query(async ({ input, ctx }) => {
+      if (!ctx.session?.user?.id) throw new Error("Unauthorized");
+      const store = await db.query.donations.findFirst({
+        where: and(
+          eq(donations.id, input.donationId),
+          eq(donations.userId, ctx.session.user.id),
+        ),
+        with: {
+          store: true,
+        },
+      });
+      if (!store) throw new Error("Unauthorized");
+      const result = await db.query.invoices.findMany({
+        where: eq(invoices.storeId, store.storeId),
+        with: {
+          store: true,
+        },
+      });
+
+      return result;
     }),
 });

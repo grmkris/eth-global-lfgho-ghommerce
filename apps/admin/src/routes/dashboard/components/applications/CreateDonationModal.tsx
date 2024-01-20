@@ -11,7 +11,7 @@ import { trpcClient } from "@/features/trpc-client";
 import { DonationDataSchema } from "ghommerce-schema/src/db/donations.db.ts";
 import { VirtualizedCombobox } from "@/components/VirtualCombobox.tsx";
 import { useState } from "react";
-import {useToast} from "@/components/ui/use-toast.ts";
+import { useToast } from "@/components/ui/use-toast.ts";
 
 const CreateDonationForm = DonationDataSchema;
 
@@ -23,15 +23,15 @@ export const CreateDonationModal = () => {
   const [selectedStore, setSelectedStore] = useState<string | undefined>();
   const toaster = useToast();
   const createDonation = trpcClient.donations.createDonation.useMutation({
-      onSuccess: () => {
-          toaster.toast({
-              title: "Donation created",
-              description: "Your donation has been created successfully",
-              variant: 'success'
-          })
-          close()
-      }
-  })
+    onSuccess: () => {
+      toaster.toast({
+        title: "Donation created",
+        description: "Your donation has been created successfully",
+        variant: "success",
+      });
+      close();
+    },
+  });
   return (
     <Dialog open={isOpen} onOpenChange={close}>
       <DialogContent className="max-h-screen overflow-y-auto custom-scrollbar m-4">
@@ -49,10 +49,10 @@ export const CreateDonationModal = () => {
         <AutoForm
           onSubmit={(data) => {
             console.log("onSubmit123", data);
-              createDonation.mutate({
-                  storeId: selectedStore,
-                  donationData: data
-              })
+            createDonation.mutate({
+              storeId: selectedStore,
+              donationData: data,
+            });
           }}
           formSchema={CreateDonationForm}
         >
