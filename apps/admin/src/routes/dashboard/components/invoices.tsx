@@ -16,6 +16,7 @@ export const StoreInvoices = (props: {
   const columns = generateColumnsFromZodSchema(
     selectInvoiceSchema.pick({
       id: true,
+      description: true,
       createdAt: true,
       status: true,
       amountDue: true,

@@ -1,7 +1,7 @@
 import { authProcedure, publicProcedure, router } from "../lib/trpc";
 import { z } from "zod";
 import { db } from "../db/db";
-import { and, eq } from "drizzle-orm";
+import {and, desc, eq} from "drizzle-orm";
 import {
   insertInvoiceSchema,
   invoices,
@@ -113,6 +113,7 @@ export const invoiceRouter = router({
             },
           },
         },
+        orderBy: (invoices) => desc(invoices.createdAt),
       });
 
       return selectInvoiceSchema.array().parse(result);
