@@ -14,8 +14,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import {ApplicationCard, ApplicationCardProps} from "@/routes/dashboard/components/applications/ApplicationCard.tsx";
-import {Church, Contact, FileQuestion, Flame, Store} from "lucide-react";
+import {
+  ApplicationCard,
+  ApplicationCardProps,
+} from "@/routes/dashboard/components/applications/ApplicationCard.tsx";
+import { Church, Contact, FileQuestion, Flame, Store } from "lucide-react";
 
 const integrationCards: IntegrationCardProps[] = [
   {
@@ -67,37 +70,38 @@ const integrationCards: IntegrationCardProps[] = [
 
 const applicationCards: ApplicationCardProps[] = [
   {
-    type: 'donations',
+    type: "donations",
     name: "Donations",
     icon: <Church size={32} />,
     description: "Donations are a great way to monetize your content",
     enabled: true,
   },
   {
-    type: 'membership',
+    type: "membership",
     name: "Membership",
     icon: <Flame size={32} />,
-    description: "Patreon like membership are a great way to monetize your content",
+    description:
+      "Patreon like membership are a great way to monetize your content",
   },
   {
-    type: 'polls',
+    type: "polls",
     name: "Polls",
     icon: <FileQuestion size={32} />,
     description: "Create paid polls, to get feedback from most engaged users",
   },
   {
-    type: 'contact-form',
+    type: "contact-form",
     name: "Contact Form",
     icon: <Contact size={32} />,
     description: "Get paid to answer questions from your community",
   },
   {
-    type: 'shop',
+    type: "shop",
     name: "Shop",
     icon: <Store size={32} />,
     description: "Sell your products or services",
-  }
-]
+  },
+];
 
 export const ApplicationsTab = (props: { userId: string }) => {
   return (
@@ -118,6 +122,7 @@ export const ApplicationsTab = (props: { userId: string }) => {
           <CardContent className="flex flex-row flex-wrap gap-4">
             {applicationCards.map((application) => (
               <ApplicationCard
+                key={application.name}
                 applicationItem={application}
                 userId={props.userId}
               />

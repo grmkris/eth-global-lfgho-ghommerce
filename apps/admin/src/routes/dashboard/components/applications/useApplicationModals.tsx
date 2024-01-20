@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { CreateDonationModal } from "./CreateDonationModal.tsx";
-import {ApplicationType} from "@/routes/dashboard/components/applications/ApplicationCard.tsx";
+import { ApplicationType } from "@/routes/dashboard/components/applications/ApplicationCard.tsx";
 
 export type ApplicationModalType = ApplicationType;
 type ModalDataType = {
@@ -40,7 +40,5 @@ export const ApplicationModals = () => {
 
   if (!modals.view) return null;
 
-  return (
-    <div>{modals.view === "donations" && <CreateDonationModal />}</div>
-  );
+  return <div>{modals.view === "donations" && <CreateDonationModal />}</div>;
 };

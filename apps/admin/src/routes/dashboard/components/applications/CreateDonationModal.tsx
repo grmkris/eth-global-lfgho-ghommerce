@@ -6,35 +6,32 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useApplicationModals } from "./useApplicationModals";
-import { z } from "zod";
 import AutoForm, { AutoFormSubmit } from "@/components/auto-form";
 import { trpcClient } from "@/features/trpc-client";
+import { DonationDataSchema } from "ghommerce-schema/src/db/donations.db.ts";
+import { VirtualizedCombobox } from "@/components/VirtualCombobox.tsx";
+import { useState } from "react";
+import {useToast} from "@/components/ui/use-toast.ts";
 
-const DonationDataSchema = z.object({
-    name: z.string(),
-    description: z.string(),
-    // storeId: z.enum(STORE_IDS),
-    storeId: z.string(),
-    options: z.array(
-        z.object({
-            amount: z.coerce.number(),
-            description: z.string(),
-        }),
-    ),
-});
+const CreateDonationForm = DonationDataSchema;
 
 export const CreateDonationModal = () => {
-  const { close, isOpen, data } = useApplicationModals((state) => ({
+  const { close, isOpen } = useApplicationModals((state) => ({
     close: state.close,
     isOpen: state.isOpen,
-    data: state.data,
   }));
-
-  const stores = trpcClient.stores.getStores.useQuery({
-    userId: data?.userId ?? "",
-  });
-
-  if (!stores.data) return <></>;
+  const [selectedStore, setSelectedStore] = useState<string | undefined>();
+  const toaster = useToast();
+  const createDonation = trpcClient.donations.createDonation.useMutation({
+      onSuccess: () => {
+          toaster.toast({
+              title: "Donation created",
+              description: "Your donation has been created successfully",
+              variant: 'success'
+          })
+          close()
+      }
+  })
   return (
     <Dialog open={isOpen} onOpenChange={close}>
       <DialogContent className="max-h-screen overflow-y-auto custom-scrollbar m-4">
@@ -45,44 +42,63 @@ export const CreateDonationModal = () => {
             started.
           </DialogDescription>
         </DialogHeader>
+        <StoresDropdown
+          selectedStore={selectedStore}
+          setSelectedStore={setSelectedStore}
+        />
         <AutoForm
-          formSchema={DonationDataSchema}
-          fieldConfig={{
-            // TODO: The current approach of add custom field doesnt send the information of the storeId selected to the form, because there is not "form" prop in render parent,
-            // if you dont know how to call form.setValue inside renderParent, redo the commented part of the code, that will enable a selector of stores IDs, good enogh for now
-            storeId: {
-              renderParent: () => {
-                return (
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="storeId"
-                      className="text-sm font-medium text-gray-700"
-                    >
-                      Store
-                    </label>
-                    <select
-                      id="storeId"
-                      name="storeId"
-                      className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                      onSelect={() => {}}
-                    >
-                      {stores.data?.map((store) => {
-                        return (
-                          <option key={store.id} value={store.id}>
-                            {store.name}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </div>
-                );
-              },
-            },
+          onSubmit={(data) => {
+            console.log("onSubmit123", data);
+              createDonation.mutate({
+                  storeId: selectedStore,
+                  donationData: data
+              })
           }}
+          formSchema={CreateDonationForm}
         >
           <AutoFormSubmit />
         </AutoForm>
       </DialogContent>
     </Dialog>
+  );
+};
+
+export const StoresDropdown = (props: {
+  selectedStore?: string;
+  setSelectedStore: (store: string) => void;
+}) => {
+  const stores = trpcClient.stores.getStores.useQuery({});
+  const [value, setValue] = useState<string | undefined>();
+
+  return (
+    <VirtualizedCombobox
+      options={
+        stores.data?.map((store) => ({
+          value: store.id,
+          label: store.name,
+        })) ?? []
+      }
+      searchPlaceholder="Search store..."
+      selectedOptions={
+        stores.data
+          ?.filter((store) => store.id === value)
+          .map((store) => ({
+            value: store.id,
+            label: store.name,
+          })) ?? []
+      }
+      className="w-full"
+      height="400px"
+      elementHeight={40}
+      filter={(option, search) => {
+        return option.label.toLowerCase().includes(search.toLowerCase());
+      }}
+      getOptionLabel={(option) => option.label}
+      getOptionValue={(option) => option.value}
+      onSelectOption={(option) => {
+        setValue(option?.[0]?.value);
+        props.setSelectedStore(option?.[0]?.value);
+      }}
+    />
   );
 };

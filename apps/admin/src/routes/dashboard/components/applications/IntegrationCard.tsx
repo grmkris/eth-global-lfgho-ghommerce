@@ -1,7 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import { ReactNode } from "react";
 import { FaExternalLinkAlt } from "react-icons/fa";
-import { ApplicationModalType, useApplicationModals } from "./useApplicationModals";
+import {
+  ApplicationModalType,
+  useApplicationModals,
+} from "./useApplicationModals";
 
 export type IntegrationTopic =
   | "streaming"
@@ -35,7 +38,9 @@ export const IntegrationCard = (props: {
     <button
       type="button"
       disabled={!applicationItem.enabled}
-      className={`flex flex-col rounded-2xl border-2 border-gray-300 p-8 gap-4 ${!applicationItem.enabled && 'opacity-50'} hover:bg-gray-50 hover:cursor-pointer`}
+      className={`flex flex-col rounded-2xl border-2 border-gray-300 p-8 gap-4 ${
+        !applicationItem.enabled && "opacity-50"
+      } hover:bg-gray-50 hover:cursor-pointer`}
       onClick={() => {
         applicationItem.modal &&
           open(applicationItem.modal, { userId: userId });
@@ -43,14 +48,14 @@ export const IntegrationCard = (props: {
     >
       <div className="flex flex-row gap-4">
         {applicationItem.enabled ? (
-            <div className="h-14 w-14 bg-gray-300 rounded-xl flex justify-center items-center">
-                {applicationItem.icon}{" "}
-            </div>
-            ) : (
-            <div className="h-14 w-14 bg-gray-300 rounded-xl flex justify-center items-center opacity-50">
-                {applicationItem.icon}{" "}
-            </div>
-            )}
+          <div className="h-14 w-14 bg-gray-300 rounded-xl flex justify-center items-center">
+            {applicationItem.icon}{" "}
+          </div>
+        ) : (
+          <div className="h-14 w-14 bg-gray-300 rounded-xl flex justify-center items-center opacity-50">
+            {applicationItem.icon}{" "}
+          </div>
+        )}
         <div className="flex flex-col gap-1 text-start">
           <h4 className="text-2xl font-semibold">{applicationItem.name}</h4>
           <a

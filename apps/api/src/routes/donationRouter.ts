@@ -1,12 +1,12 @@
-import { publicProcedure, router } from "../lib/trpc";
+import { authProcedure, publicProcedure, router } from "../lib/trpc";
 import { z } from "zod";
 import { db } from "../db/db";
 import { eq } from "drizzle-orm";
 import {
+  DonationDataSchema,
   donations,
   selectDonationSchema,
 } from "ghommerce-schema/src/db/donations.db";
-import { selectInvoiceSchema } from "ghommerce-schema/src/db/invoices.db";
 import { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema";
 
 export const donationRouter = router({
@@ -31,6 +31,28 @@ export const donationRouter = router({
       });
 
       return selectDonationSchema.parse(result);
+    }),
+  createDonation: authProcedure
+    .input(
+      z.object({
+        storeId: z.string().uuid().optional(),
+        donationData: DonationDataSchema,
+      }),
+    )
+    .output(selectDonationSchema)
+    .mutation(async ({ input, ctx }) => {
+      if (!input?.storeId) throw new Error("Invalid storeId");
+      if (!ctx.session?.user?.id) throw new Error("Invalid user");
+      const result = await db
+        .insert(donations)
+        .values({
+          userId: ctx.session.user.id,
+          storeId: input.storeId,
+          donationData: input.donationData,
+        })
+        .returning()
+        .execute();
+      return result[0];
     }),
   createDonationInvoice: publicProcedure
     .input(

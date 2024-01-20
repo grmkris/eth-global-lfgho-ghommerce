@@ -34,9 +34,7 @@ import { ApplicationsTab } from "@/routes/dashboard/components/applications/Appl
 export const DashboardPage = () => {
   const selectedView = dashboardRoute.useSearch().view;
   const userId = dashboardRoute.useRouteContext().session;
-  const stores = trpcClient.stores.getStores.useQuery({
-    userId: userId.user.id,
-  });
+  const stores = trpcClient.stores.getStores.useQuery();
   const router = useRouter();
   return (
     <Tabs
@@ -99,7 +97,7 @@ export const DashboardPage = () => {
                     <Carousel>
                       <CarouselContent>
                         {stores.data.map((store) => (
-                          <CarouselItem>
+                          <CarouselItem key={store.id}>
                             <StoreSafeCard store={store} name={store.name} />
                           </CarouselItem>
                         ))}

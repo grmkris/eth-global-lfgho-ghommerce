@@ -1,4 +1,4 @@
-import { authProcedure, publicProcedure, router } from "../lib/trpc";
+import { authProcedure, router } from "../lib/trpc";
 import { z } from "zod";
 import { db } from "../db/db";
 import { and, eq } from "drizzle-orm";
@@ -99,20 +99,18 @@ export const storeRouter = router({
 
   getStores: authProcedure
     .input(
-      z.object({
-        userId: z.string().uuid(),
-        safeId: z.string().uuid().optional(),
-      }),
+      z
+        .object({
+          safeId: z.string().uuid().optional(),
+        })
+        .optional(),
     )
     .query(async ({ input, ctx }) => {
       if (!ctx.session?.user?.id) throw new Error("Unauthorized");
       if (!input?.safeId) {
         // return all stores for user
         const result = await db.query.stores.findMany({
-          where: and(
-            eq(stores.userId, ctx.session.user.id),
-            eq(stores.userId, input.userId),
-          ),
+          where: and(eq(stores.userId, ctx.session.user.id)),
           with: {
             safe: {
               with: {
@@ -127,7 +125,7 @@ export const storeRouter = router({
         });
         return result;
       }
-      const result = await db.query.stores.findMany({
+      return await db.query.stores.findMany({
         where: and(
           eq(stores.safeId, input.safeId),
           eq(stores.userId, ctx.session.user.id),
@@ -144,7 +142,6 @@ export const storeRouter = router({
           },
         },
       });
-      return result;
     }),
 
   getSafes: authProcedure

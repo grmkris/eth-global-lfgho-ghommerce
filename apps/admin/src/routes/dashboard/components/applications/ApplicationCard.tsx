@@ -7,7 +7,7 @@ export type ApplicationType =
   | "membership"
   | "polls"
   | "contact-form"
-  | "shop"
+  | "shop";
 
 export type ApplicationCardProps = {
   name: string;
@@ -30,21 +30,22 @@ export const ApplicationCard = (props: {
     <button
       type="button"
       disabled={!applicationItem.enabled}
-      className={`flex flex-col rounded-2xl border-2 border-gray-300 p-8 gap-4 ${!applicationItem.enabled && 'opacity-50'} hover:bg-gray-50 hover:cursor-pointer`}
+      className={`flex flex-col rounded-2xl border-2 border-gray-300 p-8 gap-4 ${
+        !applicationItem.enabled && "opacity-50"
+      } hover:bg-gray-50 hover:cursor-pointer`}
       onClick={() => {
-        applicationItem.type &&
-          open(applicationItem.type, { userId: userId });
+        applicationItem.type && open(applicationItem.type, { userId: userId });
       }}
     >
       <div className="flex flex-row gap-4">
         {applicationItem.enabled ? (
-            <div className="h-14 w-14 bg-gray-300 rounded-xl flex justify-center items-center">
-              {applicationItem.icon}{" "}
-            </div>
+          <div className="h-14 w-14 bg-gray-300 rounded-xl flex justify-center items-center">
+            {applicationItem.icon}{" "}
+          </div>
         ) : (
-            <div className="h-14 w-14 bg-gray-300 rounded-xl flex justify-center items-center opacity-50">
-              {applicationItem.icon}{" "}
-            </div>
+          <div className="h-14 w-14 bg-gray-300 rounded-xl flex justify-center items-center opacity-50">
+            {applicationItem.icon}{" "}
+          </div>
         )}
         <div className="flex flex-col gap-1 text-start">
           <h4 className="text-2xl font-semibold">{applicationItem.name}</h4>
@@ -54,9 +55,9 @@ export const ApplicationCard = (props: {
         {applicationItem.description}
       </p>
       <div className="flex flex-row gap-2">
-          <Badge className={ApplicationTypeToColor[props.applicationItem.type]}>
-            <p className="text-base">{props.applicationItem.type}</p>
-          </Badge>
+        <Badge className={ApplicationTypeToColor[props.applicationItem.type]}>
+          <p className="text-base">{props.applicationItem.type}</p>
+        </Badge>
       </div>
     </button>
   );

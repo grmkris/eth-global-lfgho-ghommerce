@@ -167,6 +167,7 @@ interface VirtualizedComboboxProps<T> {
   getOptionLabel: (option: GenericOption<T>) => React.ReactNode;
   getOptionValue: (option: GenericOption<T>) => string;
   onSelectOption: (option: GenericOption<T>[]) => void;
+  isOpen?: boolean;
 }
 
 export function VirtualizedCombobox<T extends {}>({
@@ -182,8 +183,9 @@ export function VirtualizedCombobox<T extends {}>({
   onSelectOption,
   multiple,
   multipleLabel,
+  isOpen,
 }: VirtualizedComboboxProps<T>) {
-  const [open, setOpen] = React.useState<boolean>(false);
+  const [open, setOpen] = React.useState<boolean>(isOpen ?? false);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
