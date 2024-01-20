@@ -40,12 +40,12 @@ export const ApplicationModal = () => {
       z.object({
         amount: z.coerce.number(),
         description: z.string(),
-      }),
+      })
     ),
   });
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent>
+      <DialogContent className="max-h-screen overflow-y-auto custom-scrollbar m-4">
         <DialogHeader className={"mt-4 mx-4"}>
           <DialogTitle>Host your Twich donations</DialogTitle>
           <DialogDescription>

@@ -10,11 +10,11 @@ import { ApplicationModals } from "./useApplicationModals";
 
 const applicationsCards: ApplicationCardProps[] = [
   {
-    name: "Twich Donations",
-    webSite: "https://twich.com",
+    name: "Twitch Donations",
+    webSite: "https://twitch.com",
     topics: ["streaming", "communication", "no code"],
     description:
-      "Twich is a platform designed for creating communities ranging from gamers to education and businesses.",
+      "Twitch is a platform designed for creating communities ranging from gamers to education and businesses.",
     icon: <FaTwitch size={32} />,
     modal: "applicationModal",
   },
