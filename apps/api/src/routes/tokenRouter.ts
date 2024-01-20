@@ -8,7 +8,7 @@ import {
   Chain,
   ChainNameToId,
   Chains,
-  ChainSchema,
+  ChainSchema, EnabledChains,
 } from "ghommerce-schema/src/chains.schema";
 import { QuoteCurrency } from "ghommerce-schema/src/swap.schema";
 import { GetTokensOutput } from "ghommerce-schema/src/api/tokens.api.schema";
@@ -24,6 +24,7 @@ export const GetTokensForAddressParams = z.object({
   address: Address,
   quoteCurrency: QuoteCurrency,
   chains: Chain.array().optional(),
+  isTestnet: z.boolean().optional(),
 });
 export type GetTokensForAddressParams = z.infer<
   typeof GetTokensForAddressParams
@@ -33,13 +34,14 @@ async function getTokensForAddress(input: GetTokensForAddressParams) {
   return cachified({
     key: `getTokensForAddress-${input.address}-${
       input.quoteCurrency
-    }-${input.chains?.map((chain) => chain).join("-")}`,
+    }-${input.isTestnet}-
+    ${input.chains?.map((chain) => chain).join("-")}` ,
     cache: lruCache,
     async getFreshValue() {
       const client = new CovalentClient("cqt_rQg66wvckMDgfbm3C3X8XFJGPRTP"); // Replace with your Covalent API key.
-
+      const chains = input.chains ?? input.isTestnet ? EnabledChains.testnet : Chains;
       const combined = [];
-      for (const chain of input.chains ?? Chains) {
+      for (const chain of chains) {
         const tokens =
           await client.BalanceService.getTokenBalancesForWalletAddress(
             chain,
@@ -93,10 +95,10 @@ async function getTokensForAddress(input: GetTokensForAddressParams) {
 
 export const tokenRouter = router({
   getTokensForAddress: publicProcedure
-    .input(GetTokensForAddressParams.partial())
+    .input(GetTokensForAddressParams)
     .output(GetTokensOutput)
     .query(async ({ input, ctx }) => {
-      return await getTokensForAddress(GetTokensForAddressParams.parse(input));
+      return await getTokensForAddress(input);
     }),
 
   getTokenInfo: publicProcedure

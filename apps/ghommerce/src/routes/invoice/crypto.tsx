@@ -11,6 +11,7 @@ import {
 import {
   TokenAmountSchema,
   TokenSchema,
+  ZERO_ADDRESS
 } from "ghommerce-schema/src/tokens.schema.ts";
 import {
   TokenList,
@@ -46,7 +47,8 @@ export const CryptoScreen = (props: { invoice: InvoiceSchema }) => {
   const tokens = apiTrpc.tokens.getTokensForAddress.useQuery(
     {
       quoteCurrency: "USD",
-      address: account.address,
+      address: account.address ?? ZERO_ADDRESS,
+      isTestnet: props.invoice.isTestnet,
     },
     {
       enabled: !!account.address,

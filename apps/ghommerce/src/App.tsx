@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterProvider } from "@tanstack/react-router";
 import { WagmiConfig, createConfig } from "wagmi";
+
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import {
   arbitrum,
@@ -47,8 +48,7 @@ const config = createConfig(
       polygonMumbai,
       polygon,
     ],
-    // Required API Keys
-    alchemyId: "alcht_tHlvJglVFgwX9ziJkvc09fXSInaLuO", // Replace with your Alchemy ID
+    infuraId: "f0bda4965cbc4c7ab43f96d2cb7840d0", // TODO move to env
     walletConnectProjectId: projectId, // Replace with your WalletConnect Project ID
     // Required
     appName: "GHOmmerce", // Replace with the name of your app

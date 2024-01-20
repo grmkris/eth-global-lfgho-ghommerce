@@ -15,12 +15,13 @@ export const TokenList = (props: {
   tokens: TokenAmountSchema[];
   onSelect?: (token: TokenAmountSchema) => void;
 }) => {
-  const [selected, setSelected] = useState<TokenAmountSchema>(
+  console.log("TokenList", props.selectedToken);
+  const [selected, setSelected] = useState<TokenAmountSchema | undefined>(
     props.tokens.filter(
       (x) =>
         x.address === props.selectedToken?.address &&
         x.chain?.id === props.selectedToken?.chain?.id,
-    )[0] || props.tokens[0],
+    )?.[0]
   );
   const handleSelect = (token: TokenAmountSchema) => {
     if (props.onSelect) props.onSelect(token);
@@ -31,8 +32,8 @@ export const TokenList = (props: {
     <div>
       {props.tokens.map((token) => {
         const isSelected =
-          token.address === selected.address &&
-          token.chain?.id === selected.chain?.id;
+          token.address === selected?.address &&
+          token.chain?.id === selected?.chain?.id;
         return (
           <TokenCard
             tokenData={token}

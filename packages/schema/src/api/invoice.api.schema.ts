@@ -14,6 +14,7 @@ export const InvoiceSchema = selectInvoiceSchema
     amountDue: true,
   })
   .extend({
+    isTestnet: z.boolean().optional(),
     acceptedTokens: TokenSchema.array(),
     payer: selectInvoiceSchema.pick({
       payerEmail: true,

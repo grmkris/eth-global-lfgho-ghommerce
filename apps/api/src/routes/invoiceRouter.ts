@@ -77,6 +77,7 @@ export const invoiceRouter = router({
         dueDate: z.coerce.date().optional().parse(result.dueDate),
         amountDue: result.amountDue,
         status: result.status,
+        isTestnet: result.store.isTestnet,
         payer: {
           payerEmail: result.payerEmail,
           payerWallet: result.payerWallet ?? undefined,

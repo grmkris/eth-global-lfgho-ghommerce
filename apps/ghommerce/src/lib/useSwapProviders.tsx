@@ -26,6 +26,7 @@ const SwapOfferSchema = z.object({
   buyTokenAddress: TokenSchema,
   sellTokenAddress: TokenSchema,
   allowanceTarget: z.string().optional(),
+  isTestnet: z.boolean().optional(),
 });
 export type SwapOfferSchema = z.infer<typeof SwapOfferSchema>;
 
