@@ -51,7 +51,7 @@ export const invoiceRouter = router({
         );
         return {
           ...token,
-          priceUSD: (tokenData.data[0].prices[0].price ?? 0).toString(),
+          priceUSD: (tokenData.data[0].prices[0].price ?? 1).toString(), // TODO /1 is a hack to get around testnet tokens not having a price
           chainId: token.chainId,
           address: token.address,
           symbol: tokenData.data[0].contract_ticker_symbol,

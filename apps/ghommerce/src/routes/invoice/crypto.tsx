@@ -18,9 +18,9 @@ import {
 } from "@/components/web3/TokenList.tsx"
 import { useNavigate } from "@tanstack/react-router"
 import { invoiceRoute } from "@/routes/invoice/invoice.tsx"
-import { z } from "zod"
 import { Address } from "ghommerce-schema/src/address.schema.ts"
 import type { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema"
+import { parseUnits} from "viem";
 
 export type Token =
   RouterOutput["tokens"]["getTokensForAddress"]["items"][0] & {
@@ -77,20 +77,18 @@ export const CryptoScreen = (props: { invoice: InvoiceSchema }) => {
           <div className={"flex flex-col space-y-1"}>
             {selectedToken &&
               account.address &&
-              props.invoice.acceptedTokens.map(x => (
-                <TokenSwapInformationCard
-                  swapData={{
-                    fromToken: selectedToken,
-                    toToken: x,
-                    fromAddress: Address.parse(account.address),
-                    toAddress: Address.parse(props.invoice.store.wallet),
-                    fromAmount: (
-                      props.invoice.amountDue /
-                      z.coerce.number().parse(selectedToken.priceUSD)
-                    ).toString(),
-                  }}
+              props.invoice.acceptedTokens.map(x => {
+                const amount = BigInt(parseUnits(props.invoice.amountDue.toString(), x.decimals)) / BigInt(parseUnits(x.priceUSD?.toString() ?? '1', x.decimals))
+                return <TokenSwapInformationCard
+                    swapData={{
+                      fromToken: selectedToken,
+                      toToken: x,
+                      fromAddress: Address.parse(account.address),
+                      toAddress: Address.parse(props.invoice.store.wallet),
+                      fromAmount: amount.toString(),
+                    }}
                 />
-              ))}
+              })}
 
             {tokens.data && (
               <TokenList

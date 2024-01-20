@@ -13,6 +13,11 @@ export {
 } from "./donations.db.ts";
 
 export {
+  invoiceToDonation,
+    invoiceToDonationRelations,
+} from "./invoiceToDonation.db.ts";
+
+export {
   payments,
   selectPaymentSchema,
   paymentsRelations,

@@ -113,15 +113,14 @@ function TokenCard(props: {
 export const TokenSwapInformationCard = (props: {
   swapData: SwapSchema;
 }) => {
+  console.log("TokenSwapInformationCard", props.swapData);
   const { offers } = useSwapProviders({
     swap: props.swapData,
   });
-  const totalAmount =
-    Number(props.swapData.fromAmount) / 10 ** props.swapData.fromToken.decimals;
   return (
     <div className="flex flex-col space-y-2">
       <div className="flex justify-between items-center">
-        <h2 className="text-md">Tokens needed: {totalAmount.toFixed(4)}</h2>
+        <h2 className="text-md">Tokens needed: {props.swapData.fromAmount}</h2>
       </div>
       {offers ? (
         <SwapProviderList swapOffers={offers} />

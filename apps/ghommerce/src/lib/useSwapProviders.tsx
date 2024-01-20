@@ -12,7 +12,6 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 import { TokenSchema } from "ghommerce-schema/src/tokens.schema.ts";
-import { formatUnits } from "viem";
 
 const SWAP_PROVIDERS = ["1inch", "0x", "lifi", "paraswap"] as const;
 export const SwapProvider = z.enum(SWAP_PROVIDERS);
@@ -121,10 +120,7 @@ export const SwapProviderCard = (props: {
           {/*</div>*/}
           <span className={"font-bold"}>Required tokens</span>
           <span>
-            {formatUnits(
-              BigInt(props.swapOffer.sellAmount),
-              props.swapOffer.sellTokenAddress.decimals,
-            )}{" "}
+            {props.swapOffer.sellAmount} {props.swapOffer.sellTokenAddress.symbol} ➡️ {props.swapOffer.buyAmount}{" "}
             {props.swapOffer.sellTokenAddress.symbol}
           </span>
           <span>

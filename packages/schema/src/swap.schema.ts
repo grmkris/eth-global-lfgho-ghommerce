@@ -5,7 +5,7 @@ import { TokenSchema } from "./tokens.schema.ts";
 export const SwapSchema = z.object({
   fromToken: TokenSchema,
   toToken: TokenSchema,
-  fromAmount: z.string(),
+  fromAmount: z.string().describe("Amount of fromToken to swap in wei ( 1 USDT = 1 000 000"),
   toAddress: Address,
   fromAddress: Address,
 });

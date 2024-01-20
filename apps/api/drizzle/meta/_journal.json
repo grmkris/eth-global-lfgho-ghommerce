@@ -15,6 +15,13 @@
       "when": 1705731525975,
       "tag": "0001_futuristic_toro",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1705763633685,
+      "tag": "0002_goofy_infant_terrible",
+      "breakpoints": true
     }
   ]
 }
