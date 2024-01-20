@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEthersSigner } from "@/lib/useEthersSigner.tsx";
 import { useAccount, useSwitchNetwork } from "wagmi";
 import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
-import {useToast} from "@/components/ui/use-toast.ts";
+import { useToast } from "@/components/ui/use-toast.ts";
 
 const getLifiClient = (props: {
   isTestnet?: boolean;
@@ -55,6 +55,7 @@ export const useLifiRoutes = (props: {
 
 export const useExecuteLifi = (props?: {
   isTestnet?: boolean;
+  onExecute?: (props: { route: Route }) => void;
 }) => {
   const signer = useEthersSigner();
   const { switchNetworkAsync } = useSwitchNetwork();
@@ -64,6 +65,7 @@ export const useExecuteLifi = (props?: {
     onSuccess: (data) => {
       toast.toast({ title: "LiFi route executed", variant: "default" });
       console.log("LiFi route executed", data);
+      if (props?.onExecute) props.onExecute({ route: data });
     },
     mutationFn: async (variables: {
       route: Route;
@@ -74,6 +76,14 @@ export const useExecuteLifi = (props?: {
         isTestnet: variables.isTestnet ?? props?.isTestnet,
       });
       return await lifi.executeRoute(signer, variables.route, {
+        updateRouteHook: async (route) => {
+          props?.onExecute?.({ route });
+          return route;
+        },
+        updateTransactionRequestHook: async (transactionRequest) => {
+          console.log("updateTransactionRequestHook", transactionRequest);
+          return transactionRequest;
+        },
         switchChainHook: async (chainId) => {
           if (!switchNetworkAsync) throw new Error("No switchNetworkAsync");
           await switchNetworkAsync(chainId);

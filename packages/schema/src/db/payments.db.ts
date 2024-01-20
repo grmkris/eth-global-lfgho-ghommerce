@@ -19,8 +19,8 @@ export const payments = pgTable("payments", {
   invoiceId: uuid("invoice_id")
     .references(() => invoices.id)
     .notNull(),
-  amountPaid: bigint("amount_paid", { mode: "number" }).notNull(), // in currency units based on invoice defined currency (USD, EUR, etc.)
-  token: jsonb("token").notNull(), // e.g., { token: 'ETH', amount: '0.1' }
+  fromToken: jsonb("token").$type<TokenAmountSchema>(),
+  toToken: jsonb("to_token").notNull().$type<TokenAmountSchema>(),
   paymentDate: timestamp("payment_date", { mode: "date" }),
   paymentMethod: text("payment_method").notNull(), // e.g., 'wallet', 'credit_card'
   transactionHash: text("transaction_id"), // For blockchain or other payment gateway transaction references
@@ -29,14 +29,16 @@ export const payments = pgTable("payments", {
 
 export const insertPaymentSchema = createInsertSchema(payments, {
   id: (schema) => schema.id.uuid(),
-  token: TokenAmountSchema,
+  fromToken: TokenAmountSchema,
+  toToken: TokenAmountSchema,
 }).omit({
   updatedAt: true,
   createdAt: true,
 });
 
 export const selectPaymentSchema = createSelectSchema(payments, {
-  token: TokenAmountSchema,
+  fromToken: TokenAmountSchema,
+  toToken: TokenAmountSchema,
   createdAt: z.coerce.date().default(new Date()),
 });
 

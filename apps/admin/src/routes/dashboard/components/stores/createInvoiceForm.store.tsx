@@ -31,7 +31,7 @@ interface InvoiceFormState {
   goToStep: (step: number) => void;
   payerInformation: PayerInformation;
   setPayerInformation: (payerInformation: PayerInformation) => void;
-  invoiceData: Partial<InvoiceInformation>
+  invoiceData: Partial<InvoiceInformation>;
   setInvoiceData: (invoiceData: InvoiceInformation) => void;
   resetState: () => void;
 }

@@ -106,7 +106,7 @@ export const CreateInvoiceForm = ({
           ...data,
           acceptedTokens:
             ERC20_TOKEN_MAPPER[store.data?.isTestnet ? "testnet" : "mainnet"][
-                data.selectedToken
+              data.selectedToken
             ],
         });
         resetState();

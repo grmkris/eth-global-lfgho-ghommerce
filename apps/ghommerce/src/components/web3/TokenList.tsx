@@ -13,7 +13,6 @@ export const TokenList = (props: {
   tokens: TokenAmountSchema[];
   onSelect?: (token: TokenAmountSchema) => void;
 }) => {
-  console.log("TokenList", props.selectedToken);
   const [selected, setSelected] = useState<TokenAmountSchema | undefined>(
     props.tokens.filter(
       (x) =>

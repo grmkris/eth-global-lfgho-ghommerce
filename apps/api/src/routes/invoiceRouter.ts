@@ -1,7 +1,7 @@
 import { authProcedure, publicProcedure, router } from "../lib/trpc";
 import { z } from "zod";
 import { db } from "../db/db";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import {
   insertInvoiceSchema,
   invoices,
@@ -14,7 +14,11 @@ import {
   payments,
   selectPaymentSchema,
 } from "ghommerce-schema/src/db/payments.db";
-import { TokenSchema, ZERO_ADDRESS } from "ghommerce-schema/src/tokens.schema";
+import {
+  TokenAmountSchema,
+  TokenSchema,
+  ZERO_ADDRESS,
+} from "ghommerce-schema/src/tokens.schema";
 import { CovalentClient } from "@covalenthq/client-sdk";
 import { ChainIdToName } from "ghommerce-schema/src/chains.schema";
 import { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema";
@@ -153,17 +157,32 @@ export const invoiceRouter = router({
       z.object({
         invoiceId: z.string().uuid(),
         transactionHash: TransactionHash,
+        fromToken: TokenAmountSchema,
+        toToken: TokenAmountSchema,
       }),
     )
     .output(selectPaymentSchema)
     .mutation(async ({ input, ctx }) => {
       if (!input?.invoiceId) throw new Error("Invalid invoiceId");
+      // TODO: check if txHash is correct and that amounts match
+      // transaction hash should be located in the blockchain of the toToken
+
+      const existingPayment = await db.query.payments.findFirst({
+        where: and(
+          eq(payments.invoiceId, input.invoiceId),
+          eq(payments.transactionHash, input.transactionHash),
+        ),
+      });
+
+      if (existingPayment) throw new Error("Payment already exists");
+
       const payment = await db
         .insert(payments)
         .values({
           invoiceId: input.invoiceId,
           transactionHash: input.transactionHash,
-          amountPaid: 1,
+          fromToken: input.fromToken,
+          toToken: input.toToken,
           token: {
             address: ZERO_ADDRESS, // TODO: get token address from transactionHash
             priceUSD: "1", // TODO: get token price from transactionHash
@@ -188,6 +207,14 @@ export const invoiceRouter = router({
         } as insertPaymentSchema)
         .returning()
         .execute();
-      return selectPaymentSchema.parse(payment);
+
+      const updatedInvoiceStatus = await db
+        .update(invoices)
+        .set({ status: "paid" })
+        .where(eq(invoices.id, input.invoiceId))
+        .returning()
+        .execute();
+
+      return selectPaymentSchema.parse(payment[0]);
     }),
 });

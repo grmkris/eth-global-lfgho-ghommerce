@@ -20,4 +20,7 @@ layout {
         args "dev:ghommerce"
     }
     pane // panes can be bare
+    pane size=2 borderless=true {
+        plugin location="zellij:status-bar"
+    }
 }

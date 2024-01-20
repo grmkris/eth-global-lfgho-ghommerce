@@ -4,14 +4,16 @@ import { useExecuteLifi, useLifiRoutes } from "@/lib/lifi/useLifi.tsx";
 import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
 import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
 import { Address } from "ghommerce-schema/src/address.schema.ts";
+import { Route } from "@lifi/sdk";
 
 export const LifiScreen = (props: {
   swap: SwapSchema;
+  onExecute?: (props: { route: Route }) => void;
 }) => {
-  console.log("LifiScreen", props.swap);
   const { data: routes } = useLifiRoutes(props);
   const { mutate: executeLifi } = useExecuteLifi({
     isTestnet: props.swap.isTestnet,
+    onExecute: props.onExecute,
   });
 
   return (
