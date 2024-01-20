@@ -115,6 +115,17 @@ export const storeRouter = router({
             eq(stores.userId, ctx.session.user.id),
             eq(stores.userId, input.userId),
           ),
+            with: {
+              safe: {
+                  with: {
+                      eoas: {
+                          with: {
+                              eoa: true
+                          }
+                      }
+                  }
+              }
+            }
         });
         return result;
       }
@@ -123,6 +134,17 @@ export const storeRouter = router({
           eq(stores.safeId, input.safeId),
           eq(stores.userId, ctx.session.user.id),
         ),
+          with: {
+              safe: {
+                  with: {
+                      eoas: {
+                          with: {
+                              eoa: true
+                          }
+                      }
+                  }
+              }
+          }
       });
       return result;
     }),

@@ -101,7 +101,7 @@ function Index() {
         type={"button"}
         onClick={() =>
           iframeSdk.data?.iframeClient.navigateToPage.mutate({
-            page: "/invoice?id=95aca533-60ef-43e1-9e5d-923c07a1a577",
+            page: "/invoice?id=6e587eac-1c3c-4e7e-b5b0-a8dcb072c6ac",
           })
         }
       >

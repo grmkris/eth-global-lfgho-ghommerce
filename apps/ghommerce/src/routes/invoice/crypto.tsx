@@ -80,14 +80,14 @@ export const CryptoScreen = (props: {
       </CardHeader>
       <CardContent>
         <div className={"flex flex-col space-y-1"}>
-             <TokenSwapInformationCard swapData={{
-               fromToken: {}, // TODO
-               toToken: selectedToken,
-               fromAddress: account.address,
-               toAddress: props.invoice.store?.safe?.address,
-               fromAmount: params.amount,
-               toAmount: 120
-             }}/>
+          {/*<TokenSwapInformationCard swapData={{*/}
+          {/*  fromToken: {}, // TODO*/}
+          {/*  toToken: selectedToken,*/}
+          {/*  fromAddress: account.address,*/}
+          {/*  toAddress: props.invoice.store?.safe?.address,*/}
+          {/*  fromAmount: params.amount,*/}
+          {/*  toAmount: 120*/}
+          {/*}}/>*/}
           {tokens.data && (
             <TokenList
                 onSelect={handleTokenChange}

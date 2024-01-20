@@ -43,6 +43,10 @@ export const StoresWrapper = (props: { userId: string }) => {
     userId: props.userId,
   });
 
+  stores.data?.[0].safe.eoas[0].eoa.wallet // EOA owner of safe
+
+  stores.data?.[0].safe.address // Safe wallet address <-- use this to receive payments
+
   if (stores.isFetching || stores.isLoading) return <p>Loading...</p>;
 
   if (stores.data && stores.data?.length > 0)
