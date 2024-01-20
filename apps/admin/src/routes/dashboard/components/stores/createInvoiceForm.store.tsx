@@ -31,7 +31,7 @@ interface InvoiceFormState {
   goToStep: (step: number) => void;
   payerInformation: PayerInformation;
   setPayerInformation: (payerInformation: PayerInformation) => void;
-  invoiceData: InvoiceInformation;
+  invoiceData: Partial<InvoiceInformation>
   setInvoiceData: (invoiceData: InvoiceInformation) => void;
   resetState: () => void;
 }
@@ -51,7 +51,7 @@ export const useInvoiceFormStore = create<InvoiceFormState>()(
       invoiceData: {
         description: "",
         amountDue: 0,
-        selectedToken: "USDT",
+        selectedToken: undefined,
         dueDate: new Date(),
       },
       setInvoiceData: (invoiceData: InvoiceInformation) => {
@@ -67,7 +67,7 @@ export const useInvoiceFormStore = create<InvoiceFormState>()(
           invoiceData: {
             description: "",
             amountDue: 0,
-            selectedToken: "USDT",
+            selectedToken: undefined,
             dueDate: new Date(),
           },
         });

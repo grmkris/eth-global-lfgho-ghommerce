@@ -63,7 +63,6 @@ export const CreateInvoiceForm = ({
     setInvoiceData,
     goToStep,
     payerInformation,
-    invoiceData,
     resetState,
   } = useInvoiceFormStore((state) => ({
     currentStep: state.currentStep,
@@ -97,6 +96,7 @@ export const CreateInvoiceForm = ({
       formSchema: InvoiceInformation,
       onSubmit: async (data: InvoiceInformation) => {
         if (!store.data) throw new Error("Store not found");
+        if (!data.selectedToken) throw new Error("Token not found");
         setInvoiceData(data);
         await createInvoice.mutateAsync({
           storeId: storeId,
@@ -106,7 +106,7 @@ export const CreateInvoiceForm = ({
           ...data,
           acceptedTokens:
             ERC20_TOKEN_MAPPER[store.data?.isTestnet ? "testnet" : "mainnet"][
-              invoiceData.selectedToken
+                data.selectedToken
             ],
         });
         resetState();

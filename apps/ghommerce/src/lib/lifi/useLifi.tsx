@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEthersSigner } from "@/lib/useEthersSigner.tsx";
 import { useAccount, useSwitchNetwork } from "wagmi";
 import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
+import {useToast} from "@/components/ui/use-toast.ts";
 
 const getLifiClient = (props: {
   isTestnet?: boolean;
@@ -57,10 +58,12 @@ export const useExecuteLifi = (props?: {
 }) => {
   const signer = useEthersSigner();
   const { switchNetworkAsync } = useSwitchNetwork();
+  const toast = useToast();
 
   return useMutation({
-    onSuccess: () => {
-
+    onSuccess: (data) => {
+      toast.toast({ title: "LiFi route executed", variant: "default" });
+      console.log("LiFi route executed", data);
     },
     mutationFn: async (variables: {
       route: Route;
