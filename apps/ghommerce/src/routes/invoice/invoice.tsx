@@ -24,7 +24,7 @@ import { z } from "zod";
 import { rootRoute } from "../Router.tsx";
 import { Address } from "ghommerce-schema/src/address.schema.ts";
 import { ChainId } from "ghommerce-schema/src/chains.schema.ts";
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import JSConfetti from "js-confetti";
 
 export const InvoiceParams = z.object({
@@ -103,7 +103,9 @@ function PaymentScreen(props: {
       <div className="flex-grow overflow-auto space-y-2 custom-scrollbar">
         <InvoiceInformation invoice={props.invoice} />
         {/* Pass selectedPaymentMethod as a prop to PaymentSelector */}
-        <PaymentSelector selectedPaymentMethod={selectedPaymentMethod} />
+        {selectedPaymentMethod && (
+          <PaymentSelector selectedPaymentMethod={selectedPaymentMethod} />
+        )}
 
         {/* Other components */}
 
@@ -127,7 +129,9 @@ function PaymentScreen(props: {
   );
 }
 
-export const PaymentSelector = ({ selectedPaymentMethod }) => {
+export const PaymentSelector = (props: {
+  selectedPaymentMethod: "card" | "crypto";
+}) => {
   const params = invoiceRoute.useSearch();
   const navigate = useNavigate({ from: invoiceRoute.fullPath });
   const invoice = apiTrpc.invoices.getInvoice.useQuery({
@@ -175,7 +179,7 @@ export const PaymentSelector = ({ selectedPaymentMethod }) => {
         </RadioGroup>
 
         {/* Conditionally render InvoicePayerInformation if "crypto" is selected */}
-        {selectedPaymentMethod === "crypto" && (
+        {props.selectedPaymentMethod === "crypto" && (
           <InvoicePayerInformation
             invoiceId={invoice.data?.id}
             payerData={invoice.data}
@@ -304,6 +308,6 @@ export const InvoicePayerInformation = (props: {
           payerData: data,
         })
       }
-    ></AutoForm>
+    />
   );
 };

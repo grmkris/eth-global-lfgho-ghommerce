@@ -6,7 +6,7 @@ import {
   TokenAmountSchema,
   TokenSchema,
 } from "ghommerce-schema/src/tokens.schema.ts";
-import { ZERO_ADDRESS } from "@1inch/fusion-sdk";
+import { ZERO_ADDRESS } from "ghommerce-schema/src/tokens.schema.ts";
 import { SwapSchema } from "ghommerce-schema/src/swap.schema.ts";
 import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
 

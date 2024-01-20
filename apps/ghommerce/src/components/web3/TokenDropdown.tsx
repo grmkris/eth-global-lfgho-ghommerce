@@ -6,7 +6,7 @@ import { TokenSchema } from "ghommerce-schema/src/tokens.schema.ts";
 import { VirtualizedCombobox } from "@/components/VirtualCombobox.tsx";
 import { CheckIcon, Link } from "lucide-react";
 import { Badge } from "@/components/ui/badge.tsx";
-import { ZERO_ADDRESS } from "@1inch/fusion-sdk";
+import { ZERO_ADDRESS } from "ghommerce-schema/src/tokens.schema.ts";
 import { apiTrpc } from "@/trpc-client.ts";
 import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
 

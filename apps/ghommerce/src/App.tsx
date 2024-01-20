@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterProvider } from "@tanstack/react-router";
-import { WagmiConfig, createConfig, configureChains } from "wagmi";
+import { WagmiConfig, createConfig } from "wagmi";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import {
   arbitrum,
@@ -9,6 +9,8 @@ import {
   mainnet,
   arbitrumGoerli,
   arbitrumNova,
+  polygonMumbai,
+  polygon,
 } from "wagmi/chains";
 // Create a client
 const queryClient = new QueryClient({
@@ -36,13 +38,20 @@ if (!projectId) {
 // 2. Create wagmiConfig
 const config = createConfig(
   getDefaultConfig({
+    chains: [
+      arbitrum,
+      avalanche,
+      mainnet,
+      arbitrumGoerli,
+      arbitrumNova,
+      polygonMumbai,
+      polygon,
+    ],
     // Required API Keys
     alchemyId: "alcht_tHlvJglVFgwX9ziJkvc09fXSInaLuO", // Replace with your Alchemy ID
-    walletConnectProjectId: "ghommerce", // Replace with your WalletConnect Project ID
-
+    walletConnectProjectId: projectId, // Replace with your WalletConnect Project ID
     // Required
     appName: "GHOmmerce", // Replace with the name of your app
-
     // Optional
     appDescription: "GHOmmerce app", // Replace with a short description of your app
     appUrl: "https://ghommerce.com", // Replace with the URL of your app

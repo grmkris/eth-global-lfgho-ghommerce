@@ -1,11 +1,11 @@
-import { BaseTokenSchema } from "ghommerce-schema/src/tokens.schema.ts";
+import {
+  BaseTokenSchema,
+  ZERO_ADDRESS,
+} from "ghommerce-schema/src/tokens.schema.ts";
 import { apiTrpc } from "@/trpc-client.ts";
 import { ChainIdToName } from "ghommerce-schema/src/chains.schema.ts";
-import { ZERO_ADDRESS } from "@1inch/fusion-sdk";
 import { Badge } from "@/components/ui/badge.tsx";
 import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
-import { Address } from "ghommerce-schema/src/address.schema.ts";
-import { ChainInfo } from "@/components/web3/ChainInfo.tsx";
 
 export const TokenImage = (props: { tokenData: BaseTokenSchema }) => {
   const token = apiTrpc.tokens.getTokenInfo.useQuery({

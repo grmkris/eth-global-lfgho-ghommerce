@@ -18,7 +18,7 @@ import {
   PayerInformation,
   useInvoiceFormStore,
 } from "./createInvoiceForm.store";
-import type {ZodObjectOrWrapped} from "@/components/auto-form/utils.ts";
+import type { ZodObjectOrWrapped } from "@/components/auto-form/utils.ts";
 
 type StepFormType = {
   position: number;
@@ -94,7 +94,7 @@ export const CreateInvoiceForm = ({
       title: "Invoice details",
       description: "Introduce the details of the invoice",
       formSchema: InvoiceInformation,
-      onSubmit: async (data : InvoiceInformation) => {
+      onSubmit: async (data: InvoiceInformation) => {
         setInvoiceData(data);
         await createInvoice.mutateAsync({
           storeId: storeId,
@@ -129,6 +129,7 @@ export const CreateInvoiceForm = ({
           className={"m-4"}
           formSchema={selectedForm.formSchema}
           onSubmit={(data) => {
+            // @ts-ignore // TODO good for  now
             selectedForm?.onSubmit(data);
           }}
         >

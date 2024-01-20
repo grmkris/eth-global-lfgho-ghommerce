@@ -1,4 +1,4 @@
-import { use1InchOrderQuote } from "@/lib/1inch/use1Inch.tsx";
+// import { use1InchOrderQuote } from "@/lib/1inch/use1Inch.tsx";
 import { apiTrpc } from "@/trpc-client.ts";
 import { useLifiRoutes } from "@/lib/lifi/useLifi.tsx";
 import { useParaSwapRoute } from "@/lib/paraswap/useParaswap.tsx";
@@ -34,22 +34,22 @@ export const useSwapProviders = (props: {
   swap: SwapSchema;
 }) => {
   console.log("useSwapProviders", props);
-  const oneInchQuote = use1InchOrderQuote(props);
+  // const oneInchQuote = use1InchOrderQuote(props);
   const zeroExPrice = apiTrpc.zeroEx.getPrice.useQuery(props.swap);
   const lifiRoutes = useLifiRoutes(props);
   const paraswap = useParaSwapRoute(props);
 
   const swapOffers: SwapOfferSchema[] = [
-    {
-      provider: "1inch",
-      // gasPrice: oneInchQuote.data?.,
-      // gas: oneInchQuote.data?.gas,
-      sellAmount: oneInchQuote.data?.fromTokenAmount ?? "0",
-      buyAmount: oneInchQuote.data?.toTokenAmount ?? "0",
-      buyTokenAddress: props.swap.toToken,
-      sellTokenAddress: props.swap.fromToken,
-      // allowanceTarget: oneInchQuote.data?.allowanceTarget, TODO
-    },
+    // {
+    //   provider: "1inch",
+    //   // gasPrice: oneInchQuote.data?.,
+    //   // gas: oneInchQuote.data?.gas,
+    //   sellAmount: oneInchQuote.data?.fromTokenAmount ?? "0",
+    //   buyAmount: oneInchQuote.data?.toTokenAmount ?? "0",
+    //   buyTokenAddress: props.swap.toToken,
+    //   sellTokenAddress: props.swap.fromToken,
+    //   // allowanceTarget: oneInchQuote.data?.allowanceTarget, TODO
+    // },
     {
       provider: "0x",
       gasPrice: zeroExPrice.data?.gasPrice,
@@ -88,7 +88,7 @@ export const useSwapProviders = (props: {
     });
 
   return {
-    oneInchQuote,
+    // oneInchQuote,
     zeroExPrice,
     lifiRoutes,
     paraswap,

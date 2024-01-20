@@ -1,7 +1,7 @@
 import { BaseTokenSchema } from "ghommerce-schema/src/tokens.schema.ts";
 import { apiTrpc } from "@/trpc-client.ts";
 import { ChainIdToName } from "ghommerce-schema/src/chains.schema.ts";
-import { ZERO_ADDRESS } from "@1inch/fusion-sdk";
+import { ZERO_ADDRESS } from "ghommerce-schema/src/tokens.schema.ts";
 import { Badge } from "@/components/ui/badge.tsx";
 import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
 import { Address } from "ghommerce-schema/src/address.schema.ts";
@@ -41,7 +41,7 @@ export const TokenInfo = (props: {
       </div>
       <div className="flex flex-col">
         <div className="text-sm font-bold">
-          {token.data?.[0].contract_name} [
+          {token.data?.[0].contract_ticker_symbol}
           <ChainInfo chainId={props.tokenData.chainId} />
           {token.data?.[0].contract_address === ZERO_ADDRESS && (
             <Badge variant={"outline"}>Native</Badge>

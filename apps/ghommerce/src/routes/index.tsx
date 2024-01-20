@@ -4,11 +4,11 @@ import { Route } from "@tanstack/react-router";
 import { rootRoute } from "./Router.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useAccount } from "wagmi";
 import { SLIDE_IN_SLIDE_OUT_LEFT } from "@/animations.ts";
 import { getTrpcClientIframe } from "@/trpc-client.ts";
 import { useAppDrawer } from "@/drawers/AppDrawer.tsx";
+import { useModal } from "connectkit";
 
 export const indexRoute = new Route({
   getParentRoute: () => rootRoute,
@@ -34,8 +34,8 @@ function Index() {
   });
 
   // 4. Use modal hook
-  const modal = useWeb3Modal();
   const wagmiAccount = useAccount();
+  const modal = useModal();
   const drawer = useAppDrawer();
   return (
     <div className={SLIDE_IN_SLIDE_OUT_LEFT}>
@@ -48,10 +48,8 @@ function Index() {
         Click me
       </Button>
       <Separator />
-      <Button onClick={() => modal.open()}>Connect Wallet</Button>
-      <Button onClick={() => modal.open({ view: "Networks" })}>
-        Choose Network
-      </Button>
+      <Button onClick={() => modal.openProfile()}>Connect Wallet</Button>
+      <Button onClick={() => modal.openSIWE()}>Siwe</Button>
       <Button onClick={() => drawer.open({ name: "basic" })}>
         Open basic Drawer
       </Button>

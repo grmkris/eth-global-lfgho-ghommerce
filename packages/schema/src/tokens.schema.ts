@@ -15,7 +15,7 @@ export const BaseTokenSchema = z.object({
 });
 export type BaseTokenSchema = z.infer<typeof BaseTokenSchema>;
 export const StaticTokenSchema = BaseTokenSchema.extend({
-  symbol: z.string(),
+  symbol: z.string().optional(),
   decimals: z.number(),
   name: z.string(),
   logoURI: z.string().optional(),
