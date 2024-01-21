@@ -1,5 +1,4 @@
-# Ghommerce: making e-commerce simpler with Web3 and more powerful than traditional payments with GHO
-- https://ethglobal.com/events/lfgho
+# Ghommerce: making web3 e-commerce simpler 
 
 ## 📖 Storytime
 
