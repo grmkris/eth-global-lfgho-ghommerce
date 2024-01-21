@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Row } from "@tanstack/react-table";
+import  {ReactNode} from "react";
 
 export interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -20,6 +21,7 @@ export interface DataTableRowActionsProps<TData> {
     label: string;
     onClick: (row: TData) => void;
   }[];
+  customElements?: (input: TData) => ReactNode
 }
 
 export function DataTableRowActions<TData>({
@@ -28,7 +30,9 @@ export function DataTableRowActions<TData>({
   onDelete,
   onOpen,
   customActions,
+    customElements,
 }: DataTableRowActionsProps<TData>) {
+  console.log("customElements", customElements)
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -58,6 +62,7 @@ export function DataTableRowActions<TData>({
             </DropdownMenuItem>
           );
         })}
+        {customElements?.(row.original)}
         <DropdownMenuSeparator />
         <DropdownMenuSeparator />
         {onDelete && (

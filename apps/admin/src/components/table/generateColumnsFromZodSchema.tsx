@@ -83,7 +83,7 @@ export function generateColumnsFromZodSchema<
     const item = shape[name] as z.ZodAny;
     const zodBaseType = getBaseType(item);
 
-    // @ts-expect-error TODO: fix this
+
     const itemName =
       config[name]?.name ?? item._def.description ?? beautifyObjectName(name);
     const key = [name].join(".");
@@ -145,6 +145,7 @@ export function generateColumnsFromZodSchema<
           onEdit={actions.onEdit}
           onOpen={actions.onOpen}
           customActions={actions.customActions}
+          customElements={actions.customElements}
         />
       ),
       enableSorting: false,
