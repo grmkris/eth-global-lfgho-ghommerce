@@ -1,20 +1,18 @@
-import { BaseTokenSchema } from "ghommerce-schema/src/tokens.schema.ts";
-import { apiTrpc } from "@/trpc-client.ts";
-import { ChainIdToName } from "ghommerce-schema/src/chains.schema.ts";
-import { ZERO_ADDRESS } from "ghommerce-schema/src/tokens.schema.ts";
-import { Badge } from "@/components/ui/badge.tsx";
-import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
-import { Address } from "ghommerce-schema/src/address.schema.ts";
-import { ChainInfo } from "@/components/web3/ChainInfo.tsx";
+import { BaseTokenSchema } from "ghommerce-schema/src/tokens.schema.ts"
+import { apiTrpc } from "@/trpc-client.ts"
+import { ChainIdToName } from "ghommerce-schema/src/chains.schema.ts"
+import { ZERO_ADDRESS } from "ghommerce-schema/src/tokens.schema.ts"
+import { Badge } from "@/components/ui/badge.tsx"
+import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx"
+import { Address } from "ghommerce-schema/src/address.schema.ts"
+import { ChainInfo } from "@/components/web3/ChainInfo.tsx"
 
-export const TokenInfo = (props: {
-  tokenData: BaseTokenSchema;
-}) => {
+export const TokenInfo = (props: { tokenData: BaseTokenSchema }) => {
   const token = apiTrpc.tokens.getTokenInfo.useQuery({
     tokenAddress: props.tokenData.address,
     chain: ChainIdToName[props.tokenData.chainId],
     quoteCurrency: "USD",
-  });
+  })
 
   if (!token.data?.[0].contract_address)
     return (
@@ -28,14 +26,14 @@ export const TokenInfo = (props: {
           <CopyAddressLabel address={props.tokenData.address} />
         </div>
       </div>
-    );
+    )
 
   return (
     <div className="flex flex-row items-center space-x-2">
-      <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+      <div className="w-10 h-10 rounded-full flex items-center justify-center">
         <img
           src={token.data?.[0].logo_url}
-          className="w-6 h-6"
+          className="w-10 h-10"
           alt={token.data?.[0].contract_name}
         />
       </div>
@@ -52,5 +50,5 @@ export const TokenInfo = (props: {
         />
       </div>
     </div>
-  );
-};
+  )
+}
