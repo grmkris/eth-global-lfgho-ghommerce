@@ -98,8 +98,11 @@ In essence, Ghommerce is not just a payment platform; it's a comprehensive, vers
       - at no point it has access to the merchant's private key or funds
   - admin page (merchant) [apps/admin](apps/admin)
     - vite, react, tailwind, tanstack router, zustand, react-query
+    - Merchant can connect their existing wallet, or use web3auth to create a new one, then a https://safe.global/ is created for them, and they can use to receive payments
   - public payment page (customer) [apps/ghommerce](apps/ghommerce)
     - vite, react, tailwind, tanstack router, zustand, react-query
+    - Customer connects their wallet using [ConnectKit](https://docs.family.co/connectkit/getting-started) and can pay with any token they have in their wallet
   - sdk to integrate payment page as a widget [packages/sdk](packages/sdk)
     - typescript browser sdk
   - example-app to demonstrate sdk usage [apps/example](apps/example)
+    - https://github.com/grmkris/eth-global-lfgho-ghommerce/blob/994775f3fd1baaa2675b2e735ca27b7aa0eeb7ed/apps/example/src/useGhommerceSDK.tsx#L2-L2
