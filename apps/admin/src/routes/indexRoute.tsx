@@ -18,6 +18,9 @@ import { Link, Route } from "@tanstack/react-router";
 import { SiweMessage } from "siwe";
 import { SLIDE_IN_SLIDE_OUT_LEFT } from "@/features/animations.ts";
 import { insertStoreSchema } from "ghommerce-schema/src/db/stores.db.ts";
+import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
+import { Address } from "ghommerce-schema/src/address.schema.ts";
+import { Loader } from "lucide-react";
 
 export const indexRoute = new Route({
   getParentRoute: () => authOnboardingRoute,
@@ -45,7 +48,6 @@ export const indexRoute = new Route({
     const stores = trpcClient.stores.getStores.useQuery(
       {
         safeId: safes.data?.[0]?.id,
-        userId: user.user.id,
       },
       {
         enabled: !!safes.data?.[0]?.id,
@@ -189,23 +191,25 @@ const DeploySafeComponent = () => {
             </CardDescription>
           </CardHeader>
           {safeSdk.safeAddress.isLoading ? (
-            <p>Loading...</p>
+            <div className="flex justify-center items-center p-4">
+              <Loader className="w-8 h-8 animate-spin" />
+            </div>
           ) : (
             <>
               <CardContent>
                 <div>
                   <p>Safe wallet has been generated for your account</p>
-                  <p>Safe Address: {safeSdk.safeAddress?.data}</p>
+                  <p>
+                    Safe Address:{" "}
+                    <CopyAddressLabel
+                      address={Address.parse(safeSdk.safeAddress?.data)}
+                    />
+                  </p>
                 </div>
               </CardContent>
               <CardFooter>
                 <div className="flex flex-col gap-2">
-                  <p>
-                    {" "}
-                    Sign message with your wallet to verify ownership, and
-                    continue to dashboard
-                  </p>
-                  <p> Signer: {address}</p>
+                  <p> Sign message with your wallet to confirm ownership</p>
                   <Button
                     onClick={async () => {
                       if (!address) throw new Error("No address");

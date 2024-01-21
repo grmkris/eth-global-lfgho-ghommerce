@@ -50,13 +50,13 @@ export const CreateDonationModal = () => {
           onSubmit={(data) => {
             console.log("onSubmit123", data);
             if (!selectedStore) {
-                toaster.toast({
-                    title: "Please select a store",
-                    description: "You must select a store to continue",
-                    variant: "destructive",
-                });
-                return;
-                }
+              toaster.toast({
+                title: "Please select a store",
+                description: "You must select a store to continue",
+                variant: "destructive",
+              });
+              return;
+            }
             createDonation.mutate({
               storeId: selectedStore,
               donationData: data,

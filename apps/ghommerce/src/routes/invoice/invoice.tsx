@@ -27,8 +27,8 @@ import { ChainId } from "ghommerce-schema/src/chains.schema.ts";
 import { useState, useEffect } from "react";
 import JSConfetti from "js-confetti";
 import { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema.ts";
-import { Toaster } from "@/components/ui/toaster.tsx";
 import { Receipt, GripHorizontal } from "lucide-react";
+import { GhoComponent } from "@/lib/gho/GhoComponent.tsx";
 
 export const InvoiceSteps = z.enum(["payment", "crypto", "gatefi"]);
 export type InvoiceSteps = z.infer<typeof InvoiceSteps>;
@@ -75,18 +75,18 @@ function Invoice() {
         <PaymentScreen invoice={InvoiceSchema.parse(invoice.data)} />
       </div>
     );
-  if (invoice.data.status === "paid" || invoice.data.status === "handled")
+  if (invoice.data.status === "paid")
     return (
       <div>
         <PaidScreen invoice={InvoiceSchema.parse(invoice.data)} />
       </div>
-    ); /*
+    );
   if (invoice.data.status === "handled")
     return (
       <div>
         <HandledScreen invoice={InvoiceSchema.parse(invoice.data)} />
       </div>
-    )*/
+    );
 }
 
 function PaidScreen(props: { invoice: InvoiceSchema }) {
@@ -162,6 +162,7 @@ function PaymentScreen(props: { invoice: InvoiceSchema }) {
         <div className="w-[450px] overflow-auto">
           <InvoiceInformation invoice={props.invoice} />
         </div>
+        <GhoComponent invoice={props.invoice} />
         {
           // STEP 1
           step === "payment" && (
@@ -298,11 +299,9 @@ function FullInvoiceInformation(props: { invoice: InvoiceSchema }) {
             </div>
             <div className="col-span-1">
               <p className="font-medium text-gray-600">Accepted tokens:</p>
-              <p>
-                {invoice?.acceptedTokens.map((x) => (
-                  <TokenInfo tokenData={x} />
-                ))}
-              </p>
+              {invoice?.acceptedTokens.map((x) => (
+                <TokenInfo key={x.address + x.chainId} tokenData={x} />
+              ))}
             </div>
           </div>
         </CardContent>

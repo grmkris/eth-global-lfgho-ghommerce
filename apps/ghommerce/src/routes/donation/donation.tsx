@@ -8,10 +8,10 @@ import {
 } from "@/components/ui/card.tsx";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { RouterOutput, apiTrpc } from "@/trpc-client.ts";
-import {Route, useNavigate} from "@tanstack/react-router";
+import { Route, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import { rootRoute } from "../Router.tsx";
-import {invoiceRoute} from "@/routes/invoice/invoice.tsx";
+import { invoiceRoute } from "@/routes/invoice/invoice.tsx";
 
 export const DonationParams = z.object({
   id: z.string(),
@@ -48,7 +48,7 @@ function Donation() {
 export const DonationInformation = (props: {
   donation: RouterOutput["donations"]["getDonation"];
 }) => {
-  const navigate = useNavigate({from: donationRoute.fullPath});
+  const navigate = useNavigate({ from: donationRoute.fullPath });
   const createInvoice = apiTrpc.donations.createDonationInvoice.useMutation({
     onSuccess: async (invoice) => {
       await navigate({
@@ -58,9 +58,9 @@ export const DonationInformation = (props: {
           return {
             ...current,
             id: invoice.id,
-          }
-        }
-      })
+          };
+        },
+      });
     },
   });
   const donation = props.donation;
@@ -70,7 +70,7 @@ export const DonationInformation = (props: {
       donationId: donation.id,
       amount: amount,
     });
-  }
+  };
 
   return (
     <Card className="text-start">
@@ -97,7 +97,6 @@ export const DonationInformation = (props: {
             </div>
           </div>
         )}
-
       </CardContent>
     </Card>
   );
@@ -112,10 +111,7 @@ const DonationOptionCard = (props: {
 }) => {
   const { donationOption, onClick } = props;
   return (
-    <Card
-      className={"hover:shadow-lg cursor-pointer"}
-      onClick={onClick}
-    >
+    <Card className={"hover:shadow-lg cursor-pointer"} onClick={onClick}>
       <CardHeader>
         <CardDescription>{donationOption.description}</CardDescription>
       </CardHeader>

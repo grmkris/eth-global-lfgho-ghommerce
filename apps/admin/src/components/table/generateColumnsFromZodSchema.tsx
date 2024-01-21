@@ -84,7 +84,8 @@ export function generateColumnsFromZodSchema<
     const zodBaseType = getBaseType(item);
 
     // @ts-expect-error TODO: fix this
-    const itemName = config[name]?.name ?? item._def.description ?? beautifyObjectName(name);
+    const itemName =
+      config[name]?.name ?? item._def.description ?? beautifyObjectName(name);
     const key = [name].join(".");
     // @ts-expect-error TODO: fix this
     const columnConfig = config[name];

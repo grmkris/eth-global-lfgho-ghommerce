@@ -407,6 +407,12 @@ importers:
       '@1inch/fusion-sdk':
         specifier: ^0.1.12
         version: 0.1.13(assert@2.1.0)(axios@1.6.5)(stream@0.0.2)
+      '@aave/contract-helpers':
+        specifier: 1.21.1
+        version: 1.21.1(bignumber.js@9.1.2)(ethers@5.7.2)(reflect-metadata@0.1.14)(tslib@2.6.2)
+      '@aave/math-utils':
+        specifier: 1.21.1
+        version: 1.21.1(bignumber.js@9.1.2)(tslib@2.6.2)
       '@cowprotocol/cow-sdk':
         specifier: ^4.0.7
         version: 4.1.0(ethers@5.7.2)
@@ -658,6 +664,33 @@ packages:
       - encoding
       - supports-color
       - utf-8-validate
+    dev: false
+
+  /@aave/contract-helpers@1.21.1(bignumber.js@9.1.2)(ethers@5.7.2)(reflect-metadata@0.1.14)(tslib@2.6.2):
+    resolution: {integrity: sha512-sp5m0KZ0lInlBfTfZnbR7yh0jG1Q+5wvM42H7JBMOdjxb1jWKWkAWg0DFQJzXlDsBo+bk6BS/sBHa4Eql0IA8A==}
+    peerDependencies:
+      bignumber.js: ^9.x
+      ethers: ^5.x
+      reflect-metadata: ^0.1.x
+      tslib: ^2.4.x
+    dependencies:
+      bignumber.js: 9.1.2
+      ethers: 5.7.2
+      isomorphic-unfetch: 3.1.0
+      reflect-metadata: 0.1.14
+      tslib: 2.6.2
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /@aave/math-utils@1.21.1(bignumber.js@9.1.2)(tslib@2.6.2):
+    resolution: {integrity: sha512-oFZafJ5MeNtiqgJBEsmvvGlFtdFauWX0wI9B+wikqT//LVc0PYS0IX49UItv6yoTcd0I7IDq3Zv8V47e3lhBOw==}
+    peerDependencies:
+      bignumber.js: ^9.x
+      tslib: ^2.4.x
+    dependencies:
+      bignumber.js: 9.1.2
+      tslib: 2.6.2
     dev: false
 
   /@adraffy/ens-normalize@1.10.0:
@@ -11613,6 +11646,10 @@ packages:
     engines: {node: '>=4'}
     dependencies:
       redis-errors: 1.2.0
+    dev: false
+
+  /reflect-metadata@0.1.14:
+    resolution: {integrity: sha512-ZhYeb6nRaXCfhnndflDK8qI6ZQ/YcWZCISRAWICW9XYqMUwjZM9Z0DveWX/ABN01oxSHwVxKQmxeYZSsm0jh5A==}
     dev: false
 
   /refractor@3.6.0:
