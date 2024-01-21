@@ -54,7 +54,7 @@ function AuthenticationPage() {
           <img
             src={logo}
             alt="logo"
-            className="max-w-[150px] md:max-w-[200px] animate-bounce"
+            className="max-w-[150px] md:max-w-[200px] "
           />
         </div>
         <div className="foreground bg-gray-800 button rounded-md">
