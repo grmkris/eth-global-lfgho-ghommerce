@@ -12,7 +12,11 @@ import {
   Drawer,
   DrawerTrigger,
   DrawerContent,
-  DrawerTitle, DrawerClose, DrawerHeader, DrawerDescription, DrawerFooter,
+  DrawerTitle,
+  DrawerClose,
+  DrawerHeader,
+  DrawerDescription,
+  DrawerFooter,
 } from "@/components/ui/drawer.tsx";
 
 import { Button } from "@/components/ui/button.tsx";
@@ -36,7 +40,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { GhoCreditModal } from "@/lib/gho/GhoCreditComponent.tsx";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {Loader} from "lucide-react";
+import { Loader } from "lucide-react";
 
 export type OnSwapProps = {
   txHash: TransactionHash;
@@ -162,30 +166,33 @@ export const CryptoScreen = (props: { invoice: InvoiceSchema }) => {
                   fromAmountScaled * BigInt(10) ** BigInt(tokenDecimals);
 
                 return (
-                    <TokenSwapInformationCard
-                      key={x.address + x.chainId}
-                      onSwap={onSuccessfulSwap}
-                      swapData={{
-                        fromToken: selectedToken,
-                        toToken: x,
-                        fromAddress: Address.parse(account.address),
-                        toAddress: Address.parse(props.invoice.store.wallet),
-                        fromAmount: fromAmount.toString(),
-                        isTestnet: props.invoice.isTestnet,
-                      }}
-                    />
+                  <TokenSwapInformationCard
+                    key={x.address + x.chainId}
+                    onSwap={onSuccessfulSwap}
+                    swapData={{
+                      fromToken: selectedToken,
+                      toToken: x,
+                      fromAddress: Address.parse(account.address),
+                      toAddress: Address.parse(props.invoice.store.wallet),
+                      fromAmount: fromAmount.toString(),
+                      isTestnet: props.invoice.isTestnet,
+                    }}
+                  />
                 );
               })}
             {/* Drawer for token selection */}
-            {tokens.data?.items && <TokenSelectorDrawer account={account.address} isTestnet={props.invoice.isTestnet}
-                                                        handleTokenChange={handleTokenChange} selectedToken={selectedToken} />}
+              <TokenSelectorDrawer
+                account={account.address}
+                isTestnet={props.invoice.isTestnet}
+                handleTokenChange={handleTokenChange}
+                selectedToken={selectedToken}
+              />
           </div>
         </CardContent>
       </Card>
     </div>
   );
 };
-
 
 export const TokenSelectorDrawer = (props: {
   account?: Address;
@@ -194,69 +201,80 @@ export const TokenSelectorDrawer = (props: {
   selectedToken?: TokenSchema;
 }) => {
   const tokens = apiTrpc.tokens.getTokensForAddress.useQuery(
-      {
-        quoteCurrency: "USD",
-        address: props.account ?? ZERO_ADDRESS,
-        isTestnet: props.isTestnet,
-      },
-      {
-        enabled: !!props.account,
-      },
+    {
+      quoteCurrency: "USD",
+      address: props.account ?? ZERO_ADDRESS,
+      isTestnet: props.isTestnet,
+    },
+    {
+      enabled: !!props.account,
+    },
   );
   const [isOpen, setIsOpen] = useState(false);
   return (
-      <Drawer open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
-        <DrawerTrigger asChild onClick={()=> {
-            setIsOpen(!isOpen);
-        }}><Card>
+    <Drawer open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
+      <DrawerTrigger
+        asChild
+        onClick={() => {
+          setIsOpen(!isOpen);
+        }}
+      >
+        <Card>
           <CardContent>
             {props.selectedToken ? (
-                <TokenInfo tokenData={props.selectedToken} />
+              <TokenInfo tokenData={props.selectedToken} />
             ) : (
-                <Button className="self-center mt-6">Select a Token</Button>
+              <Button className="self-center mt-6">Select a Token</Button>
             )}
           </CardContent>
-        </Card></DrawerTrigger>
-        <DrawerContent className='fixed inset-0 m-auto max-h-[90vh] max-w-xl flex items-center justify-center'>
+        </Card>
+      </DrawerTrigger>
+      <DrawerContent className="fixed inset-0 m-auto max-h-[90vh] max-w-xl flex items-center justify-center">
+        <DrawerHeader>
+          <DrawerTitle>Your Tokens</DrawerTitle>
+          <DrawerDescription>
+            {!tokens.data && (
+                <p>We are fetching your tokens, this may take a few seconds.</p>
+                )}
 
-          <DrawerHeader>
-            <DrawerTitle>Your Tokens</DrawerTitle>
-            <DrawerDescription>We found {tokens.data?.items.length} tokens in your wallet,
-                select one to pay with, and we handle the rest.
-            </DrawerDescription>
-          </DrawerHeader>
-          <ScrollArea className='overflow-auto p-4'>
+            {
+              tokens.data && (
+                  <p>We found {tokens.data?.items.length} tokens in your wallet, select
+                    one to pay with, and we handle the rest.</p>
+                )
+            }
+          </DrawerDescription>
+        </DrawerHeader>
+        <ScrollArea className="overflow-auto p-4">
           {tokens.data && (
-              <TokenList
-                  onSelect={(token) => {
-                    props.handleTokenChange(token);
-                    setIsOpen(false);
-                  }}
-                  tokens={TokenAmountSchema.array().parse(tokens.data?.items)}
-                  selectedToken={props.selectedToken}
-              />
+            <TokenList
+              onSelect={(token) => {
+                props.handleTokenChange(token);
+                setIsOpen(false);
+              }}
+              tokens={TokenAmountSchema.array().parse(tokens.data?.items)}
+              selectedToken={props.selectedToken}
+            />
           )}
-            {
-              !tokens.data && (
-                  <div className='flex flex-col items-center justify-center space-y-4'>
-                    <Loader className='w-8 h-8 animate-spin' />
-                  </div>
-              )
-            }
-            {
-              tokens.data?.items.length === 0 && (
-                  <div className='flex flex-col items-center justify-center space-y-4'>
-                    <p className='text-sm text-gray-500'>No tokens found</p>
-                  </div>
-              )
-            }
-          </ScrollArea>
-          <DrawerFooter>
-            <DrawerClose className={"w-full"}>
-              <Button variant="outline" className={"w-full"}>Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    );
-}
+          {!tokens.data && (
+            <div className="flex flex-col items-center justify-center space-y-4">
+              <Loader className="w-8 h-8 animate-spin" />
+            </div>
+          )}
+          {tokens.data?.items.length === 0 && (
+            <div className="flex flex-col items-center justify-center space-y-4">
+              <p className="text-sm text-gray-500">No tokens found</p>
+            </div>
+          )}
+        </ScrollArea>
+        <DrawerFooter>
+          <DrawerClose className={"w-full"}>
+            <Button variant="outline" className={"w-full"}>
+              Cancel
+            </Button>
+          </DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+  );
+};

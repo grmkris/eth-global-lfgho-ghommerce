@@ -202,7 +202,7 @@ const DeploySafeComponent = () => {
                     Safe Address:{" "}
                     <CopyBadge
                       label={Address.parse(safeSdk.safeAddress?.data)}
-                        type={"address"}
+                      type={"address"}
                     />
                   </p>
                 </div>

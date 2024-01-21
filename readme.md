@@ -87,3 +87,19 @@ In essence, Ghommerce is not just a payment platform; it's a comprehensive, vers
 ## Architecture
 
 <img src="images/arhitecture-ghommerce.svg" height="1200" alt="ghommerce-architecture.png" />
+
+
+## Tech Stack
+
+- apps:
+  - api (merchant + customer) [apps/api](apps/api)
+    - supabase (postgres + auth) and bun for backend logic
+      - api is only used for providing various data to the frontend and store management, notifications, analytics, etc.
+      - at no point it has access to the merchant's private key or funds
+  - admin page (merchant) [apps/admin](apps/admin)
+    - vite, react, tailwind, tanstack router, zustand, react-query
+  - public payment page (customer) [apps/ghommerce](apps/ghommerce)
+    - vite, react, tailwind, tanstack router, zustand, react-query
+  - sdk to integrate payment page as a widget [packages/sdk](packages/sdk)
+    - typescript browser sdk
+  - example-app to demonstrate sdk usage [apps/example](apps/example)

@@ -37,11 +37,11 @@ export const InvoicesTable = (props: {
       payerEmail: true,
     }),
     {
-        id: {
-            render: (value) => {
-                return <CopyBadge label={value.id} type={"uuid"} />
-            }
+      id: {
+        render: (value) => {
+          return <CopyBadge label={value.id} type={"uuid"} />;
         },
+      },
       payerWallet: {
         render: (value) => {
           return value.payerWallet ? (

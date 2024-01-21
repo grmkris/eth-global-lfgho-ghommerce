@@ -28,8 +28,8 @@ export const CopyBadge = (props: {
   };
 
   return (
-      <Badge onClick={handleClick} className="cursor-pointer">
-        {formatLabel(props.label)}
-      </Badge>
+    <Badge onClick={handleClick} className="cursor-pointer">
+      {formatLabel(props.label)}
+    </Badge>
   );
 };

@@ -12,7 +12,7 @@ import { DonationDataSchema } from "ghommerce-schema/src/db/donations.db.ts";
 import { VirtualizedCombobox } from "@/components/VirtualCombobox.tsx";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast.ts";
-import {useQueryClient} from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 const CreateDonationForm = DonationDataSchema;
 
@@ -21,17 +21,17 @@ export const CreateDonationModal = () => {
     close: state.close,
     isOpen: state.isOpen,
   }));
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   const [selectedStore, setSelectedStore] = useState<string | undefined>();
   const toaster = useToast();
   const createDonation = trpcClient.donations.createDonation.useMutation({
-    onSuccess:async (data) => {
+    onSuccess: async (data) => {
       toaster.toast({
         title: `${data.donationData.name} donation page created`,
         description: "Your donation page has been created successfully",
         variant: "success",
       });
-        await queryClient.invalidateQueries()
+      await queryClient.invalidateQueries();
       close();
     },
   });

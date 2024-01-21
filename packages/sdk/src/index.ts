@@ -24,7 +24,7 @@ export let actions: Actions | null = null;
 /**
  * Iframe SDK
  */
-export const IframeSDK = async (props: {
+export const GhommerceSDK = async (props: {
   url: string;
   actions: Actions;
 }) => {
