@@ -1,5 +1,32 @@
 # Ghommerce: making web3 e-commerce simpler
 
+## Summary
+Meet Ghommerce: A seamless e-commerce platform revolutionizing merchant transactions. Simplify payments with modular invoicing, versatile integrations, and our SDK. Empower customers to leverage crypto for credit, while merchants can invest earnings
+
+<img src="images/ghommerce2.png" height="256" alt="ghommerce.png" />
+
+## Problem
+
+The classical e-commerce sector is struggling with several significant issues.
+- high transaction fees,
+- lengthy settlement times,
+- currency conversion
+
+**These issues drastically burden both merchants and customers.**
+
+Furthermore, the practical integration of cryptocurrencies with e-commerce platforms often remains a complex task.
+Merchants are faced with a variety of challenges, including:
+- complex integrations, requiring deep technical knowledge
+- lack of customized payment options
+
+Consumers, on the other hand:
+- are often limited to a single payment option, restricting their financial flexibility.
+- find their ability to leverage digital assets within an e-commerce context considerably limited, restricting their financial flexibility.
+
+Lastly, the prevalent norm of e-commerce platforms acting as custodial entities raises critical trust issues.  
+**The inherent lack of financial autonomy negates the core advantage of decentralization, emphasizing the urgent need for a genuinely distributed, blockchain-centric solution effective enough to create a seamless web3 e-commerce environment.**
+
+
 ## 📖 Storytime
 
 To better imagine the use case, let's take a look at some possible scenarios where Ghommerce can be used.
@@ -27,33 +54,7 @@ The merchant, in turn, receives his payment in a token of his choice, and can ev
 
 > _These stories encapsulate the essence of Ghommerce, illustrating its potential to not just facilitate transactions, but to empower, adapt, and redefine the way we perceive value and freedom in a rapidly evolving digital landscape._
 
-## Summary
-Meet Ghommerce: A seamless e-commerce platform revolutionizing merchant transactions. Simplify payments with modular invoicing, versatile integrations, and our SDK. Empower customers to leverage crypto for credit, while merchants can invest earnings  
-
-<img src="images/ghommerce2.png" height="256" alt="ghommerce.png" />  
-
-## Problem
-
-The classical e-commerce sector is struggling with several significant issues. 
- - high transaction fees, 
- - lengthy settlement times,
- - currency conversion
-
-**These issues drastically burden both merchants and customers.** 
-
-Furthermore, the practical integration of cryptocurrencies with e-commerce platforms often remains a complex task.
-Merchants are faced with a variety of challenges, including:
-  - complex integrations, requiring deep technical knowledge 
-  - lack of customized payment options
-
-Consumers, on the other hand:
-  - are often limited to a single payment option, restricting their financial flexibility. 
-  - find their ability to leverage digital assets within an e-commerce context considerably limited, restricting their financial flexibility.  
-
-Lastly, the prevalent norm of e-commerce platforms acting as custodial entities raises critical trust issues.  
-**The inherent lack of financial autonomy negates the core advantage of decentralization, emphasizing the urgent need for a genuinely distributed, blockchain-centric solution effective enough to create a seamless web3 e-commerce environment.**  
-
-## Product
+## Our solution
 
 Ghommerce represents a groundbreaking evolution in e-commerce, merging the autonomy of open-source software with the cutting-edge features of web3 technology.   
 It simplifies transactions for merchants through account abstraction, allowing them to focus on their businesses without getting entangled in the complexities of blockchain.  
