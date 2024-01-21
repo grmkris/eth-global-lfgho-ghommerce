@@ -170,10 +170,10 @@ export const DonationsTable = (props: { data: selectDonationSchema[] }) => {
     selectDonationSchema.pick({
       id: true,
       donationData: true,
-      storeId: true,
     }),
     {
       donationData: {
+        name: "Title",
         render: (value) => {
           return value.donationData ? (
             <span>{value.donationData.name}</span>

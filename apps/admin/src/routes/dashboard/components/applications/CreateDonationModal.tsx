@@ -23,10 +23,10 @@ export const CreateDonationModal = () => {
   const [selectedStore, setSelectedStore] = useState<string | undefined>();
   const toaster = useToast();
   const createDonation = trpcClient.donations.createDonation.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
       toaster.toast({
-        title: "Donation created",
-        description: "Your donation has been created successfully",
+        title: `${data.donationData.name} donation page created`,
+        description: "Your donation page has been created successfully",
         variant: "success",
       });
       close();
@@ -36,7 +36,7 @@ export const CreateDonationModal = () => {
     <Dialog open={isOpen} onOpenChange={close}>
       <DialogContent className="max-h-screen overflow-y-auto custom-scrollbar m-4">
         <DialogHeader className={"mt-4 mx-4"}>
-          <DialogTitle>Host your Twich donations</DialogTitle>
+          <DialogTitle>Create a new donation page</DialogTitle>
           <DialogDescription>
             Connect your store to one of the following applications to get
             started.
@@ -49,6 +49,14 @@ export const CreateDonationModal = () => {
         <AutoForm
           onSubmit={(data) => {
             console.log("onSubmit123", data);
+            if (!selectedStore) {
+                toaster.toast({
+                    title: "Please select a store",
+                    description: "You must select a store to continue",
+                    variant: "destructive",
+                });
+                return;
+                }
             createDonation.mutate({
               storeId: selectedStore,
               donationData: data,

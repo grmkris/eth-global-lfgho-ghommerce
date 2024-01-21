@@ -82,7 +82,9 @@ export function generateColumnsFromZodSchema<
   const columns: ColumnDef<TData>[] = Object.keys(shape).map((name) => {
     const item = shape[name] as z.ZodAny;
     const zodBaseType = getBaseType(item);
-    const itemName = item._def.description ?? beautifyObjectName(name);
+
+    // @ts-expect-error TODO: fix this
+    const itemName = config[name]?.name ?? item._def.description ?? beautifyObjectName(name);
     const key = [name].join(".");
     // @ts-expect-error TODO: fix this
     const columnConfig = config[name];
