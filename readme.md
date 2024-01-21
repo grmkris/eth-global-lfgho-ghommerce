@@ -2,7 +2,7 @@
 - https://ethglobal.com/events/lfgho
 
 ## Summary
-Meet Ghommerce: A seamless e-commerce platform revolutionizing merchant transactions with account abstraction. Simplify payments with modular invoicing, versatile integrations, and our SDK. Empower customers to leverage crypto for credit, while merchants can invest earnings
+Meet Ghommerce: A seamless e-commerce platform revolutionizing merchant transactions. Simplify payments with modular invoicing, versatile integrations, and our SDK. Empower customers to leverage crypto for credit, while merchants can invest earnings
 
 
 ## Problem
