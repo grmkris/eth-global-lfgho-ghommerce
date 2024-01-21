@@ -21,6 +21,8 @@ import {
   TokenSchema,
   ZERO_ADDRESS,
 } from "ghommerce-schema/src/tokens.schema.ts";
+
+import { TokenInfo } from "@/components/web3/TokenElement.tsx"
 import { TokenList } from "@/components/web3/TokenList.tsx";
 import { useNavigate } from "@tanstack/react-router";
 import { invoiceRoute } from "@/routes/invoice/invoice.tsx";
@@ -41,11 +43,11 @@ export type OnSwapProps = {
 };
 
 export const CryptoScreen = (props: { invoice: InvoiceSchema }) => {
-  const queryClient = useQueryClient();
-  const params = invoiceRoute.useSearch();
-  const navigate = useNavigate({ from: invoiceRoute.fullPath });
-  const updatePayerInformation = apiTrpc.invoices.updatePayerData.useMutation();
-  const recordPayment = apiTrpc.invoices.recordPayment.useMutation();
+  const queryClient = useQueryClient()
+  const params = invoiceRoute.useSearch()
+  const navigate = useNavigate({ from: invoiceRoute.fullPath })
+  const updatePayerInformation = apiTrpc.invoices.updatePayerData.useMutation()
+  const recordPayment = apiTrpc.invoices.recordPayment.useMutation()
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -176,22 +178,30 @@ export const CryptoScreen = (props: { invoice: InvoiceSchema }) => {
                 );
               })}
             {/* Trigger to open Drawer for token selection */}
-            <Button onClick={handleDrawerOpen}>
-              {selectedToken ? "Change Token" : "Select a Token"}
-            </Button>
+
+            <Card onClick={handleDrawerOpen}>
+              <CardContent>
+                {selectedToken ? (
+                  <TokenInfo tokenData={selectedToken} />
+                ) : (
+                  <Button className="self-center mt-6">Select a Token</Button>
+                )}
+              </CardContent>
+            </Card>
 
             {/* Drawer for token selection */}
             <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
-              <DrawerTrigger asChild>
-                <Button onClick={handleDrawerClose}>Close</Button>
-              </DrawerTrigger>
-              <DrawerContent className="fixed inset-0 mx-auto my-auto w-80 z-50 bg-white shadow-lg transform h-3/4 top-1/4 custom-scrollbar  ${isScrollNeeded ? 'overflow-y-auto' : ''">
+              <DrawerTrigger asChild />
+              <DrawerContent className="fixed inset-0 mx-auto my-auto w-80 z-50 transform h-3/4 top-1/4 custom-scrollbar  ${isScrollNeeded ? 'overflow-y-auto' : ''">
                 <DrawerTitle className="m-2 mb-4 self-center">
                   Select a Token
                 </DrawerTitle>
                 {tokens.data && (
                   <TokenList
-                    onSelect={handleTokenChange}
+                    onSelect={token => {
+                      handleTokenChange(token)
+                      handleDrawerClose()
+                    }}
                     tokens={TokenAmountSchema.array().parse(tokens.data.items)}
                     selectedToken={selectedToken}
                   />
