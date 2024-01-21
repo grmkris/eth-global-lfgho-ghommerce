@@ -1,7 +1,7 @@
 # Ghommerce - A simple web3 e-commerce platform built at GHOO hackathon
 - https://ethglobal.com/events/lfgho
 
-## 📖Storytime
+## 📖 Storytime
 
 To better imagine the use case, let's take a look at some possible scenarios where Ghommerce can be used.
 
