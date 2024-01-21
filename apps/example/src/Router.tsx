@@ -3,7 +3,6 @@ import { Link, Outlet, RootRoute, Route, Router } from "@tanstack/react-router";
 import { IframeSDK } from "ghommerce-sdk/src";
 import * as React from "react";
 import { Suspense, useState } from "react";
-import { useBearStore } from "./store.ts";
 
 const TanStackRouterDevtools =
   process.env.NODE_ENV === "production"
@@ -47,7 +46,6 @@ const indexRoute = new Route({
 });
 
 function Index() {
-  const bears = useBearStore();
   const iframeSdk = useQuery({
     queryKey: ["iframe-sdk"],
     queryFn: async () => {
@@ -56,7 +54,6 @@ function Index() {
         actions: {
           onHelloWorld: (param) => {
             console.log("hello world", param.name);
-            bears.increase(1);
             return { message: "hello world" };
           },
         },
@@ -70,97 +67,105 @@ function Index() {
     refetchIntervalInBackground: false,
   });
 
-  const [itemId, setItemId] = useState<string>("");
+  const [donationId, setDonationId] = useState<string | undefined>();
+  const [invoiceId, setInvoiceId] = useState<string | undefined>();
 
   return (
-    <div className="p-4">
-      <h3>Welcome Home! {bears.bears}</h3>
-      <div className="flex flex-col gap-1">
-        {itemId !== "" && <p>Current ID introduced: {itemId}</p>}
-        <label>Introduce the id that you want to expose: </label>
-        <input
-          type="text"
-          id="fname"
-          name="itemId"
-          value={itemId}
-          onChange={(input) => setItemId(input.target.value)}
-        />
+      <div className="p-4">
+          <h3>Welcome to GHOmerce example application</h3>
+          <p>
+              This is an example application that uses the GHOmerce SDK to show how to
+              integrate with GHOmerce payment widget
+          </p>
+          <hr/>
+          <div className="flex flex-col gap-1">
+              <label>
+                  Input the <b>invoice id</b> that you want to expose through SDK:{" "}
+              </label>
+              <input
+                  type="text"
+                  id="fname"
+                  name="invoiceId"
+                  value={invoiceId}
+                  onChange={(input) => setInvoiceId(input.target.value)}
+              />
+              {donationId !== "" && <p>Current invoice ID: {invoiceId}</p>}
+              <button
+                  type={"button"}
+                  onClick={() => {
+                      iframeSdk.data?.showIframeModal();
+                      iframeSdk.data?.iframeClient.navigateToPage.mutate({
+                          page: `/invoice?id=${invoiceId}`,
+                      });
+                  }}
+              >
+                  Open invoice
+              </button>
+          </div>
+          <hr/>
+          <div className="flex flex-col gap-1">
+              <label>
+                  Input the <b>donation id</b> that you want to expose through SDK:{" "}
+              </label>
+              <input
+                  type="text"
+                  id="fname"
+                  name="donationId"
+                  value={donationId}
+                  onChange={(input) => setDonationId(input.target.value)}
+              />
+              {donationId !== "" && <p>Current donationId ID: {donationId}</p>}
+              <button
+                  type={"button"}
+                  onClick={() => {
+                      iframeSdk.data?.showIframeModal();
+                      iframeSdk.data?.iframeClient.navigateToPage.mutate({
+                          page: `/donation?id=${donationId}`,
+                      });
+                  }}
+              >
+                  Open donation
+              </button>
+          </div>
+          <hr/>
+          <button type={"button"} onClick={() => iframeSdk.data?.showIframeModal()}>
+              show sdk
+          </button>
+          <button type={"button"} onClick={() => iframeSdk.data?.hideIframeModal()}>
+              hide sdk
+          </button>
+
+          <button
+              type={"button"}
+              onClick={() =>
+                  iframeSdk.data?.iframeClient.navigateToPage.mutate({page: "/"})
+              }
+          >
+              go to home
+          </button>
       </div>
-      <button type={"button"} onClick={() => iframeSdk.data?.showIframeModal()}>
-        show modal
-      </button>
-      <button type={"button"} onClick={() => iframeSdk.data?.hideIframeModal()}>
-        hide modal
-      </button>
-      <button
-        type={"button"}
-        onClick={() =>
-          iframeSdk.data?.iframeClient.helloIframe.mutate({ name: "world" })
-        }
-      >
-        trpc
-      </button>
-      <button
-        type={"button"}
-        onClick={() =>
-          iframeSdk.data?.iframeClient.navigateToPage.mutate({
-            page: "/sub-page-1",
-          })
-        }
-      >
-        go to sub-page-1
-      </button>
-      <button
-        type={"button"}
-        onClick={() =>
-          iframeSdk.data?.iframeClient.navigateToPage.mutate({
-            page: `/invoice?id=${itemId}`,
-          })
-        }
-      >
-        go to sub-page-2
-      </button>
-      <button
-        type={"button"}
-        onClick={() =>
-          iframeSdk.data?.iframeClient.navigateToPage.mutate({
-            page: "/sub-page-3",
-          })
-        }
-      >
-        go to sub-page-3
-      </button>
-      <button
-        type={"button"}
-        onClick={() =>
-          iframeSdk.data?.iframeClient.navigateToPage.mutate({ page: "/" })
-        }
-      >
-        go to home
-      </button>
-    </div>
   );
 }
 
 const aboutRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: "/about",
-  component: About,
+    getParentRoute: () => rootRoute,
+    path: "/about",
+    component: About,
 });
 
 function About() {
-  return <div>Hello from About!</div>;
+    return <div>Hello from About!</div>;
 }
 
 // Create the route tree using your routes
 const routeTree = rootRoute.addChildren([indexRoute, aboutRoute]);
 
 // Create the router using your route tree
-export const exampleRouter = new Router({ routeTree });
+export const exampleRouter = new Router({routeTree});
 
 // Register your router for maximum type safety
 declare module "@tanstack/react-router" {
-  interface Register {
-    exampleRouter: typeof exampleRouter;
-  }
+    interface Register {
+        exampleRouter: typeof exampleRouter;
+    }
 }

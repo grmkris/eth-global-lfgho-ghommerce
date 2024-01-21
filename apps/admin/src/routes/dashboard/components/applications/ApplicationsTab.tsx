@@ -28,12 +28,14 @@ import { generateColumnsFromZodSchema } from "@/components/table/generateColumns
 import { DataTable } from "@/components/table/components/data-table.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
-  Dialog, DialogClose,
+  Dialog,
+  DialogClose,
   DialogContent,
-  DialogDescription, DialogFooter,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
+  DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import QRCode from "react-qr-code";
 
@@ -197,7 +199,11 @@ export const DonationsTable = (props: { data: selectDonationSchema[] }) => {
         console.log(donation);
         window.open(`http://localhost:5321/donation?id=${donation.id}`);
       },
-      customElements: (donation) => <DonationQrCode url={`http://localhost:5321/donation?id=${donation.id}`} />
+      customElements: (donation) => (
+        <DonationQrCode
+          url={`http://localhost:5321/donation?id=${donation.id}`}
+        />
+      ),
     },
   );
 
@@ -214,37 +220,43 @@ export const DonationsTable = (props: { data: selectDonationSchema[] }) => {
   );
 };
 
-
 export function DonationQrCode(props: {
-  url: string
+  url: string;
 }) {
   return (
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline">Share</Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Share this QR</DialogTitle>
-            <DialogDescription>
-              Anyone can scan this QR to donate to your store
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex items-center space-x-2">
-              <QRCode value={props.url}  size={256} />
-            <a href={props.url} target="_blank" className="text-blue-500 underline" rel="noreferrer">Open in browser</a>
-          </div>
-          <DialogFooter className="sm:justify-start">
-            <DialogClose asChild>
-              <Button type="button" variant="secondary">
-                Close
-              </Button>
-            </DialogClose>
-            <Button type="button" variant="outline">
-              Copy qr to clipboard
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">Share</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Share this QR</DialogTitle>
+          <DialogDescription>
+            Anyone can scan this QR to donate to your store
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex items-center space-x-2">
+          <QRCode value={props.url} size={256} />
+          <a
+            href={props.url}
+            target="_blank"
+            className="text-blue-500 underline"
+            rel="noreferrer"
+          >
+            Open in browser
+          </a>
+        </div>
+        <DialogFooter className="sm:justify-start">
+          <DialogClose asChild>
+            <Button type="button" variant="secondary">
+              Close
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-  )
+          </DialogClose>
+          <Button type="button" variant="outline">
+            Copy qr to clipboard
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
 }

@@ -85,6 +85,7 @@ export function generateColumnsFromZodSchema<
 
 
     const itemName =
+        // @ts-ignore // biome-ignore lint/suspicious/noExplicitAny: <🥸>
       config[name]?.name ?? item._def.description ?? beautifyObjectName(name);
     const key = [name].join(".");
     // @ts-expect-error TODO: fix this

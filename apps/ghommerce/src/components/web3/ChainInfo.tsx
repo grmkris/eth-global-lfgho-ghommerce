@@ -1,4 +1,4 @@
-import { ChainIdToName } from "ghommerce-schema/src/chains.schema.ts"
+import { ChainIdToName } from "ghommerce-schema/src/chains.schema.ts";
 
 export const ChainInfo = (props: { chainId: number }) => {
   return (
@@ -14,5 +14,5 @@ export const ChainInfo = (props: { chainId: number }) => {
         <div className="text-sm font-bold">{ChainIdToName[props.chainId]}</div>
       </div>
     </div>
-  )
-}
+  );
+};

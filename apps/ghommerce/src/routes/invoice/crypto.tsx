@@ -22,7 +22,7 @@ import {
   ZERO_ADDRESS,
 } from "ghommerce-schema/src/tokens.schema.ts";
 
-import { TokenInfo } from "@/components/web3/TokenElement.tsx"
+import { TokenInfo } from "@/components/web3/TokenElement.tsx";
 import { TokenList } from "@/components/web3/TokenList.tsx";
 import { useNavigate } from "@tanstack/react-router";
 import { invoiceRoute } from "@/routes/invoice/invoice.tsx";
@@ -34,7 +34,7 @@ import type { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema"
 import { TokenSwapInformationCard } from "@/components/web3/TokenSwapInformationCard";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { GhoCreditModal} from "@/lib/gho/GhoCreditComponent.tsx";
+import { GhoCreditModal } from "@/lib/gho/GhoCreditComponent.tsx";
 
 export type OnSwapProps = {
   txHash: TransactionHash;
@@ -44,11 +44,11 @@ export type OnSwapProps = {
 };
 
 export const CryptoScreen = (props: { invoice: InvoiceSchema }) => {
-  const queryClient = useQueryClient()
-  const params = invoiceRoute.useSearch()
-  const navigate = useNavigate({ from: invoiceRoute.fullPath })
-  const updatePayerInformation = apiTrpc.invoices.updatePayerData.useMutation()
-  const recordPayment = apiTrpc.invoices.recordPayment.useMutation()
+  const queryClient = useQueryClient();
+  const params = invoiceRoute.useSearch();
+  const navigate = useNavigate({ from: invoiceRoute.fullPath });
+  const updatePayerInformation = apiTrpc.invoices.updatePayerData.useMutation();
+  const recordPayment = apiTrpc.invoices.recordPayment.useMutation();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -134,11 +134,7 @@ export const CryptoScreen = (props: { invoice: InvoiceSchema }) => {
         </CardHeader>
         <CardContent>
           <div className={"flex flex-col space-y-1"}>
-            {
-                selectedToken && (
-                    <GhoCreditModal invoice={props.invoice} />
-                )
-            }
+            {selectedToken && <GhoCreditModal invoice={props.invoice} />}
             {selectedToken &&
               account.address &&
               props.invoice.acceptedTokens.map((x) => {
@@ -171,16 +167,16 @@ export const CryptoScreen = (props: { invoice: InvoiceSchema }) => {
                 return (
                   <>
                     <TokenSwapInformationCard
-                        key={x.address + x.chainId}
-                        onSwap={onSuccessfulSwap}
-                        swapData={{
-                          fromToken: selectedToken,
-                          toToken: x,
-                          fromAddress: Address.parse(account.address),
-                          toAddress: Address.parse(props.invoice.store.wallet),
-                          fromAmount: fromAmount.toString(),
-                          isTestnet: props.invoice.isTestnet,
-                        }}
+                      key={x.address + x.chainId}
+                      onSwap={onSuccessfulSwap}
+                      swapData={{
+                        fromToken: selectedToken,
+                        toToken: x,
+                        fromAddress: Address.parse(account.address),
+                        toAddress: Address.parse(props.invoice.store.wallet),
+                        fromAmount: fromAmount.toString(),
+                        isTestnet: props.invoice.isTestnet,
+                      }}
                     />
                   </>
                 );
@@ -205,9 +201,9 @@ export const CryptoScreen = (props: { invoice: InvoiceSchema }) => {
                 </DrawerTitle>
                 {tokens.data && (
                   <TokenList
-                    onSelect={token => {
-                      handleTokenChange(token)
-                      handleDrawerClose()
+                    onSelect={(token) => {
+                      handleTokenChange(token);
+                      handleDrawerClose();
                     }}
                     tokens={TokenAmountSchema.array().parse(tokens.data.items)}
                     selectedToken={selectedToken}

@@ -1,18 +1,18 @@
-import { BaseTokenSchema } from "ghommerce-schema/src/tokens.schema.ts"
-import { apiTrpc } from "@/trpc-client.ts"
-import { ChainIdToName } from "ghommerce-schema/src/chains.schema.ts"
-import { ZERO_ADDRESS } from "ghommerce-schema/src/tokens.schema.ts"
-import { Badge } from "@/components/ui/badge.tsx"
-import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx"
-import { Address } from "ghommerce-schema/src/address.schema.ts"
-import { ChainInfo } from "@/components/web3/ChainInfo.tsx"
+import { BaseTokenSchema } from "ghommerce-schema/src/tokens.schema.ts";
+import { apiTrpc } from "@/trpc-client.ts";
+import { ChainIdToName } from "ghommerce-schema/src/chains.schema.ts";
+import { ZERO_ADDRESS } from "ghommerce-schema/src/tokens.schema.ts";
+import { Badge } from "@/components/ui/badge.tsx";
+import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
+import { Address } from "ghommerce-schema/src/address.schema.ts";
+import { ChainInfo } from "@/components/web3/ChainInfo.tsx";
 
 export const TokenInfo = (props: { tokenData: BaseTokenSchema }) => {
   const token = apiTrpc.tokens.getTokenInfo.useQuery({
     tokenAddress: props.tokenData.address,
     chain: ChainIdToName[props.tokenData.chainId],
     quoteCurrency: "USD",
-  })
+  });
 
   if (!token.data?.[0].contract_address)
     return (
@@ -26,7 +26,7 @@ export const TokenInfo = (props: { tokenData: BaseTokenSchema }) => {
           <CopyAddressLabel address={props.tokenData.address} />
         </div>
       </div>
-    )
+    );
 
   return (
     <div className="flex flex-row items-center space-x-2">
@@ -50,5 +50,5 @@ export const TokenInfo = (props: { tokenData: BaseTokenSchema }) => {
         />
       </div>
     </div>
-  )
-}
+  );
+};
