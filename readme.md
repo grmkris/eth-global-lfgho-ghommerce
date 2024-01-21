@@ -28,4 +28,4 @@ The platform stands out by never holding funds, prioritizing financial autonomy 
 In essence, Ghommerce is not just a payment platform; it's a comprehensive, versatile, secure, and user-friendly financial ecosystem designed to meet the evolving needs of merchants and customers in the dynamic digital age, setting a new standard for business and customer interactions.
 
 ## Architecture
-![ghommerce](./ghommerce-arhitecture.png)
+![arhitecture-ghommerce.svg](arhitecture-ghommerce.svg)
