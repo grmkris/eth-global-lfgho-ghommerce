@@ -30,7 +30,7 @@ The merchant, in turn, receives his payment in a token of his choice, and can ev
 ## Summary
 Meet Ghommerce: A seamless e-commerce platform revolutionizing merchant transactions. Simplify payments with modular invoicing, versatile integrations, and our SDK. Empower customers to leverage crypto for credit, while merchants can invest earnings  
 
-<img src="images/ghommerce.png" height="256" alt="ghommerce.png" />
+<img src="images/ghommerce2.png" height="256" alt="ghommerce.png" />  
 
 ## Problem
 
