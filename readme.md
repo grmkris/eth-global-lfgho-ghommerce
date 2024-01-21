@@ -1,6 +1,29 @@
 # Ghommerce - A simple web3 e-commerce platform built at GHOO hackathon
 - https://ethglobal.com/events/lfgho
 
+## Storytime
+
+To better imagine the use case, let's take a look at a real-life example.
+
+### Example1: Empowering Voices in the Face of Censorship
+In a nation gripped by censorship, a political activist fights to make his voice heard. Operating under constant threat, his lifeline is a vibrant Telegram channel, a beacon for those seeking truth amidst the fog of propaganda. 
+Yet, sustaining this beacon requires funds—funds that are perilously exposed to the prying eyes and iron fists of authoritarian oversight.  
+
+Enter GHOmmerce. Integrating this platform, the activist connects and safely monetizes his audience opening a new chapter of resilience.  
+His donations and payments, converted into an array of digital assets, are now beyond the reach of censorship.
+
+### Example2: Indulging in Luxury with the Whims of the Market
+Picture a high-end boutique, an emporium of luxury watches, each timepiece a testament to craftsmanship and opulence.  
+Yet, in a digital era, the clientele's wealth is not just in vaults, but also in bytes—cryptocurrency, a volatile ocean of digital assets, some as whimsical as the PEPE token.
+
+For a discerning merchant, adapting to this new age of affluence is pivotal. By integrating Ghommerce, the boutique not only embraces the future but also captivates a new breed of customers.  
+
+One such customer, riding the crest of a meme token surge, finds himself on the boutique's digital storefront. The sight of exquisite timepieces, now within reach through his digital fortune, is irresistible.  
+With a few clicks, his PEPE tokens, once a speculative punt are now converted into a luxury watch, a tangible symbol of his success.
+The merchant, in turn, receives his payment in a token of his choice, and can even opt to invest it in a crypto financial product, potentially increasing his earnings even further.  
+
+> _These stories encapsulate the essence of Ghommerce, illustrating its potential to not just facilitate transactions, but to empower, adapt, and redefine the way we perceive value and freedom in a rapidly evolving digital landscape._
+
 ## Summary
 Meet Ghommerce: A seamless e-commerce platform revolutionizing merchant transactions. Simplify payments with modular invoicing, versatile integrations, and our SDK. Empower customers to leverage crypto for credit, while merchants can invest earnings  
 
