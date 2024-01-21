@@ -107,11 +107,11 @@ In essence, Ghommerce is not just a payment platform; it's a comprehensive, vers
         - https://github.com/grmkris/eth-global-lfgho-ghommerce/blob/994775f3fd1baaa2675b2e735ca27b7aa0eeb7ed/apps/example/src/useGhommerceSDK.tsx#L2-L2
 
 ## How to run
-- pnpm run db:dev
+- `pnpm run db:dev`
   Copy paste .env.example to .env and fill in the values (pay attention to copy supa private key into .env of api)
 
-- a) pnpm run dev
-- b) pnpm run zellij
+- a) `pnpm run dev`
+- b) `pnpm run zellij`
 
 - this will start 4 services in your terminal
     - http://localhost:5320/ (admin)
