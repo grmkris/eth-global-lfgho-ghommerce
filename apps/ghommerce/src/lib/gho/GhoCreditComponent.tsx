@@ -12,11 +12,12 @@ import { BigNumber, Signer } from "ethers";
 import {
   Dialog, DialogClose,
   DialogContent,
-  DialogDescription, DialogFooter,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger
 } from "@/components/ui/dialog.tsx";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader} from "@/components/ui/card";
 
 async function submitTransaction(props: {
   signer: Signer;
@@ -89,7 +90,11 @@ export const GhoCreditComponent = (props: {
 
 export const GhoCreditModal = ( props: {
     invoice: InvoiceSchema;
+
 }) => {
+
+  const availableCredit = "1000000"; // New prop for available credit
+  const maxCredit = "100000000"; // New prop for max credit
 
   return (
       <Dialog>
@@ -98,20 +103,41 @@ export const GhoCreditModal = ( props: {
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>AAVE GHO Credit</DialogTitle>
-            <DialogDescription>
-              Instead of selling your holdings, you can borrow against them, to pay your invoice.
-              This is a great way to avoid capital gains tax, and keep your crypto, especially if you think it will go up in value.
-            </DialogDescription>
+            <DialogTitle>🏦 AAVE GHO Credit</DialogTitle>
           </DialogHeader>
-          <div className="flex flex-col space-y-3 mt-2">
-            // information about the invoice
-            // how much GHO credit is available
-            // how much we would need to supply to be able to pay the invoice
-          </div>
+          <Card className="mt-4">
+            <CardHeader>
+              <CardDescription>
+                Instead of selling your holdings, you can borrow against them, to pay your invoice.
+                This is a great way to avoid capital gains tax, and keep your crypto, especially if you think it will go up in value.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mt-2">
+                Instantly borrow GHO against your assets! No sale, no tax event. ✨
+              </p>
+              <div className="mt-4">
+                <div className="flex justify-between items-center">
+                  <span>Invoice Amount:</span>
+                  <span className="font-bold">{props.invoice.amountDue} {props.invoice.currency}</span>
+                </div>
+                <div className="flex justify-between items-center mt-2">
+                  <span>Available Credit:</span>
+                  <span className="font-bold">{availableCredit} GHO</span>
+                </div>
+                <div className="flex justify-between items-center mt-2">
+                  <span>Potential Credit:</span>
+                  <span className="font-bold">{maxCredit} GHO</span>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <GhoCreditComponent invoice={props.invoice} />
+            </CardFooter>
+            </Card>
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
-              <GhoCreditComponent invoice={props.invoice} />
+                <Button variant="outline">Close</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
