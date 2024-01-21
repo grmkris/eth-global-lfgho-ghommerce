@@ -18,7 +18,7 @@ import { Link, Route } from "@tanstack/react-router";
 import { SiweMessage } from "siwe";
 import { SLIDE_IN_SLIDE_OUT_LEFT } from "@/features/animations.ts";
 import { insertStoreSchema } from "ghommerce-schema/src/db/stores.db.ts";
-import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
+import { CopyBadge } from "@/components/web3/CopyBadge.tsx";
 import { Address } from "ghommerce-schema/src/address.schema.ts";
 import { Loader } from "lucide-react";
 
@@ -26,7 +26,6 @@ export const indexRoute = new Route({
   getParentRoute: () => authOnboardingRoute,
   path: "/",
   component: () => {
-    const user = indexRoute.useRouteContext().session;
     const { web3Auth, web3Modal } = useWallet();
     const walletConnected = !!web3Auth?.address || !!web3Modal?.address;
     const isWalletVerified = trpcClient.verifyWallet.isVerified.useQuery(
@@ -201,8 +200,9 @@ const DeploySafeComponent = () => {
                   <p>Safe wallet has been generated for your account</p>
                   <p>
                     Safe Address:{" "}
-                    <CopyAddressLabel
-                      address={Address.parse(safeSdk.safeAddress?.data)}
+                    <CopyBadge
+                      label={Address.parse(safeSdk.safeAddress?.data)}
+                        type={"address"}
                     />
                   </p>
                 </div>

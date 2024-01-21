@@ -28,7 +28,7 @@ export const TokenSwapInformationCard = (props: {
     if (txHash) {
       props.onSwap?.({
         txHash: TransactionHash.parse(txHash),
-        toToken: Address.parse(lifiStep?.action.toToken),
+        toToken: Address.parse(lifiStep?.action.toToken.address),
         fromAmount: lifiStep?.action.fromAmount ?? "0",
         toAmount: lifiStep?.estimate.toAmount ?? "0",
       });

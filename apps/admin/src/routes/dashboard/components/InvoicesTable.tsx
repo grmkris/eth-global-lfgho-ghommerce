@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { Dialog } from "@/components/ui/dialog.tsx";
 
 import { CreateInvoiceForm } from "./stores/CreateInvoiceForm";
-import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
+import { CopyBadge } from "@/components/web3/CopyBadge.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { InvoiceStatus } from "ghommerce-schema/src/invoice.schema.ts";
 
@@ -37,10 +37,15 @@ export const InvoicesTable = (props: {
       payerEmail: true,
     }),
     {
+        id: {
+            render: (value) => {
+                return <CopyBadge label={value.id} type={"uuid"} />
+            }
+        },
       payerWallet: {
         render: (value) => {
           return value.payerWallet ? (
-            <CopyAddressLabel address={value.payerWallet} />
+            <CopyBadge label={value.payerWallet} type={"address"} />
           ) : (
             <span>Unknown</span>
           );

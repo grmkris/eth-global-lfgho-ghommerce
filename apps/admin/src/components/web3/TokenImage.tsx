@@ -4,7 +4,7 @@ import {
 } from "ghommerce-schema/src/tokens.schema.ts";
 import { ChainIdToName } from "ghommerce-schema/src/chains.schema.ts";
 import { Badge } from "@/components/ui/badge.tsx";
-import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
+import { CopyBadge } from "@/components/web3/CopyBadge.tsx";
 import { trpcClient } from "@/features/trpc-client.ts";
 
 export const TokenImage = (props: { tokenData: BaseTokenSchema }) => {
@@ -23,7 +23,7 @@ export const TokenImage = (props: { tokenData: BaseTokenSchema }) => {
               <Badge variant={"outline"}>Native</Badge>
             )}
           </div>
-          <CopyAddressLabel address={props.tokenData.address} />
+          <CopyBadge label={props.tokenData.address} type={"address"} />
         </div>
       </div>
     );

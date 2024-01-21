@@ -28,7 +28,7 @@ import { selectInvoiceSchema } from "ghommerce-schema/src/db/invoices.db.ts";
 import { Loader, MoreHorizontal } from "lucide-react";
 import { map, sumBy } from "remeda";
 import { CreateStoreModal } from "@/routes/dashboard/components/stores/CreateStore.modal.tsx";
-import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
+import { CopyBadge } from "@/components/web3/CopyBadge.tsx";
 import { Address } from "ghommerce-schema/src/address.schema";
 import { Badge } from "@/components/ui/badge.tsx";
 
@@ -46,10 +46,8 @@ export type Store = {
   };
 };
 
-export const StoresWrapper = (props: { userId: string }) => {
-  const stores = trpcClient.stores.getStores.useQuery({
-    userId: props.userId,
-  });
+export const StoresWrapper = () => {
+  const stores = trpcClient.stores.getStores.useQuery();
 
   stores.data?.[0].safe.eoas[0].eoa.wallet; // EOA owner of safe
 
@@ -168,7 +166,7 @@ export const StoreCard = (props: {
           )}
           <p className="text-sm">{store.description}</p>
           <p className="text-sm">
-            <CopyAddressLabel address={store.safe.address} />
+            <CopyBadge label={store.safe.address} type={"address"} />
           </p>
           {store.isTestnet && (
             <p className="text-sm">

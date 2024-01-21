@@ -176,7 +176,7 @@ export const DashboardPage = () => {
           </TabsContent>
 
           <TabsContent value={ViewOption.enum.Stores} className="space-y-4">
-            <StoresWrapper userId={userId.user.id} />
+            <StoresWrapper />
           </TabsContent>
 
           <TabsContent

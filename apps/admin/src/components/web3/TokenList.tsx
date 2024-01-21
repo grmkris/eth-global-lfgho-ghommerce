@@ -6,7 +6,7 @@ import {
   TokenSchema,
 } from "ghommerce-schema/src/tokens.schema.ts";
 import { ZERO_ADDRESS } from "ghommerce-schema/src/tokens.schema.ts";
-import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
+import { CopyBadge } from "@/components/web3/CopyBadge.tsx";
 
 export const TokenList = (props: {
   selectedToken?: TokenSchema;
@@ -100,7 +100,7 @@ function TokenCard(props: {
           <Badge>
             {props.tokenData.address === ZERO_ADDRESS ? "Native" : "ERC20"}
           </Badge>
-          <CopyAddressLabel address={props.tokenData.address} />
+          <CopyBadge label={props.tokenData.address} type={"address"} />
           <Badge>{props.tokenData.chain?.name}</Badge>
         </div>
       </CardContent>

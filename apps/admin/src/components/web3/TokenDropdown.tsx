@@ -6,7 +6,7 @@ import { TokenSchema } from "ghommerce-schema/src/tokens.schema.ts";
 import { CheckIcon, Link } from "lucide-react";
 import { Badge } from "@/components/ui/badge.tsx";
 import { ZERO_ADDRESS } from "ghommerce-schema/src/tokens.schema.ts";
-import { CopyAddressLabel } from "@/components/web3/CopyAddressLabel.tsx";
+import { CopyBadge } from "@/components/web3/CopyBadge.tsx";
 import { VirtualizedCombobox } from "@/components/VirtualCombobox.tsx";
 import { trpcClient } from "@/features/trpc-client.ts";
 
@@ -34,7 +34,7 @@ const TokenDropdownElement = (props: {
               <Badge variant={"outline"}>Native</Badge>
             )}
           </div>
-          <CopyAddressLabel address={props.token.address} />
+          <CopyBadge label={props.token.address} type={"address"} />
         </div>
       </div>
       {props.selected && <CheckIcon className="h-4 w-4" />}
