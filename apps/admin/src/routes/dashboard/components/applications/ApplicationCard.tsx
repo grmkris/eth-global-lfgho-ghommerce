@@ -30,13 +30,16 @@ export const ApplicationCard = (props: {
     <button
       type="button"
       disabled={!applicationItem.enabled}
-      className={`flex flex-col rounded-2xl border-2 border-gray-300 p-8 gap-4 ${
+      className={`w-64 h-55 flex flex-col rounded-2xl border-2 border-gray-300 p-8 gap-4 ${
         !applicationItem.enabled && "opacity-50"
       } hover:bg-gray-50 hover:cursor-pointer`}
       onClick={() => {
         applicationItem.type && open(applicationItem.type, { userId: userId });
       }}
     >
+      {!applicationItem.enabled && (
+        <p className="text-gray-600 font-bold">Coming Soon</p>
+      )}
       <div className="flex flex-row gap-4">
         {applicationItem.enabled ? (
           <div className="h-14 w-14 bg-gray-300 rounded-xl flex justify-center items-center">
