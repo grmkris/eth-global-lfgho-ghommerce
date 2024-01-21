@@ -1,4 +1,4 @@
-# Ghommerce - A simple web3 e-commerce platform built at GHOO hackathon
+# Ghommerce - Make e-commerce simpler with Web3 and more powerful than traditional payments with GHO
 - https://ethglobal.com/events/lfgho
 
 ## 📖 Storytime
