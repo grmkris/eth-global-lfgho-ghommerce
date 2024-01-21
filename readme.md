@@ -8,7 +8,9 @@ To better imagine the use case, let's take a look at some possible scenarios whe
 ### Example1: Empowering Voices in the Face of Censorship 🤬
 In a nation gripped by censorship, a political activist fights to make his voice heard. Operating under constant threat, his lifeline is a vibrant Telegram channel, a beacon for those seeking truth amidst the fog of propaganda. 
 Yet, sustaining this beacon requires funds—funds that are perilously exposed to the prying eyes and iron fists of authoritarian oversight.  
-![example1-activist.png](images/example1-activist.png | width=100)
+
+<img src="images/example1-activist.png" height="400" alt="example1-activist.png" />  
+
 Enter GHOmmerce. Integrating this platform, the activist connects and safely monetizes his audience opening a new chapter of resilience.  
 His donations and payments, converted into an array of digital assets, are now beyond the reach of censorship.
 
@@ -16,8 +18,10 @@ His donations and payments, converted into an array of digital assets, are now b
 Picture a high-end boutique, an emporium of luxury watches, each timepiece a testament to craftsmanship and opulence.  
 Yet, in a digital era, the clientele's wealth is not just in vaults, but also in bytes—cryptocurrency, a volatile ocean of digital assets, some as whimsical as the PEPE token.
 
-For a discerning merchant, adapting to this new age of affluence is pivotal. By integrating Ghommerce, the boutique not only embraces the future but also captivates a new breed of customers.  
-![example2-luxury-store.png](images/example2-luxury-store.png)
+For a discerning merchant, adapting to this new age of affluence is pivotal. By integrating Ghommerce, the boutique not only embraces the future but also captivates a new breed of customers.
+
+<img src="images/example2-luxury-store.png" height="400" alt="example2-luxury-store.png" />
+
 One such customer, riding the crest of a meme token surge, finds himself on the boutique's digital storefront. The sight of exquisite timepieces, now within reach through his digital fortune, is irresistible.  
 With a few clicks, his PEPE tokens, once a speculative punt are now converted into a luxury watch, a tangible symbol of his success.
 The merchant, in turn, receives his payment in a token of his choice, and can even opt to invest it in a crypto financial product, potentially increasing his earnings even further.  
@@ -27,7 +31,7 @@ The merchant, in turn, receives his payment in a token of his choice, and can ev
 ## Summary
 Meet Ghommerce: A seamless e-commerce platform revolutionizing merchant transactions. Simplify payments with modular invoicing, versatile integrations, and our SDK. Empower customers to leverage crypto for credit, while merchants can invest earnings  
 
-![ghommerce.png](images/ghommerce.png)
+<img src="images/ghommerce.png" height="256" alt="ghommerce.png" />
 
 ## Problem
 
@@ -81,4 +85,5 @@ Its scalability is further enhanced by the option for merchants to either self-h
 In essence, Ghommerce is not just a payment platform; it's a comprehensive, versatile, secure, and user-friendly financial ecosystem designed to meet the evolving needs of merchants and customers in the dynamic digital age, setting a new standard for business and customer interactions.
 
 ## Architecture
-![arhitecture-ghommerce.svg](images/arhitecture-ghommerce.svg)
+
+<img src="images/arhitecture-ghommerce.svg" height="1200" alt="ghommerce-architecture.png" />
