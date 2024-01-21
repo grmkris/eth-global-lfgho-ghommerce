@@ -34,6 +34,7 @@ import type { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema"
 import { TokenSwapInformationCard } from "@/components/web3/TokenSwapInformationCard";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import {GhoCreditComponent} from "@/lib/gho/GhoCreditComponent.tsx";
 
 export type OnSwapProps = {
   txHash: TransactionHash;
@@ -133,6 +134,11 @@ export const CryptoScreen = (props: { invoice: InvoiceSchema }) => {
         </CardHeader>
         <CardContent>
           <div className={"flex flex-col space-y-1"}>
+            {
+                selectedToken && (
+                    <GhoCreditComponent invoice={props.invoice} />
+                )
+            }
             {selectedToken &&
               account.address &&
               props.invoice.acceptedTokens.map((x) => {
@@ -163,21 +169,22 @@ export const CryptoScreen = (props: { invoice: InvoiceSchema }) => {
                   fromAmountScaled * BigInt(10) ** BigInt(tokenDecimals);
 
                 return (
-                  <TokenSwapInformationCard
-                    key={x.address + x.chainId}
-                    onSwap={onSuccessfulSwap}
-                    swapData={{
-                      fromToken: selectedToken,
-                      toToken: x,
-                      fromAddress: Address.parse(account.address),
-                      toAddress: Address.parse(props.invoice.store.wallet),
-                      fromAmount: fromAmount.toString(),
-                      isTestnet: props.invoice.isTestnet,
-                    }}
-                  />
+                  <>
+                    <TokenSwapInformationCard
+                        key={x.address + x.chainId}
+                        onSwap={onSuccessfulSwap}
+                        swapData={{
+                          fromToken: selectedToken,
+                          toToken: x,
+                          fromAddress: Address.parse(account.address),
+                          toAddress: Address.parse(props.invoice.store.wallet),
+                          fromAmount: fromAmount.toString(),
+                          isTestnet: props.invoice.isTestnet,
+                        }}
+                    />
+                  </>
                 );
               })}
-            {/* Trigger to open Drawer for token selection */}
 
             <Card onClick={handleDrawerOpen}>
               <CardContent>

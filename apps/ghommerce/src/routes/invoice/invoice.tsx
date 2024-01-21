@@ -28,7 +28,6 @@ import { useState, useEffect } from "react";
 import JSConfetti from "js-confetti";
 import { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema.ts";
 import { Receipt, GripHorizontal } from "lucide-react";
-import { GhoComponent } from "@/lib/gho/GhoComponent.tsx";
 
 export const InvoiceSteps = z.enum(["payment", "crypto", "gatefi"]);
 export type InvoiceSteps = z.infer<typeof InvoiceSteps>;
@@ -162,7 +161,6 @@ function PaymentScreen(props: { invoice: InvoiceSchema }) {
         <div className="w-[450px] overflow-auto">
           <InvoiceInformation invoice={props.invoice} />
         </div>
-        <GhoComponent invoice={props.invoice} />
         {
           // STEP 1
           step === "payment" && (

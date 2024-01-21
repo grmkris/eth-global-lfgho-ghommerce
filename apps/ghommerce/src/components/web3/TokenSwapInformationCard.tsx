@@ -7,14 +7,12 @@ import { LifiScreen } from "@/lib/lifi/LifiScreen.tsx"
 import { Route } from "@lifi/sdk"
 import { OnSwapProps } from "@/routes/invoice/crypto.tsx"
 import { useState } from "react"
-import { set } from "date-fns"
 
 export const TokenSwapInformationCard = (props: {
   swapData: SwapSchema
   onSwap?: (props: OnSwapProps) => void
 }) => {
   const [isLoading, setIsLoading] = useState(false)
-  const [drawerOpen, setDrawerOpen] = useState(false)
 
   const onExecute = (data: { route: Route }) => {
     setIsLoading(true)
@@ -47,7 +45,6 @@ export const TokenSwapInformationCard = (props: {
         </div>
       ) : (
         <>
-          <div className="flex justify-between items-center"></div>
           <LifiScreen swap={props.swapData} onExecute={onExecute} />{" "}
         </>
       )}

@@ -28,7 +28,7 @@ async function submitTransaction(props: {
  * https://docs.gho.xyz/developer-docs/overview#setup:~:text=contract%2Dhelpers%401.21.1-,borrow%E2%80%8B,delegation%20and%20passes%20in%20the%20delegators%20address%20in%20the%20onBehalfOf%20field.,-Sample%20Code%20(JavaScript
  * @constructor
  */
-export const GhoComponent = (props: {
+export const GhoCreditComponent = (props: {
   invoice: InvoiceSchema;
 }) => {
   const signer = useEthersSigner();
@@ -63,6 +63,8 @@ export const GhoComponent = (props: {
   return (
     <div>
       <Button
+        className="w-full mt-2 py-2 transition duration-300"
+        variant={'ghost'}
         onClick={() =>
           borrow.mutate({
             recipient: props.invoice.store.wallet,
@@ -70,7 +72,7 @@ export const GhoComponent = (props: {
           })
         }
       >
-        Borrow
+        Check GHO Credit
       </Button>
     </div>
   );
