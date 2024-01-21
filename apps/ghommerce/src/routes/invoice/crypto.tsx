@@ -135,7 +135,21 @@ export const CryptoScreen = (props: { invoice: InvoiceSchema }) => {
         </CardHeader>
         <CardContent>
           <div className={"flex flex-col space-y-1"}>
-            {selectedToken && <GhoCreditModal invoice={props.invoice} />}
+            {selectedToken && (
+              <GhoCreditModal
+                invoice={props.invoice}
+                fromToken={{
+                  ...selectedToken,
+                  amount: "1",
+                  updated_at: new Date(),
+                }}
+                toToken={{
+                  ...selectedToken,
+                  amount: "1",
+                  updated_at: new Date(),
+                }}
+              />
+            )}
             {selectedToken &&
               account.address &&
               props.invoice.acceptedTokens.map((x) => {
@@ -181,12 +195,12 @@ export const CryptoScreen = (props: { invoice: InvoiceSchema }) => {
                 );
               })}
             {/* Drawer for token selection */}
-              <TokenSelectorDrawer
-                account={account.address}
-                isTestnet={props.invoice.isTestnet}
-                handleTokenChange={handleTokenChange}
-                selectedToken={selectedToken}
-              />
+            <TokenSelectorDrawer
+              account={account.address}
+              isTestnet={props.invoice.isTestnet}
+              handleTokenChange={handleTokenChange}
+              selectedToken={selectedToken}
+            />
           </div>
         </CardContent>
       </Card>
@@ -234,15 +248,15 @@ export const TokenSelectorDrawer = (props: {
           <DrawerTitle>Your Tokens</DrawerTitle>
           <DrawerDescription>
             {!tokens.data && (
-                <p>We are fetching your tokens, this may take a few seconds.</p>
-                )}
+              <p>We are fetching your tokens, this may take a few seconds.</p>
+            )}
 
-            {
-              tokens.data && (
-                  <p>We found {tokens.data?.items.length} tokens in your wallet, select
-                    one to pay with, and we handle the rest.</p>
-                )
-            }
+            {tokens.data && (
+              <p>
+                We found {tokens.data?.items.length} tokens in your wallet,
+                select one to pay with, and we handle the rest.
+              </p>
+            )}
           </DrawerDescription>
         </DrawerHeader>
         <ScrollArea className="overflow-auto p-4">

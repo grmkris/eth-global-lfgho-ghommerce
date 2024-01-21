@@ -83,6 +83,9 @@ Its scalability is further enhanced by the option for merchants to either self-h
 
 In essence, Ghommerce is not just a payment platform; it's a comprehensive, versatile, secure, and user-friendly financial ecosystem designed to meet the evolving needs of merchants and customers in the dynamic digital age, setting a new standard for business and customer interactions.
 
+## App screenshots
+The whole flow is well documented in [images/screenshots/screenshots.md](images/screenshots/screenshots.md)
+
 ## Architecture
 
 <img src="images/arhitecture-ghommerce.svg" height="1200" alt="ghommerce-architecture.png" />

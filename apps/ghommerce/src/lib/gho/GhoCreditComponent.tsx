@@ -3,7 +3,7 @@ import {
   InterestRate,
   EthereumTransactionTypeExtended,
 } from "@aave/contract-helpers";
-import { useMutation } from "@tanstack/react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import { Address } from "wagmi";
 import { useEthersSigner } from "@/lib/useEthersSigner.tsx";
 import { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema.ts";
@@ -25,6 +25,9 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { apiTrpc } from "@/trpc-client.ts";
+import { TokenAmountSchema } from "ghommerce-schema/src/tokens.schema.ts";
+import {useState} from "react";
 
 async function submitTransaction(props: {
   signer: Signer;
@@ -46,8 +49,13 @@ async function submitTransaction(props: {
  */
 export const GhoCreditComponent = (props: {
   invoice: InvoiceSchema;
+  fromToken: TokenAmountSchema;
+  toToken: TokenAmountSchema;
+  onSuccess?: () => void;
 }) => {
   const signer = useEthersSigner();
+  const queryClient = useQueryClient();
+  const recordPayment = apiTrpc.invoices.recordPayment.useMutation();
   const borrow = useMutation({
     mutationFn: async (variables: {
       recipient: Address;
@@ -58,7 +66,7 @@ export const GhoCreditComponent = (props: {
       if (!address) throw new Error("No signer");
       if (!signer?.provider) throw new Error("No provider");
       const pool = new Pool(signer.provider, {
-        POOL: "0x3De59b6901e7Ad0A19621D49C5b52cC9a4977e52", // Goerli GHO market
+        POOL: "0x617Cf26407193E32a771264fB5e9b8f09715CdfB", // Goerli GHO market
         WETH_GATEWAY: "0x9c402E3b0D123323F0FCed781b8184Ec7E02Dd31", // Goerli GHO market
       });
       console.log("pool 2 ", pool);
@@ -70,8 +78,17 @@ export const GhoCreditComponent = (props: {
         debtTokenAddress: "0x80aa933EfF12213022Fd3d17c2c59C066cBb91c7", // Goerli GHO market
       });
       console.log("txs 3", txs);
-      const tx = submitTransaction({ signer, tx: txs[0] });
-      console.log("tx 4 ", tx);
+      const tx = await submitTransaction({ signer, tx: txs[0] });
+      const waited = await tx.wait(1);
+      console.log("tx 4 ", {tx, waited});
+      await recordPayment.mutateAsync({
+        invoiceId: props.invoice.id,
+        transactionHash: tx.hash,
+        fromToken: props.fromToken,
+        toToken: props.toToken,
+      });
+      await queryClient.invalidateQueries();
+      props.onSuccess?.();
       return txs[0].tx();
     },
   });
@@ -79,12 +96,13 @@ export const GhoCreditComponent = (props: {
   return (
     <div>
       <Button
+          disabled={borrow.isLoading}
         className="w-full mt-2 py-2 transition duration-300"
         variant={"default"}
         onClick={() =>
           borrow.mutate({
             recipient: props.invoice.store.wallet,
-            amount: "1000000",
+            amount: "1",
           })
         }
       >
@@ -96,12 +114,15 @@ export const GhoCreditComponent = (props: {
 
 export const GhoCreditModal = (props: {
   invoice: InvoiceSchema;
+  fromToken: TokenAmountSchema;
+  toToken: TokenAmountSchema;
 }) => {
   const availableCredit = "1000000"; // New prop for available credit
   const maxCredit = "100000000"; // New prop for max credit
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
       <DialogTrigger asChild>
         <Button variant="outline">Check GHO Credit</Button>
       </DialogTrigger>
@@ -141,7 +162,15 @@ export const GhoCreditModal = (props: {
             </div>
           </CardContent>
           <CardFooter>
-            <GhoCreditComponent invoice={props.invoice} />
+            <GhoCreditComponent
+              invoice={props.invoice}
+              fromToken={props.fromToken}
+              toToken={props.toToken}
+              onSuccess={() => {
+                console.log("success");
+                setIsOpen(false);
+              }}
+            />
           </CardFooter>
         </Card>
         <DialogFooter className="sm:justify-start">
