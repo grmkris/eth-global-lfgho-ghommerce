@@ -9,6 +9,14 @@ import { useEthersSigner } from "@/lib/useEthersSigner.tsx";
 import { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { BigNumber, Signer } from "ethers";
+import {
+  Dialog, DialogClose,
+  DialogContent,
+  DialogDescription, DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from "@/components/ui/dialog.tsx";
 
 async function submitTransaction(props: {
   signer: Signer;
@@ -64,7 +72,7 @@ export const GhoCreditComponent = (props: {
     <div>
       <Button
         className="w-full mt-2 py-2 transition duration-300"
-        variant={'ghost'}
+        variant={'default'}
         onClick={() =>
           borrow.mutate({
             recipient: props.invoice.store.wallet,
@@ -72,8 +80,41 @@ export const GhoCreditComponent = (props: {
           })
         }
       >
-        Check GHO Credit
+        Borrow
       </Button>
     </div>
+  );
+};
+
+
+export const GhoCreditModal = ( props: {
+    invoice: InvoiceSchema;
+}) => {
+
+  return (
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button variant="outline">Check GHO Credit</Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>AAVE GHO Credit</DialogTitle>
+            <DialogDescription>
+              Instead of selling your holdings, you can borrow against them, to pay your invoice.
+              This is a great way to avoid capital gains tax, and keep your crypto, especially if you think it will go up in value.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col space-y-3 mt-2">
+            // information about the invoice
+            // how much GHO credit is available
+            // how much we would need to supply to be able to pay the invoice
+          </div>
+          <DialogFooter className="sm:justify-start">
+            <DialogClose asChild>
+              <GhoCreditComponent invoice={props.invoice} />
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
   );
 };

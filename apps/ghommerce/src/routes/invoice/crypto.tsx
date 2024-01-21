@@ -34,7 +34,7 @@ import type { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema"
 import { TokenSwapInformationCard } from "@/components/web3/TokenSwapInformationCard";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import {GhoCreditComponent} from "@/lib/gho/GhoCreditComponent.tsx";
+import { GhoCreditModal} from "@/lib/gho/GhoCreditComponent.tsx";
 
 export type OnSwapProps = {
   txHash: TransactionHash;
@@ -136,7 +136,7 @@ export const CryptoScreen = (props: { invoice: InvoiceSchema }) => {
           <div className={"flex flex-col space-y-1"}>
             {
                 selectedToken && (
-                    <GhoCreditComponent invoice={props.invoice} />
+                    <GhoCreditModal invoice={props.invoice} />
                 )
             }
             {selectedToken &&
