@@ -9,9 +9,12 @@ import {
 } from "ghommerce-schema/src/db/donations.db";
 import { InvoiceSchema } from "ghommerce-schema/src/api/invoice.api.schema";
 import {
+  insertInvoiceSchema,
   invoices,
   selectInvoiceSchema,
 } from "ghommerce-schema/src/db/invoices.db";
+import { ERC20_TOKEN_MAPPER } from "ghommerce-schema/src/tokens.schema";
+import { invoiceToDonation } from "ghommerce-schema/src/db/invoiceToDonation.db";
 
 export const donationRouter = router({
   getDonation: publicProcedure
@@ -61,32 +64,59 @@ export const donationRouter = router({
   createDonationInvoice: publicProcedure
     .input(
       z.object({
-        donationId: z.string().uuid().optional(),
-        option: z.number().optional(), // TODO add params as needed
+        donationId: z.string().uuid(),
+        amount: z.number(), // TODO add params as needed
         email: z.string().email().optional(), // TODO add params as needed
       }),
     )
-    .output(InvoiceSchema)
-    .query(async ({ input, ctx }) => {
+    .output(selectInvoiceSchema)
+    .mutation(async ({ input, ctx }) => {
       if (!input?.donationId) throw new Error("Invalid donationId");
-      const result = await db.query.donations.findFirst({
+      const donation = await db.query.donations.findFirst({
         where: eq(donations.id, input.donationId),
         with: {
-          store: {
-            with: {
-              safe: true,
-            },
-          },
+          store: true,
         },
       });
 
-      // TOOD create invoice
+      if (!donation?.storeId) throw new Error("Invalid donation");
+      const dueDate = new Date();
+      dueDate.setDate(dueDate.getDate() + 30);
+      const invoice = await db
+        .insert(invoices)
+        .values(
+          insertInvoiceSchema.parse({
+            description: donation.donationData.description,
+            storeId: donation.storeId,
+            status: "pending",
+            dueDate: dueDate,
+            amountDue: input.amount,
+            currency: "USD",
+            acceptedTokens:
+              ERC20_TOKEN_MAPPER[
+                donation.store.isTestnet ? "testnet" : "mainnet"
+              ].USDT,
+          } satisfies insertInvoiceSchema),
+        )
+        .returning()
+        .execute();
 
       // TODO create enttiy in invoiceToDonation table
+      if (!invoice[0].id) throw new Error("Invalid invoice");
+      if (!donation?.id) throw new Error("Invalid donation");
+
+      const invoiceToDonationResult = await db
+        .insert(invoiceToDonation)
+        .values({
+          invoiceId: invoice[0].id,
+          donationId: donation.id,
+        })
+        .returning()
+        .execute();
 
       // return invoice
 
-      return InvoiceSchema.parse({});
+      return selectInvoiceSchema.parse(invoice[0]);
     }),
 
   getDonations: authProcedure

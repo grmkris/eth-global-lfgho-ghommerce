@@ -6,7 +6,10 @@ import {
   FaWordpress,
   FaShopify,
 } from "react-icons/fa";
-import {ApplicationModals, useApplicationModals} from "./useApplicationModals";
+import {
+  ApplicationModals,
+  useApplicationModals,
+} from "./useApplicationModals";
 import {
   Card,
   CardContent,
@@ -23,7 +26,7 @@ import { trpcClient } from "@/features/trpc-client.ts";
 import { selectDonationSchema } from "ghommerce-schema/src/db/donations.db.ts";
 import { generateColumnsFromZodSchema } from "@/components/table/generateColumnsFromZodSchema.tsx";
 import { DataTable } from "@/components/table/components/data-table.tsx";
-import {Button} from "@/components/ui/button.tsx";
+import { Button } from "@/components/ui/button.tsx";
 
 const integrationCards: IntegrationCardProps[] = [
   {
@@ -136,7 +139,9 @@ export const ApplicationsTab = (props: { userId: string }) => {
             ))}
           </CardContent>
         </Card>
-        <DonationsTable data={selectDonationSchema.array().parse(donations.data ?? [])} />
+        <DonationsTable
+          data={selectDonationSchema.array().parse(donations.data ?? [])}
+        />
         <Card>
           <CardHeader>
             <CardTitle>Integrations</CardTitle>
@@ -188,7 +193,13 @@ export const DonationsTable = (props: { data: selectDonationSchema[] }) => {
 
   return (
     <>
-      <DataTable data={props.data} columns={columns} rightToolbarActions={<Button onClick={() => modal("donations")}>Create Donation</Button>} />
+      <DataTable
+        data={props.data}
+        columns={columns}
+        rightToolbarActions={
+          <Button onClick={() => modal("donations")}>Create Donation</Button>
+        }
+      />
     </>
   );
 };

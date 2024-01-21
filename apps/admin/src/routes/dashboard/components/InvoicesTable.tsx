@@ -61,15 +61,15 @@ export const InvoicesTable = (props: {
   );
 
   return (
-        <DataTable
-            data={props.data}
-            columns={columns}
-            rightToolbarActions={
-                <>
-                    <CreateInvoiceComponent storeId={props.selectedStoreId} />
-                </>
-            }
-        />
+    <DataTable
+      data={props.data}
+      columns={columns}
+      rightToolbarActions={
+        <>
+          <CreateInvoiceComponent storeId={props.selectedStoreId} />
+        </>
+      }
+    />
   );
 };
 
