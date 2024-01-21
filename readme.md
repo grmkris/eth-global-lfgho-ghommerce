@@ -1,4 +1,4 @@
-# Ghommerce: making web3 e-commerce simpler 
+# Ghommerce: making web3 e-commerce simpler
 
 ## 📖 Storytime
 
@@ -91,17 +91,30 @@ In essence, Ghommerce is not just a payment platform; it's a comprehensive, vers
 ## Tech Stack
 
 - apps:
-  - api (merchant + customer) [apps/api](apps/api)
-    - supabase (postgres + auth) and bun for backend logic
-      - api is only used for providing various data to the frontend and store management, notifications, analytics, etc.
-      - at no point it has access to the merchant's private key or funds
-  - admin page (merchant) [apps/admin](apps/admin)
-    - vite, react, tailwind, tanstack router, zustand, react-query
-    - Merchant can connect their existing wallet, or use web3auth to create a new one, then a https://safe.global/ is created for them, and they can use to receive payments
-  - public payment page (customer) [apps/ghommerce](apps/ghommerce)
-    - vite, react, tailwind, tanstack router, zustand, react-query
-    - Customer connects their wallet using [ConnectKit](https://docs.family.co/connectkit/getting-started) and can pay with any token they have in their wallet
-  - sdk to integrate payment page as a widget [packages/sdk](packages/sdk)
-    - typescript browser sdk
-  - example-app to demonstrate sdk usage [apps/example](apps/example)
-    - https://github.com/grmkris/eth-global-lfgho-ghommerce/blob/994775f3fd1baaa2675b2e735ca27b7aa0eeb7ed/apps/example/src/useGhommerceSDK.tsx#L2-L2
+    - api (merchant + customer) [apps/api](apps/api)
+        - supabase (postgres + auth) and bun for backend logic
+            - api is only used for providing various data to the frontend and store management, notifications, analytics, etc.
+            - at no point it has access to the merchant's private key or funds
+    - admin page (merchant) [apps/admin](apps/admin)
+        - vite, react, tailwind, tanstack router, zustand, react-query
+        - Merchant can connect their existing wallet, or use web3auth to create a new one, then a https://safe.global/ is created for them, and they can use to receive payments
+    - public payment page (customer) [apps/ghommerce](apps/ghommerce)
+        - vite, react, tailwind, tanstack router, zustand, react-query
+        - Customer connects their wallet using [ConnectKit](https://docs.family.co/connectkit/getting-started) and can pay with any token they have in their wallet
+    - sdk to integrate payment page as a widget [packages/sdk](packages/sdk)
+        - typescript browser sdk
+    - example-app to demonstrate sdk usage [apps/example](apps/example)
+        - https://github.com/grmkris/eth-global-lfgho-ghommerce/blob/994775f3fd1baaa2675b2e735ca27b7aa0eeb7ed/apps/example/src/useGhommerceSDK.tsx#L2-L2
+
+## How to run
+- pnpm run db:dev
+  Copy paste .env.example to .env and fill in the values (pay attention to copy supa private key into .env of api)
+
+- a) pnpm run dev
+- b) pnpm run zellij
+
+- this will start 4 services in your terminal
+    - http://localhost:5320/ (admin)
+    - http://localhost:5321/ (payment widget)
+    - http://localhost:5322/ (example app)
+    - http://localhost:8080/trpc-panel (api)
